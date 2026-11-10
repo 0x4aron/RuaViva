@@ -16,6 +16,10 @@ target/
 .idea/
 .vscode/
 *.iml
+.classpath
+.project
+.settings/
+.factorypath
 
 # Segredos
 .env

@@ -45,10 +45,10 @@ SELECT c.NM_CATEGORIA,
 -- -------------------------------------------------------------
 -- CONSULTA 3 - LEFT OUTER JOIN com WHERE e ORDER BY
 -- Fila de trabalho do gestor: ocorrencias ABERTAS que ainda nao
--- tem nenhum atendimento agendado, da maior para a menor prioridade.
+-- tem atendimento valido, da maior para a menor prioridade.
 -- O LEFT JOIN traz todas as ocorrencias; as que nao tem atendimento
--- ficam com as colunas de GS_ATENDIMENTO nulas, e o WHERE filtra
--- justamente essas.
+-- (atendimentos cancelados nao contam) ficam com as colunas de
+-- GS_ATENDIMENTO nulas, e o WHERE filtra justamente essas.
 -- Tabelas: GS_OCORRENCIA e GS_ATENDIMENTO
 -- -------------------------------------------------------------
 SELECT o.ID_OCORRENCIA,
@@ -59,6 +59,7 @@ SELECT o.ID_OCORRENCIA,
   FROM GS_OCORRENCIA o
   LEFT OUTER JOIN GS_ATENDIMENTO a
     ON a.ID_OCORRENCIA = o.ID_OCORRENCIA
+   AND a.ST_ATENDIMENTO <> 'CANCELADO'
  WHERE o.ST_OCORRENCIA = 'ABERTA'
    AND a.ID_ATENDIMENTO IS NULL
  ORDER BY o.NR_PRIORIDADE DESC, o.DT_ABERTURA;

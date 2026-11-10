@@ -169,7 +169,7 @@ O peso (1 a 5) é informado pelo **gestor da subprefeitura** quando ele cadastra
 |---|---|---|
 | 1 | INNER JOIN entre duas tabelas | Ocorrências da Rua Barão de Iguape com a categoria (`GS_OCORRENCIA` + `GS_CATEGORIA`) |
 | 2 | INNER JOIN + funções de grupo + GROUP BY | Por categoria: total, resolvidas, média de dias até a resolução e prioridade média |
-| 3 | LEFT OUTER JOIN + WHERE + ORDER BY | Fila do gestor: ocorrências **abertas e sem atendimento**, da maior para a menor prioridade (`GS_OCORRENCIA` + `GS_ATENDIMENTO`) |
+| 3 | LEFT OUTER JOIN + WHERE + ORDER BY | Fila do gestor: ocorrências **abertas e sem atendimento** (atendimentos cancelados não contam), da maior para a menor prioridade (`GS_OCORRENCIA` + `GS_ATENDIMENTO`) |
 
 Resultado da consulta 3 com os dados de exemplo: o bueiro da Barão de Iguape, 288 (prioridade 71, com 3 apoios e perto da escola) aparece em primeiro.
 
