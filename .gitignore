@@ -1,0 +1,24 @@
+# Material da FIAP (não é nosso)
+GS CitizenTech*.pdf
+
+# Python
+__pycache__/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Java / Maven
+target/
+*.class
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Segredos
+.env
+*.env
+
+# Bases brutas grandes (baixar pelo link do README)
+data-science/dados/raw/
