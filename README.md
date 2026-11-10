@@ -10,7 +10,7 @@
 | **Cidade e bairro** | São Paulo (SP), Liberdade, Rua Barão de Iguape (Subprefeitura Sé) |
 | **Cidadão beneficiado** | Moradores do bairro, em especial idosos, pessoas com deficiência e quem anda com carrinho de bebê, que dependem de ruas e calçadas em bom estado |
 | **Problema, em uma frase** | O morador registra buracos, lixo acumulado e calçadas quebradas na prefeitura, mas não sabe quando o problema vai ser resolvido, nem se outras pessoas já reclamaram do mesmo problema, e os casos que afetam mais gente não recebem prioridade |
-| **Como funciona** | O cidadão registra a ocorrência e apoia registros de vizinhos ("também me afeta"). A plataforma prioriza a fila pelo impacto (quantas pessoas são afetadas e proximidade de escola, UBS ou rota de idosos), estima o prazo de atendimento e monta a rota diária da equipe de campo |
+| **Como funciona** | O cidadão registra a ocorrência e apoia registros de vizinhos ("também me afeta"). A plataforma prioriza a fila pelo impacto: gravidade do problema, quantas pessoas apoiaram, proximidade de escola, UBS ou casa de repouso, e se quem registrou é idoso ou pessoa com deficiência. Com os dados do SP156, prevê a demanda de cada região e a chance de um pedido ser resolvido em até 7 dias. Também monta a rota diária da equipe de campo |
 | **O que cada parte faz** | Ver tabela abaixo |
 | **Link do repositório** | <https://github.com/0x4aron/RuaViva> |
 | **Indicador de impacto** | Tempo médio até a resolução · % de ocorrências resolvidas em até 7 dias · nº de registros duplicados unificados |
