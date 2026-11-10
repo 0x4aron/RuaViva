@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meus registros | {app}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header id="cabecalho"></header>
+
+  <main class="pagina">
+    <div id="aviso" class="aviso" hidden tabindex="-1"></div>
+
+    <h1>Meus registros</h1>
+    <ul class="lista" id="lista"><li>Carregando...</li></ul>
+
+    <h2>Problemas que eu apoiei</h2>
+    <ul class="lista" id="apoiados"><li>Carregando...</li></ul>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    const usuario = sessao.exigir("cidadao");
+    montarCabecalho(LINKS_CIDADAO("minhas"));
+
+    function itemOcorrencia(o, apoio) {
+      return `
+        <li class="item">
+          <a class="cobrir" href="ocorrencia.html?id=${o.idOcorrencia}">
+            <div class="item-topo">${placaDeRua(o)} ${seloStatus(o.status)}</div>
+            <p class="item-categoria">${esc(apoio.categoria[o.idCategoria].nome)}</p>
+            <p class="item-meta">Registrado em ${formatarData(o.dataAbertura)}${
+              o.dataResolucao ? `, resolvido em ${formatarData(o.dataResolucao)}` : ""}</p>
+          </a>
+        </li>`;
+    }
+
+    Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios")])
+      .then(([apoio, ocorrencias, apoios]) => {
+        const minhas = ocorrencias
+          .filter((o) => o.idCidadao === usuario.idCidadao)
+          .sort((a, b) => b.dataAbertura.localeCompare(a.dataAbertura));
+        document.getElementById("lista").innerHTML = minhas.length
+          ? minhas.map((o) => itemOcorrencia(o, apoio)).join("")
+          : '<li class="vazio">Você ainda não registrou nenhum problema. <a href="registrar.html">Registrar agora</a></li>';
+
+        const idsApoiados = new Set(apoios.filter((a) => a.idCidadao === usuario.idCidadao).map((a) => a.idOcorrencia));
+        const apoiadas = ocorrencias.filter((o) => idsApoiados.has(o.idOcorrencia));
+        document.getElementById("apoiados").innerHTML = apoiadas.length
+          ? apoiadas.map((o) => itemOcorrencia(o, apoio)).join("")
+          : '<li class="vazio">Você ainda não apoiou nenhum registro. <a href="mapa.html">Ver o mapa do bairro</a></li>';
+      })
+      .catch(avisarErro);
+  </script>
+</body>
+</html>

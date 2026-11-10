@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{app}: zeladoria do bairro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <main class="entrada">
+    <div class="entrada-conteudo">
+      <span class="placa"><span class="placa-rua" id="nome-app">RuaViva</span></span>
+      <p>Viu um buraco, entulho ou calçada quebrada? Registre aqui, apoie o que seus vizinhos já registraram e acompanhe até a prefeitura resolver.</p>
+
+      <div id="aviso" class="aviso" hidden tabindex="-1"></div>
+
+      <section class="entrada-cartao" aria-labelledby="titulo-morador">
+        <h2 id="titulo-morador">Sou morador</h2>
+        <form id="form-morador">
+          <div class="campo">
+            <label for="cidadao">Quem é você?</label>
+            <p class="dica">Nesta versão de demonstração, os moradores são fictícios.</p>
+            <select id="cidadao" required>
+              <option value="">Carregando...</option>
+            </select>
+          </div>
+          <button class="botao botao-principal botao-bloco" type="submit">Entrar como morador</button>
+        </form>
+      </section>
+
+      <section class="entrada-cartao" aria-labelledby="titulo-gestor">
+        <h2 id="titulo-gestor">Trabalho na subprefeitura</h2>
+        <p>Veja a fila de problemas por prioridade e agende as equipes.</p>
+        <button class="botao botao-bloco" id="entrar-gestor" type="button">Entrar como gestor</button>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    document.title = document.title.replace("{app}", CONFIG.APP_NOME);
+    document.getElementById("nome-app").textContent = CONFIG.APP_NOME;
+
+    const select = document.getElementById("cidadao");
+
+    api.get("/cidadaos")
+      .then((cidadaos) => {
+        select.innerHTML = '<option value="">Escolha um morador</option>' +
+          cidadaos.map((c) => `<option value="${c.idCidadao}">${esc(c.nome)}${c.prioritario ? " (atendimento prioritário)" : ""}</option>`).join("");
+        select.cidadaos = cidadaos;
+      })
+      .catch((erro) => {
+        select.innerHTML = '<option value="">Não foi possível carregar</option>';
+        avisarErro(erro);
+      });
+
+    document.getElementById("form-morador").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const c = select.cidadaos.find((x) => String(x.idCidadao) === select.value);
+      sessao.salvar({ perfil: "cidadao", idCidadao: c.idCidadao, nome: c.nome });
+      location.href = "mapa.html";
+    });
+
+    document.getElementById("entrar-gestor").addEventListener("click", () => {
+      sessao.salvar({ perfil: "gestor" });
+      location.href = "gestor.html";
+    });
+  </script>
+</body>
+</html>

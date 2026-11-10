@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapa do bairro | {app}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header id="cabecalho"></header>
+
+  <main class="pagina">
+    <div id="aviso" class="aviso" hidden tabindex="-1"></div>
+
+    <h1>Problemas no bairro</h1>
+    <p class="texto-suave">Toque numa bolinha para ver o problema. Se ele também atrapalha você, apoie: quanto mais apoios, mais rápido ele sobe na fila da prefeitura.</p>
+
+    <div id="mapa" class="mapa" role="region" aria-label="Mapa com os problemas registrados"></div>
+    <p class="legenda">
+      <span style="--cor:#c8102e">Aberto</span>
+      <span style="--cor:#d9a400">Em andamento</span>
+      <span style="--cor:#1e7d4f">Resolvido</span>
+    </p>
+
+    <div class="campo">
+      <label for="filtro">Mostrar</label>
+      <select id="filtro">
+        <option value="pendentes">Ainda não resolvidos</option>
+        <option value="RESOLVIDA">Resolvidos</option>
+        <option value="todos">Todos</option>
+      </select>
+    </div>
+
+    <h2 id="titulo-lista">Lista</h2>
+    <ul class="lista" id="lista" aria-labelledby="titulo-lista"></ul>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/mapa.js"></script>
+  <script>
+    sessao.exigir("cidadao");
+    montarCabecalho(LINKS_CIDADAO("mapa"));
+
+    const mapa = criarMapa("mapa");
+    const camada = L.layerGroup().addTo(mapa);
+    let ocorrencias = [];
+    let apoio;
+
+    function filtrar() {
+      const f = document.getElementById("filtro").value;
+      if (f === "todos") return ocorrencias.filter((o) => o.status !== "CANCELADA");
+      if (f === "pendentes") return ocorrencias.filter((o) => o.status === "ABERTA" || o.status === "EM_ANDAMENTO");
+      return ocorrencias.filter((o) => o.status === f);
+    }
+
+    function desenhar() {
+      const visiveis = filtrar();
+      camada.clearLayers();
+      visiveis.forEach((o) => {
+        marcadorOcorrencia(o)
+          .bindPopup(`<strong>${esc(apoio.categoria[o.idCategoria].nome)}</strong><br>${esc(endereco(o))}<br>
+            ${STATUS_TEXTO[o.status]}<br><a href="ocorrencia.html?id=${o.idOcorrencia}">Ver e apoiar</a>`)
+          .addTo(camada);
+      });
+
+      const lista = document.getElementById("lista");
+      if (!visiveis.length) {
+        lista.innerHTML = '<li class="vazio">Nenhum problema nesta lista. <a href="registrar.html">Registrar um problema</a></li>';
+        return;
+      }
+      lista.innerHTML = visiveis.map((o) => `
+        <li class="item">
+          <a class="cobrir" href="ocorrencia.html?id=${o.idOcorrencia}">
+            <div class="item-topo">${placaDeRua(o)} ${seloStatus(o.status)}</div>
+            <p class="item-categoria">${esc(apoio.categoria[o.idCategoria].nome)}</p>
+            <p class="item-meta">${esc(o.descricao)}</p>
+            <p class="item-meta">Registrado em ${formatarData(o.dataAbertura)}</p>
+          </a>
+        </li>`).join("");
+    }
+
+    Promise.all([carregarApoio(), api.get("/ocorrencias")])
+      .then(([a, lista]) => {
+        apoio = a;
+        ocorrencias = lista;
+        desenhar();
+      })
+      .catch(avisarErro);
+
+    document.getElementById("filtro").addEventListener("change", desenhar);
+  </script>
+</body>
+</html>

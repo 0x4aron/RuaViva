@@ -25,6 +25,7 @@
 | [`data-science/`](data-science/) | Data Science | Dados reais do SP156: regressão linear para a demanda diária por subprefeitura e regressão logística para estimar se a solicitação é atendida em até 7 dias |
 | [`database/`](database/) | Database Design | Modelo relacional Oracle e scripts DDL, DML e DQL |
 | [`java-api/`](java-api/) | DDD - Java | API REST em Spring Boot + Oracle, com deploy no Render |
+| [`web/`](web/) | (todas) | Site do MVP: morador registra e apoia problemas; gestor vê a fila e agenda equipes |
 | [`dynamic-programming/`](dynamic-programming/) | Dynamic Programming | Rota da equipe de campo (grafos) e escolha das ocorrências dentro do orçamento (tabulação/memoização) |
 | [`network/`](network/) | Network Architect | Rede da base de zeladoria da subprefeitura no Packet Tracer |
 

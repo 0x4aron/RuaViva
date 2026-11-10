@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Categorias | {app}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header id="cabecalho"></header>
+
+  <main class="pagina pagina-larga">
+    <div id="aviso" class="aviso" hidden tabindex="-1"></div>
+
+    <h1>Categorias de problema</h1>
+
+    <div class="colunas">
+      <section aria-labelledby="titulo-form">
+        <h2 id="titulo-form">Nova categoria</h2>
+        <form id="form" class="bloco" novalidate>
+          <div class="campo">
+            <label for="nome">Nome</label>
+            <input id="nome" maxlength="80" required placeholder="Ex.: Fiação solta na calçada">
+          </div>
+          <div class="campo">
+            <label for="descricao">Descrição (opcional)</label>
+            <input id="descricao" maxlength="255">
+          </div>
+          <div class="linha-campos">
+            <div class="campo">
+              <label for="prazo">Prazo de atendimento (dias)</label>
+              <input id="prazo" type="number" min="1" max="999" required>
+            </div>
+            <div class="campo">
+              <label for="horas">Horas de trabalho</label>
+              <input id="horas" type="number" min="1" max="999" required>
+            </div>
+          </div>
+
+          <fieldset class="campo">
+            <legend>Gravidade (peso de 1 a 5)</legend>
+            <p class="dica">Sugestão para escolher o peso. Toque numa linha para usar o valor, ou digite outro.</p>
+            <ul class="regua" id="regua"></ul>
+            <label for="peso" class="visualmente-oculto">Peso escolhido</label>
+            <input id="peso" type="number" min="1" max="5" required style="margin-top:.6rem" placeholder="Peso escolhido (1 a 5)">
+          </fieldset>
+
+          <button class="botao botao-principal botao-bloco" type="submit">Cadastrar categoria</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="titulo-lista">
+        <h2 id="titulo-lista">Categorias cadastradas</h2>
+        <div class="tabela-rolagem">
+          <table>
+            <thead><tr><th scope="col">Categoria</th><th scope="col">Peso</th><th scope="col">Prazo</th><th scope="col">Horas</th></tr></thead>
+            <tbody id="tabela"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    sessao.exigir("gestor");
+    montarCabecalho(LINKS_GESTOR("categorias"));
+
+    const campoPeso = document.getElementById("peso");
+
+    function marcarRegua() {
+      document.querySelectorAll("#regua button").forEach((b) =>
+        b.setAttribute("aria-pressed", String(b.dataset.peso === campoPeso.value)));
+    }
+
+    async function carregarTabela() {
+      const categorias = await api.get("/categorias");
+      document.getElementById("tabela").innerHTML = categorias
+        .sort((a, b) => b.pesoGravidade - a.pesoGravidade)
+        .map((c) => `<tr><td>${esc(c.nome)}</td><td>${c.pesoGravidade}</td><td>${c.prazoDias} dias</td><td>${c.horasEstimadas} h</td></tr>`)
+        .join("");
+    }
+
+    // A regua vem da API (GET /categorias/regua-peso): e so uma sugestao para o gestor
+    api.get("/categorias/regua-peso")
+      .then((regua) => {
+        document.getElementById("regua").innerHTML = regua.map((r) => `
+          <li><button type="button" data-peso="${r.peso}" aria-pressed="false">
+            <span class="regua-peso">${r.peso}</span>
+            <span>${esc(r.criterio)}<small>Ex.: ${esc(r.exemplos)}</small></span>
+          </button></li>`).join("");
+        document.getElementById("regua").addEventListener("click", (e) => {
+          const botao = e.target.closest("button");
+          if (!botao) return;
+          campoPeso.value = botao.dataset.peso;
+          marcarRegua();
+        });
+      })
+      .catch(avisarErro);
+
+    campoPeso.addEventListener("input", marcarRegua);
+    carregarTabela().catch(avisarErro);
+
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      limparAviso();
+      try {
+        const criada = await api.post("/categorias", {
+          nome: document.getElementById("nome").value.trim(),
+          descricao: document.getElementById("descricao").value.trim() || null,
+          prazoDias: Number(document.getElementById("prazo").value) || null,
+          pesoGravidade: Number(campoPeso.value) || null,
+          horasEstimadas: Number(document.getElementById("horas").value) || null,
+        });
+        avisar(`Categoria "${criada.nome}" cadastrada. Os moradores já podem escolher essa opção.`);
+        e.target.reset();
+        marcarRegua();
+        await carregarTabela();
+      } catch (erro) {
+        avisarErro(erro);
+      }
+    });
+  </script>
+</body>
+</html>

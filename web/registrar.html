@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registrar problema | {app}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header id="cabecalho"></header>
+
+  <main class="pagina">
+    <div id="aviso" class="aviso" hidden tabindex="-1"></div>
+
+    <h1>Registrar um problema</h1>
+
+    <form id="form" novalidate>
+      <fieldset class="campo">
+        <legend>Qual é o problema?</legend>
+        <div class="opcoes" id="categorias"></div>
+      </fieldset>
+
+      <div class="campo">
+        <label for="mapa">Onde fica?</label>
+        <p class="dica">Toque no mapa no ponto exato do problema, ou use a sua localização.</p>
+        <div id="mapa" class="mapa mapa-pequeno"></div>
+        <button class="botao" type="button" id="minha-localizacao">Usar minha localização</button>
+        <p class="dica" id="local-escolhido" aria-live="polite">Nenhum ponto marcado ainda.</p>
+      </div>
+
+      <div id="parecidas" hidden></div>
+
+      <div class="linha-campos">
+        <div class="campo">
+          <label for="logradouro">Rua</label>
+          <input id="logradouro" maxlength="120" required autocomplete="address-line1" placeholder="Ex.: Rua Barão de Iguape">
+        </div>
+        <div class="campo">
+          <label for="numero">Número</label>
+          <input id="numero" maxlength="10" inputmode="numeric" placeholder="Ex.: 288">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="distrito">Bairro</label>
+        <select id="distrito" required></select>
+      </div>
+
+      <div class="campo">
+        <label for="descricao">Conte o que está acontecendo</label>
+        <p class="dica">Por exemplo: "buraco fundo perto da faixa de pedestre, já vi gente tropeçar".</p>
+        <textarea id="descricao" maxlength="500" required></textarea>
+      </div>
+
+      <button class="botao botao-principal botao-bloco" type="submit" id="enviar">Registrar problema</button>
+    </form>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/mapa.js"></script>
+  <script>
+    const usuario = sessao.exigir("cidadao");
+    montarCabecalho(LINKS_CIDADAO("registrar"));
+
+    const mapa = criarMapa("mapa");
+    let ponto = null;      // marcador escolhido
+    let pendentes = [];    // ocorrencias abertas, para avisar sobre repetidas
+    let apoio;
+
+    function marcar(lat, lng) {
+      if (ponto) ponto.setLatLng([lat, lng]);
+      else ponto = L.marker([lat, lng], { draggable: true }).addTo(mapa)
+        .on("dragend", (e) => marcar(e.target.getLatLng().lat, e.target.getLatLng().lng));
+      document.getElementById("local-escolhido").textContent = "Ponto marcado no mapa.";
+      verificarParecidas();
+    }
+
+    mapa.on("click", (e) => marcar(e.latlng.lat, e.latlng.lng));
+
+    document.getElementById("minha-localizacao").addEventListener("click", () => {
+      if (!navigator.geolocation) return avisar("Seu navegador não informa a localização. Toque no mapa.", "erro");
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          marcar(pos.coords.latitude, pos.coords.longitude);
+          mapa.setView([pos.coords.latitude, pos.coords.longitude], 18);
+        },
+        () => avisar("Não conseguimos sua localização. Toque no mapa para marcar o ponto.", "erro")
+      );
+    });
+
+    // Distancia em metros (formula de Haversine, a mesma usada na API)
+    function distancia(a, b) {
+      const r = 6371000, rad = Math.PI / 180;
+      const dLat = (b.lat - a.lat) * rad, dLon = (b.lng - a.lng) * rad;
+      const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLon / 2) ** 2;
+      return 2 * r * Math.asin(Math.sqrt(h));
+    }
+
+    // Antes de registrar, mostra problemas parecidos ja registrados a ate 60 m: melhor apoiar do que repetir
+    function verificarParecidas() {
+      const area = document.getElementById("parecidas");
+      const categoria = document.querySelector('input[name="categoria"]:checked')?.value;
+      if (!ponto || !categoria) { area.hidden = true; return; }
+
+      const aqui = ponto.getLatLng();
+      const perto = pendentes
+        .filter((o) => String(o.idCategoria) === categoria)
+        .map((o) => ({ o, metros: distancia(aqui, { lat: o.latitude, lng: o.longitude }) }))
+        .filter((x) => x.metros <= 60)
+        .sort((a, b) => a.metros - b.metros);
+
+      if (!perto.length) { area.hidden = true; return; }
+      area.className = "bloco";
+      area.innerHTML = `<h2>Alguém já registrou isso?</h2>
+        <p>Encontramos ${perto.length === 1 ? "um problema parecido" : perto.length + " problemas parecidos"} bem perto daqui. Se for o mesmo, apoie o registro existente: ele ganha prioridade e a fila não fica com repetidos.</p>
+        <ul class="lista">${perto.map(({ o, metros }) => `
+          <li class="item">
+            <div class="item-topo">${placaDeRua(o)} ${seloStatus(o.status)}</div>
+            <p class="item-meta">${esc(o.descricao)} (a ${Math.round(metros)} m)</p>
+            <a class="botao" href="ocorrencia.html?id=${o.idOcorrencia}">Ver e apoiar</a>
+          </li>`).join("")}</ul>`;
+      area.hidden = false;
+    }
+
+    Promise.all([carregarApoio(), api.get("/ocorrencias")])
+      .then(([a, lista]) => {
+        apoio = a;
+        pendentes = lista.filter((o) => o.status === "ABERTA" || o.status === "EM_ANDAMENTO");
+
+        document.getElementById("categorias").innerHTML = a.categorias.map((c) => `
+          <label class="opcao">
+            <input type="radio" name="categoria" value="${c.idCategoria}" required>
+            <span>${esc(c.nome)}</span>
+          </label>`).join("");
+        document.querySelectorAll('input[name="categoria"]').forEach((r) => r.addEventListener("change", verificarParecidas));
+
+        document.getElementById("distrito").innerHTML = a.distritos.map((d) =>
+          `<option value="${d.idDistrito}" ${d.nome === "LIBERDADE" ? "selected" : ""}>${esc(d.nome)}</option>`).join("");
+      })
+      .catch(avisarErro);
+
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      limparAviso();
+
+      const categoria = document.querySelector('input[name="categoria"]:checked');
+      const faltando = [];
+      if (!categoria) faltando.push("Escolha qual é o problema.");
+      if (!ponto) faltando.push("Marque no mapa onde fica o problema.");
+      if (!document.getElementById("logradouro").value.trim()) faltando.push("Informe a rua.");
+      if (!document.getElementById("descricao").value.trim()) faltando.push("Conte o que está acontecendo.");
+      if (faltando.length) return avisar("Falta pouco para registrar:", "erro", faltando);
+
+      const local = ponto.getLatLng();
+      const botao = document.getElementById("enviar");
+      botao.disabled = true;
+      try {
+        const criada = await api.post("/ocorrencias", {
+          idCidadao: usuario.idCidadao,
+          idCategoria: Number(categoria.value),
+          idDistrito: Number(document.getElementById("distrito").value),
+          descricao: document.getElementById("descricao").value.trim(),
+          logradouro: document.getElementById("logradouro").value.trim(),
+          numero: document.getElementById("numero").value.trim() || null,
+          latitude: local.lat,
+          longitude: local.lng,
+        });
+        location.href = `ocorrencia.html?id=${criada.idOcorrencia}&novo=1`;
+      } catch (erro) {
+        avisarErro(erro);
+        botao.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Problema registrado | {app}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header id="cabecalho"></header>
+
+  <main class="pagina">
+    <div id="aviso" class="aviso" hidden tabindex="-1"></div>
+    <div id="conteudo"><p>Carregando...</p></div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/mapa.js"></script>
+  <script>
+    const usuario = sessao.ler();
+    if (!usuario) location.href = "index.html";
+    const ehCidadao = usuario?.perfil === "cidadao";
+    montarCabecalho(ehCidadao ? LINKS_CIDADAO("") : LINKS_GESTOR(""));
+
+    const parametros = new URLSearchParams(location.search);
+    const id = parametros.get("id");
+    let mapa;
+
+    async function carregar() {
+      const [o, apoios, atendimentos, apoio] = await Promise.all([
+        api.get(`/ocorrencias/${id}`),
+        api.get(`/ocorrencias/${id}/apoios`),
+        api.get(`/ocorrencias/${id}/atendimentos`),
+        carregarApoio(),
+      ]);
+      const categoria = apoio.categoria[o.idCategoria];
+      const pendente = o.status === "ABERTA" || o.status === "EM_ANDAMENTO";
+      const ehMinha = ehCidadao && o.idCidadao === usuario.idCidadao;
+      const meuApoio = ehCidadao ? apoios.find((a) => a.idCidadao === usuario.idCidadao) : null;
+      const nivel = nivelPrioridade(o.prioridade);
+
+      // Monta a linha do tempo com o que aconteceu
+      const eventos = [{ data: o.dataAbertura, texto: "Problema registrado" }];
+      atendimentos.forEach((a) => {
+        if (a.status === "AGENDADO") eventos.push({ data: a.dataAgendada, texto: "Visita da equipe agendada" });
+        if (a.status === "CONCLUIDO") eventos.push({ data: a.dataExecucao, texto: "Equipe resolveu o problema" + (a.observacao ? `: ${a.observacao}` : "") });
+        if (a.status === "CANCELADO") eventos.push({ data: a.dataAgendada, texto: "Visita cancelada" });
+      });
+      if (o.status === "CANCELADA") eventos.push({ data: null, texto: "Registro cancelado" });
+      eventos.sort((a, b) => (a.data || "9999").localeCompare(b.data || "9999"));
+
+      let botaoApoio = "";
+      if (ehCidadao && pendente && !ehMinha) {
+        botaoApoio = meuApoio
+          ? `<p>Você apoiou este registro.</p><button class="botao" id="retirar">Retirar meu apoio</button>`
+          : `<button class="botao botao-principal botao-bloco" id="apoiar">Isso também me afeta</button>`;
+      } else if (ehMinha) {
+        botaoApoio = `<p class="texto-suave">Este registro é seu. Peça para os vizinhos apoiarem.</p>`;
+      }
+
+      document.getElementById("conteudo").innerHTML = `
+        <p>${placaDeRua(o).replace('class="placa"', 'class="placa placa-grande"')}</p>
+        <h1>${esc(categoria.nome)}</h1>
+        <p>${seloStatus(o.status)}</p>
+        <p>${esc(o.descricao)}</p>
+
+        <section class="bloco" aria-labelledby="titulo-apoio">
+          <h2 id="titulo-apoio" class="visualmente-oculto">Apoios</h2>
+          <p><span class="contador-apoio">${apoios.length}</span> ${apoios.length === 1 ? "vizinho apoiou" : "vizinhos apoiaram"}</p>
+          ${botaoApoio}
+        </section>
+
+        ${!ehCidadao ? `<section class="bloco"><span class="prioridade ${nivel.classe}"><span class="prioridade-valor">${o.prioridade}</span> prioridade ${nivel.texto.toLowerCase()}</span></section>` : ""}
+
+        <div id="mapa" class="mapa mapa-pequeno" role="region" aria-label="Local do problema"></div>
+
+        <h2>O que já aconteceu</h2>
+        <ol class="linha-tempo">
+          ${eventos.map((e) => `<li>${e.data ? `<strong>${formatarData(e.data)}</strong><br>` : ""}${esc(e.texto)}</li>`).join("")}
+        </ol>
+        ${pendente ? `<p class="texto-suave">Aberto há ${diasDesde(o.dataAbertura)} dias. O prazo de referência para "${esc(categoria.nome)}" é de ${categoria.prazoDias} dias.</p>` : ""}
+      `;
+
+      if (mapa) mapa.remove();
+      mapa = criarMapa("mapa", [o.latitude, o.longitude], 18);
+      marcadorOcorrencia(o).addTo(mapa);
+
+      document.getElementById("apoiar")?.addEventListener("click", async (e) => {
+        e.target.disabled = true;
+        try {
+          await api.post("/apoios", { idOcorrencia: Number(id), idCidadao: usuario.idCidadao });
+          avisar("Apoio registrado. Obrigado por avisar que isso também afeta você.");
+          await carregar();
+        } catch (erro) {
+          avisarErro(erro);
+          e.target.disabled = false;
+        }
+      });
+
+      document.getElementById("retirar")?.addEventListener("click", async (e) => {
+        e.target.disabled = true;
+        try {
+          await api.delete(`/apoios/${meuApoio.idApoio}`);
+          avisar("Seu apoio foi retirado.");
+          await carregar();
+        } catch (erro) {
+          avisarErro(erro);
+          e.target.disabled = false;
+        }
+      });
+    }
+
+    if (parametros.get("novo")) avisar("Problema registrado. Agora a subprefeitura já vê na fila de trabalho.");
+    carregar().catch(avisarErro);
+  </script>
+</body>
+</html>
