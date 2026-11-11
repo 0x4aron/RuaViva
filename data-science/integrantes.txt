@@ -1,0 +1,11 @@
+Global Solution 2026.2 - FIAP - Engenharia de Software
+Data Science & Statistical Computing
+
+Integrantes:
+Anthony Goncalves Sforzin - RM 562096
+Cesar Aaron Herrera - RM 565398
+
+Fonte dos dados:
+Portal de Dados Abertos da Prefeitura de Sao Paulo - "Dados do SP156" (licenca CC0)
+https://dados.prefeitura.sp.gov.br/dataset/dados-do-sp156
+Arquivos: Dados do SP156 - 1o, 2o, 3o e 4o TRI 2025 (CSV), filtrados pelo script preparar_base.py

@@ -30,3 +30,6 @@ data-science/dados/raw/
 
 # Configuracao local do Claude Code
 .claude/
+
+# ZIPs prontos para enviar no Teams/Portal
+entregas/
