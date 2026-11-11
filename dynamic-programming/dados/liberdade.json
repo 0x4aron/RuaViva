@@ -1,0 +1,208 @@
+{
+  "origem": "database/02_dml.sql",
+  "categorias": [
+    {
+      "id": 1,
+      "nome": "Tapa-buraco",
+      "horas_estimadas": 3,
+      "peso_gravidade": 4
+    },
+    {
+      "id": 2,
+      "nome": "Remocao de entulho",
+      "horas_estimadas": 2,
+      "peso_gravidade": 3
+    },
+    {
+      "id": 3,
+      "nome": "Limpeza de bueiro",
+      "horas_estimadas": 2,
+      "peso_gravidade": 4
+    },
+    {
+      "id": 4,
+      "nome": "Calcada danificada",
+      "horas_estimadas": 4,
+      "peso_gravidade": 5
+    },
+    {
+      "id": 5,
+      "nome": "Guias e sarjetas",
+      "horas_estimadas": 4,
+      "peso_gravidade": 3
+    },
+    {
+      "id": 6,
+      "nome": "Falta de varricao",
+      "horas_estimadas": 1,
+      "peso_gravidade": 2
+    },
+    {
+      "id": 7,
+      "nome": "Lixeira publica",
+      "horas_estimadas": 1,
+      "peso_gravidade": 1
+    }
+  ],
+  "equipes": [
+    {
+      "id": 1,
+      "nome": "Zeladoria Se - Equipe A",
+      "subprefeitura_id": 1,
+      "horas_dia": 8,
+      "ativa": true,
+      "base": {
+        "latitude": -23.5503,
+        "longitude": -46.6339
+      }
+    },
+    {
+      "id": 2,
+      "nome": "Zeladoria Se - Equipe B",
+      "subprefeitura_id": 1,
+      "horas_dia": 6,
+      "ativa": true,
+      "base": {
+        "latitude": -23.5503,
+        "longitude": -46.6339
+      }
+    },
+    {
+      "id": 3,
+      "nome": "Zeladoria Se - Equipe Noturna",
+      "subprefeitura_id": 1,
+      "horas_dia": 6,
+      "ativa": false,
+      "base": {
+        "latitude": -23.5503,
+        "longitude": -46.6339
+      }
+    },
+    {
+      "id": 4,
+      "nome": "Zeladoria Mooca - Equipe A",
+      "subprefeitura_id": 2,
+      "horas_dia": 8,
+      "ativa": true,
+      "base": {
+        "latitude": -23.55,
+        "longitude": -46.6
+      }
+    },
+    {
+      "id": 5,
+      "nome": "Zeladoria Vila Mariana - Equipe A",
+      "subprefeitura_id": 3,
+      "horas_dia": 8,
+      "ativa": true,
+      "base": {
+        "latitude": -23.589,
+        "longitude": -46.634
+      }
+    }
+  ],
+  "ocorrencias": [
+    {
+      "id": 3,
+      "categoria_id": 3,
+      "categoria": "Limpeza de bueiro",
+      "distrito_id": 1,
+      "descricao": "Bueiro entupido, rua alaga quando chove",
+      "endereco": "Rua Barao de Iguape, 288",
+      "latitude": -23.5584177,
+      "longitude": -46.6341792,
+      "status": "ABERTA",
+      "prioridade": 71,
+      "horas_estimadas": 2
+    },
+    {
+      "id": 5,
+      "categoria_id": 3,
+      "categoria": "Limpeza de bueiro",
+      "distrito_id": 1,
+      "descricao": "Boca de lobo com mau cheiro e lixo acumulado",
+      "endereco": "Rua Barao de Iguape, 277",
+      "latitude": -23.5582016,
+      "longitude": -46.6341396,
+      "status": "EM_ANDAMENTO",
+      "prioridade": 59,
+      "horas_estimadas": 2
+    },
+    {
+      "id": 7,
+      "categoria_id": 5,
+      "categoria": "Guias e sarjetas",
+      "distrito_id": 1,
+      "descricao": "Guia quebrada na frente do comercio",
+      "endereco": "Rua Barao de Iguape, 664",
+      "latitude": -23.5581837,
+      "longitude": -46.6304707,
+      "status": "ABERTA",
+      "prioridade": 45,
+      "horas_estimadas": 4
+    },
+    {
+      "id": 8,
+      "categoria_id": 5,
+      "categoria": "Guias e sarjetas",
+      "distrito_id": 1,
+      "descricao": "Sarjeta afundada, idosos tropecam ao atravessar",
+      "endereco": "Rua Barao de Iguape, 319",
+      "latitude": -23.5584036,
+      "longitude": -46.6342574,
+      "status": "ABERTA",
+      "prioridade": 59,
+      "horas_estimadas": 4
+    },
+    {
+      "id": 10,
+      "categoria_id": 1,
+      "categoria": "Tapa-buraco",
+      "distrito_id": 1,
+      "descricao": "Buraco fundo perto da creche",
+      "endereco": "Rua Doutor Siqueira Campos, 23",
+      "latitude": -23.5632017,
+      "longitude": -46.638823,
+      "status": "ABERTA",
+      "prioridade": 57,
+      "horas_estimadas": 3
+    }
+  ],
+  "pontos_sensiveis": [
+    {
+      "id": 1,
+      "nome": "Escola Estadual Barao (ficticia)",
+      "tipo": "ESCOLA",
+      "latitude": -23.5586,
+      "longitude": -46.6338
+    },
+    {
+      "id": 2,
+      "nome": "UBS Liberdade Centro (ficticia)",
+      "tipo": "UBS",
+      "latitude": -23.5598,
+      "longitude": -46.6322
+    },
+    {
+      "id": 3,
+      "nome": "Casa de Repouso Sakura (ficticia)",
+      "tipo": "ILPI",
+      "latitude": -23.5578,
+      "longitude": -46.6302
+    },
+    {
+      "id": 4,
+      "nome": "Creche Municipal Jardim (ficticia)",
+      "tipo": "CRECHE",
+      "latitude": -23.5628,
+      "longitude": -46.6392
+    },
+    {
+      "id": 5,
+      "nome": "Estacao Japao-Liberdade (Metro)",
+      "tipo": "TERMINAL",
+      "latitude": -23.5554,
+      "longitude": -46.6357
+    }
+  ]
+}
