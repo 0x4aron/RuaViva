@@ -1,0 +1,118 @@
+! Cisco 2911 novo no Packet Tracer 8.2. Responda no ao assistente inicial.
+! Todas as senhas abaixo sao exemplos: troque antes da entrega.
+enable
+configure terminal
+!
+! Identidade e protecao do acesso administrativo.
+hostname R1-BASE
+no ip domain-lookup
+enable secret Gs2026!Troque
+service password-encryption
+banner motd #ACESSO RESTRITO - RuaViva - Somente pessoal autorizado.#
+username admin privilege 15 secret Gs2026!Troque
+ip domain-name ruaviva.gs
+crypto key generate rsa general-keys modulus 1024
+ip ssh version 2
+!
+! Somente a VLAN Equipe pode abrir sessoes SSH no R1.
+ip access-list standard VTY_EQUIPE
+ permit 192.168.10.0 0.0.0.255
+ deny any
+exit
+line console 0
+ password Gs2026!Troque
+ login
+ logging synchronous
+ exec-timeout 5 0
+exit
+line vty 0 4
+ login local
+ transport input ssh
+ access-class VTY_EQUIPE in
+ exec-timeout 5 0
+exit
+!
+! DHCP local: reservas .1 a .9 em cada VLAN e servidor .30.10.
+service dhcp
+ip dhcp excluded-address 192.168.10.1 192.168.10.9
+ip dhcp excluded-address 192.168.20.1 192.168.20.9
+ip dhcp excluded-address 192.168.30.1 192.168.30.9
+ip dhcp excluded-address 192.168.30.10
+ip dhcp pool EQUIPE
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+exit
+ip dhcp pool CIDADAO
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+exit
+ip dhcp pool SERVIDORES_SENSORES
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+exit
+!
+! ACL de entrada do Wi-Fi: DHCP inicial em broadcast e renovacao ao R1.
+! Origem 68 (bootpc), destino 67 (bootps), sem excecao para outras VLANs.
+ip access-list extended WIFI_CIDADAO_IN
+ permit udp any eq 68 host 255.255.255.255 eq 67
+ permit udp 192.168.20.0 0.0.0.255 eq 68 host 192.168.20.1 eq 67
+ permit udp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 53
+ permit tcp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 80
+ deny ip any 192.168.10.0 0.0.0.255
+ deny ip any 192.168.30.0 0.0.0.255
+ permit ip 192.168.20.0 0.0.0.255 any
+exit
+!
+! Enlace fisico com SW1; enderecos ficam somente nas subinterfaces.
+interface GigabitEthernet0/0
+ description TRUNK_8021Q_PARA_SW1_G0/1
+ no ip address
+ no shutdown
+exit
+interface GigabitEthernet0/0.10
+ description VLAN10_EQUIPE
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+exit
+interface GigabitEthernet0/0.20
+ description VLAN20_CIDADAO_WIFI
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip nat inside
+ ip access-group WIFI_CIDADAO_IN in
+exit
+interface GigabitEthernet0/0.30
+ description VLAN30_SERVIDORES_SENSORES
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+ ip nat inside
+exit
+!
+! Saida para o provedor; IP publico compartilhado pelo PAT.
+interface GigabitEthernet0/1
+ description WAN_PARA_ISP_G0/0
+ ip address 200.10.0.2 255.255.255.252
+ ip nat outside
+ no shutdown
+exit
+interface GigabitEthernet0/2
+ description NAO_UTILIZADA
+ shutdown
+exit
+!
+! ACL 1 apenas seleciona origens para NAT; nao e o filtro do Wi-Fi.
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 1 permit 192.168.20.0 0.0.0.255
+access-list 1 permit 192.168.30.0 0.0.0.255
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+ip route 0.0.0.0 0.0.0.0 200.10.0.1
+!
+end
+write memory

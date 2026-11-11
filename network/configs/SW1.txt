@@ -1,0 +1,96 @@
+! Cisco 2960-24TT novo no Packet Tracer 8.2.
+! Todas as senhas abaixo sao exemplos: troque antes da entrega.
+enable
+configure terminal
+!
+! Identidade e administracao por SSH a partir da Equipe.
+hostname SW1
+no ip domain-lookup
+enable secret Gs2026!Troque
+service password-encryption
+banner motd #ACESSO RESTRITO - Switch da base RuaViva.#
+username admin privilege 15 secret Gs2026!Troque
+ip domain-name ruaviva.gs
+crypto key generate rsa general-keys modulus 1024
+ip ssh version 2
+access-list 10 permit 192.168.10.0 0.0.0.255
+access-list 10 deny any
+line console 0
+ password Gs2026!Troque
+ login
+ logging synchronous
+ exec-timeout 5 0
+exit
+line vty 0 15
+ login local
+ transport input ssh
+ access-class 10 in
+ exec-timeout 5 0
+exit
+!
+! Uma VLAN por setor, conforme plano aprovado.
+vlan 10
+ name EQUIPE
+exit
+vlan 20
+ name CIDADAO_WIFI
+exit
+vlan 30
+ name SERVIDORES_SENSORES
+exit
+!
+! O 2960 usa 802.1Q; nao inserir switchport trunk encapsulation dot1q.
+interface GigabitEthernet0/1
+ description TRUNK_PARA_R1_G0/0
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30
+ no shutdown
+exit
+!
+! Portas de acesso: os dispositivos finais nao enviam tags de VLAN.
+interface FastEthernet0/1
+ description PC_EQUIPE
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ no shutdown
+exit
+interface FastEthernet0/2
+ description AP_WIFI_PORT0
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+ no shutdown
+exit
+interface FastEthernet0/3
+ description SRV_RUAVIVA
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ no shutdown
+exit
+interface FastEthernet0/4
+ description PC_SENSOR_SIMULADO
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ no shutdown
+exit
+!
+! IP de gerencia reservado e excluido do DHCP; switch nao roteia VLANs.
+interface Vlan10
+ ip address 192.168.10.2 255.255.255.0
+ no shutdown
+exit
+ip default-gateway 192.168.10.1
+!
+! Desativar portas sem uso.
+interface range FastEthernet0/5 - 24
+ shutdown
+exit
+interface GigabitEthernet0/2
+ shutdown
+exit
+!
+end
+write memory

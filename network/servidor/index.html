@@ -1,0 +1,45 @@
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>RuaViva - Ficha da CitizenTech</title></head>
+<body>
+<h1>RuaViva &#8212; CitizenTech de zeladoria urbana</h1>
+<p>Global Solution 2026.2 &#183; FIAP &#183; Engenharia de Software &#183; 2&#186; ano (Fev)</p>
+<h2>Ficha da CitizenTech</h2>
+<table border="1" cellpadding="6" cellspacing="0">
+<tr><th>Campo</th><th>Resposta</th></tr>
+<tr><td><b>Nome da CitizenTech</b></td><td>RuaViva <i>(nome provis&#243;rio)</i></td></tr>
+<tr><td><b>Cidade e bairro</b></td><td>S&#227;o Paulo (SP), Liberdade, Rua Bar&#227;o de Iguape (Subprefeitura S&#233;)</td></tr>
+<tr><td><b>Cidad&#227;o beneficiado</b></td><td>Moradores do bairro, em especial idosos, pessoas com defici&#234;ncia e quem anda com carrinho de beb&#234;, que dependem de ruas e cal&#231;adas em bom estado</td></tr>
+<tr><td><b>Problema, em uma frase</b></td><td>O morador registra buracos, lixo acumulado e cal&#231;adas quebradas na prefeitura, mas n&#227;o sabe quando o problema vai ser resolvido, nem se outras pessoas j&#225; reclamaram do mesmo problema, e os casos que afetam mais gente n&#227;o recebem prioridade</td></tr>
+<tr><td><b>Como funciona</b></td><td>O cidad&#227;o registra a ocorr&#234;ncia e apoia registros de vizinhos (&quot;tamb&#233;m me afeta&quot;). A plataforma prioriza a fila pelo impacto: gravidade do problema, quantas pessoas apoiaram, proximidade de escola, UBS ou casa de repouso, e se quem registrou &#233; idoso ou pessoa com defici&#234;ncia. Com os dados do SP156, prev&#234; a demanda de cada regi&#227;o e a chance de um pedido ser resolvido em at&#233; 7 dias. Tamb&#233;m monta a rota di&#225;ria da equipe de campo</td></tr>
+<tr><td><b>O que cada parte faz</b></td><td>Ver tabela abaixo</td></tr>
+<tr><td><b>Link do reposit&#243;rio</b></td><td><a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a></td></tr>
+<tr><td><b>Indicador de impacto</b></td><td>Tempo m&#233;dio at&#233; a resolu&#231;&#227;o &#183; % de ocorr&#234;ncias resolvidas em at&#233; 7 dias &#183; n&#186; de registros duplicados unificados</td></tr>
+<tr><td><b>ODS conectados</b></td><td>ODS 11 (Cidades e comunidades sustent&#225;veis) &#183; ODS 10 (Redu&#231;&#227;o das desigualdades) &#183; ODS 9 (Ind&#250;stria, inova&#231;&#227;o e infraestrutura)</td></tr>
+</table>
+<h3>O que cada parte faz</h3>
+<table border="1" cellpadding="6" cellspacing="0">
+<tr><th>Pasta</th><th>Disciplina</th><th>Parte da solu&#231;&#227;o</th></tr>
+<tr><td>agile/</td><td>Agile Methodology</td><td>Personas, casos de uso, backlog (MoSCoW + story points), prot&#243;tipo de telas, pitch</td></tr>
+<tr><td>ar-vr/</td><td>AR-VR Modelling</td><td>V&#237;deo 3D: uma rua do bairro com as ocorr&#234;ncias e a solu&#231;&#227;o em a&#231;&#227;o</td></tr>
+<tr><td>data-science/</td><td>Data Science</td><td>Dados reais do SP156: regress&#227;o linear para a demanda di&#225;ria por subprefeitura e regress&#227;o log&#237;stica para estimar se a solicita&#231;&#227;o &#233; atendida em at&#233; 7 dias</td></tr>
+<tr><td>database/</td><td>Database Design</td><td>Modelo relacional Oracle e scripts DDL, DML e DQL</td></tr>
+<tr><td>java-api/</td><td>DDD - Java</td><td>API REST em Spring Boot + Oracle, com deploy no Render</td></tr>
+<tr><td>web/</td><td>(todas)</td><td>Site do MVP: morador registra e apoia problemas; gestor v&#234; a fila e agenda equipes</td></tr>
+<tr><td>dynamic-programming/</td><td>Dynamic Programming</td><td>Rota da equipe de campo (grafos) e escolha das ocorr&#234;ncias dentro do or&#231;amento (tabula&#231;&#227;o/memoiza&#231;&#227;o)</td></tr>
+<tr><td>network/</td><td>Network Architect</td><td>Rede da base de zeladoria da subprefeitura no Packet Tracer</td></tr>
+</table>
+<h2>Equipe</h2>
+<table border="1" cellpadding="6" cellspacing="0">
+<tr><th>Nome</th><th>RM</th></tr>
+<tr><td>Anthony Gon&#231;alves Sforzin</td><td>562096</td></tr>
+<tr><td>Cesar Aaron Herrera</td><td>565398</td></tr>
+</table>
+<h2>Fonte dos dados</h2>
+<p><b>SP156 &#8212; Solicita&#231;&#245;es</b> (Prefeitura de S&#227;o Paulo, Portal de Dados Abertos, licen&#231;a CC0): <a href="https://dados.prefeitura.sp.gov.br/dataset/dados-do-sp156">https://dados.prefeitura.sp.gov.br/dataset/dados-do-sp156</a>. Os dados n&#227;o cont&#234;m informa&#231;&#245;es pessoais dos solicitantes.</p>
+<p>Os demais dados usados no sistema (cidad&#227;os, equipes) s&#227;o <b>simulados</b>.</p>
+<hr>
+<p>Rede da base de zeladoria da Subprefeitura S&#233;, que atende a Liberdade.</p>
+<p>Esta p&#225;gina apresenta a Ficha da CitizenTech no laborat&#243;rio. Os links externos s&#227;o refer&#234;ncias e n&#227;o est&#227;o hospedados na internet simulada.</p>
+<p><a href="http://internet.gs">Testar a Internet simulada</a></p>
+</body>
+</html>

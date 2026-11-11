@@ -1,0 +1,50 @@
+! Cisco 2911 novo no Packet Tracer 8.2. Responda no ao assistente inicial.
+! Todas as senhas abaixo sao exemplos: troque antes da entrega.
+enable
+configure terminal
+!
+! Acesso remoto somente SSH; console local autenticado.
+hostname ISP
+no ip domain-lookup
+enable secret Gs2026!Troque
+service password-encryption
+banner motd #ACESSO RESTRITO - Provedor simulado RuaViva.#
+username admin privilege 15 secret Gs2026!Troque
+ip domain-name ruaviva.gs
+crypto key generate rsa general-keys modulus 1024
+ip ssh version 2
+line console 0
+ password Gs2026!Troque
+ login
+ logging synchronous
+ exec-timeout 5 0
+exit
+line vty 0 4
+ login local
+ transport input ssh
+ exec-timeout 5 0
+exit
+!
+! Rede publica diretamente conectada: retorno para o PAT 200.10.0.2.
+interface GigabitEthernet0/0
+ description WAN_PARA_R1_G0/1
+ ip address 200.10.0.1 255.255.255.252
+ no shutdown
+exit
+!
+! Rede do servidor externo que representa a internet.
+interface GigabitEthernet0/1
+ description SERVIDOR_INTERNET_FASTETHERNET0
+ ip address 8.8.8.1 255.255.255.0
+ no shutdown
+exit
+interface GigabitEthernet0/2
+ description NAO_UTILIZADA
+ shutdown
+exit
+!
+! Nao criar rotas para 192.168.10/20/30.0: o retorno usa o IP do PAT.
+! 200.10.0.0/30 e 8.8.8.0/24 ja aparecem como rotas conectadas.
+! Sem rota default: este ISP e o fim da internet simulada.
+end
+write memory
