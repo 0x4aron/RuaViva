@@ -1,14 +1,9 @@
-// Funcoes de interface usadas em todas as paginas: sessao, cabecalho, textos e avisos.
-
-// ---------- Sessao (quem esta usando o site) ----------
-// MVP sem login: o perfil escolhido na entrada fica guardado no navegador.
+// Componentes e funções comuns, sem dependência de framework.
+const $ = (id) => document.getElementById(id);
 const sessao = {
   ler() {
-    try {
-      return JSON.parse(localStorage.getItem("sessao")) || null;
-    } catch {
-      return null;
-    }
+    try { return JSON.parse(localStorage.getItem("sessao")) || null; }
+    catch { return null; }
   },
   salvar(dados) {
     try {
@@ -20,132 +15,201 @@ const sessao = {
     }
   },
   sair() {
-    localStorage.removeItem("sessao");
-    location.href = "index.html";
-  },
-  // Manda para a entrada se o perfil da pagina nao for o da sessao
-  exigir(perfil) {
-    const s = this.ler();
-    if (!s || s.perfil !== perfil) {
+    try {
+      localStorage.removeItem("sessao");
       location.href = "index.html";
+    } catch {
+      avisar("O navegador bloqueou o armazenamento. Não foi possível trocar o perfil.", "erro");
+    }
+  },
+  exigir(perfil) {
+    const usuario = this.ler();
+    if (!usuario || usuario.perfil !== perfil) {
+      location.replace("index.html");
       return null;
     }
-    return s;
+    return usuario;
   },
 };
 
-// ---------- Textos ----------
-const STATUS_TEXTO = {
-  ABERTA: "Aberta",
-  EM_ANDAMENTO: "Em andamento",
-  RESOLVIDA: "Resolvida",
-  CANCELADA: "Cancelada",
-};
-
-const ATENDIMENTO_TEXTO = {
-  AGENDADO: "Visita agendada",
-  CONCLUIDO: "Visita concluida",
-  CANCELADO: "Visita cancelada",
-};
-
-function formatarData(iso) {
-  if (!iso) return "";
-  const [ano, mes, dia] = iso.split("-");
-  return `${dia}/${mes}/${ano}`;
-}
-
-function diasDesde(iso) {
-  const inicio = new Date(iso + "T00:00:00");
-  return Math.max(0, Math.floor((Date.now() - inicio) / 86400000));
-}
-
-function nivelPrioridade(valor) {
-  if (valor >= 60) return { classe: "alta", texto: "Alta" };
-  if (valor >= 40) return { classe: "media", texto: "Media" };
-  return { classe: "baixa", texto: "Baixa" };
-}
-
-function endereco(o) {
-  return o.numero ? `${o.logradouro}, ${o.numero}` : o.logradouro;
-}
-
-// Evita que texto digitado pelo usuario vire HTML
-function esc(texto) {
-  const div = document.createElement("div");
-  div.textContent = texto ?? "";
-  return div.innerHTML;
-}
-
-// ---------- Componentes ----------
-function placaDeRua(o) {
-  return `<span class="placa"><span class="placa-rua">${esc(o.logradouro)}</span>${
-    o.numero ? `<span class="placa-num">${esc(o.numero)}</span>` : ""
-  }</span>`;
-}
-
-function seloStatus(status) {
-  return `<span class="selo selo-${status.toLowerCase()}">${STATUS_TEXTO[status]}</span>`;
-}
-
-// Cabecalho comum. links: [{ href, texto, atual }]
-function montarCabecalho(links) {
-  const s = sessao.ler();
-  const quem = s ? (s.perfil === "gestor" ? "Gestor da subprefeitura" : s.nome) : "";
-  document.getElementById("cabecalho").innerHTML = `
-    <div class="cabecalho-linha">
-      <a class="marca" href="index.html">${CONFIG.APP_NOME}</a>
-      ${s ? `<button class="botao-texto" id="botao-sair" type="button">Trocar perfil</button>` : ""}
-    </div>
-    ${quem ? `<p class="quem">${esc(quem)}</p>` : ""}
-    ${
-      links
-        ? `<nav class="abas" aria-label="Paginas">${links
-            .map((l) => `<a href="${l.href}" ${l.atual ? 'aria-current="page"' : ""}>${l.texto}</a>`)
-            .join("")}</nav>`
-        : ""
-    }`;
-  document.getElementById("botao-sair")?.addEventListener("click", () => sessao.sair());
-  document.title = document.title.replace("{app}", CONFIG.APP_NOME);
-}
-
+const STATUS_TEXTO = { ABERTA: "Aberto", EM_ANDAMENTO: "Em andamento", RESOLVIDA: "Resolvido", CANCELADA: "Cancelado" };
 const LINKS_CIDADAO = (atual) => [
-  { href: "mapa.html", texto: "Mapa", atual: atual === "mapa" },
+  { href: "mapa.html", texto: "Bairro", atual: atual === "mapa" },
   { href: "registrar.html", texto: "Registrar", atual: atual === "registrar" },
-  { href: "minhas.html", texto: "Meus registros", atual: atual === "minhas" },
+  { href: "minhas.html", texto: "Meus registros", curto: "Meus", atual: atual === "minhas" },
 ];
-
 const LINKS_GESTOR = (atual) => [
   { href: "gestor.html", texto: "Fila de trabalho", atual: atual === "fila" },
   { href: "categorias.html", texto: "Categorias", atual: atual === "categorias" },
 ];
 
-// ---------- Avisos ----------
-// Mostra um aviso no topo da pagina (tipo: "sucesso" ou "erro")
+function esc(texto) {
+  return String(texto ?? "").replace(/[&<>"']/g, (letra) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[letra]);
+}
+
+// Corrige a grafia dos nomes legados, sem alterar os dados da API.
+function nomeExibido(texto) {
+  if (String(texto).toUpperCase() === "SE") return "Sé";
+  const palavras = {
+    barao: "Barão", remocao: "Remoção", calcada: "Calçada", calcadas: "Calçadas",
+    varricao: "Varrição", publica: "pública", publico: "público",
+    republica: "República", sao: "São", joao: "João", jose: "José",
+  };
+  return String(texto ?? "").replace(/\b(Barao|Remocao|Calcada|Calcadas|Varricao|Publica|Publico|Republica|Sao|Joao|Jose)\b/gi,
+    (palavra) => palavras[palavra.toLowerCase()]);
+}
+function chave(texto) {
+  return String(texto).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+function nomeProprio(texto) {
+  return nomeExibido(texto).toLocaleLowerCase("pt-BR").replace(/\p{L}+/gu, (palavra, indice) =>
+    indice > 0 && ["de", "da", "do", "dos", "das", "e"].includes(palavra)
+      ? palavra : palavra[0].toLocaleUpperCase("pt-BR") + palavra.slice(1));
+}
+function icone(nome) {
+  return `<svg class="icone" aria-hidden="true" focusable="false"><use href="img/icones.svg#${nome}"></use></svg>`;
+}
+function categoriaVisual(categoria) {
+  const nome = chave(categoria?.nome || "");
+  const tipos = [
+    ["buraco", "buraco", "buraco no asfalto da rua"],
+    ["bueiro", "bueiro", "bueiro entupido ou com água acumulada"],
+    ["calcada", "calcada", "piso quebrado no caminho de pedestres"],
+    ["entulho", "entulho", "restos de obra ou objetos na rua"],
+    ["guia", "guia", "guia ou sarjeta quebrada"],
+    ["varri", "varricao", "folhas e lixo acumulados na rua"],
+    ["lixeira", "lixeira", "lixeira quebrada, cheia ou ausente"],
+  ];
+  const tipo = tipos.find(([termo]) => nome.includes(termo));
+  return { icone: tipo?.[1] || "info", exemplo: tipo?.[2] || categoria?.descricao || "problema de manutenção na rua" };
+}
+function hoje() {
+  const data = new Date();
+  return new Date(data.getTime() - data.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+}
+function formatarData(iso) {
+  if (!iso) return "Data não informada";
+  return iso.slice(0, 10).split("-").reverse().join("/");
+}
+function diasDesde(iso, fim = hoje()) {
+  return Math.max(0, Math.floor((Date.parse(fim + "T12:00:00Z") - Date.parse(iso + "T12:00:00Z")) / 86400000));
+}
+function nivelPrioridade(valor) {
+  if (valor >= 60) return { classe: "alta", texto: "Alta" };
+  if (valor >= 40) return { classe: "media", texto: "Média" };
+  return { classe: "baixa", texto: "Baixa" };
+}
+function endereco(o) {
+  return nomeProprio(o.logradouro) + (o.numero ? `, ${o.numero}` : "");
+}
+// Abrevia títulos comuns em nomes de rua para a placa compacta caber em uma linha
+function abreviarRua(nome) {
+  return nome.replace(/^Doutor\s/, "Dr. ").replace(/^Professor\s/, "Prof. ").replace(/^Conselheiro\s/, "Cons. ").replace(/^Senador\s/, "Sen. ").replace(/^General\s/, "Gen. ");
+}
+function placaDeRua(o, grande = false) {
+  if (grande) return `<span class="placa placa-grande"><span class="placa-rua">${esc(nomeProprio(o.logradouro))}</span>${o.numero ? `<span class="placa-num">${esc(o.numero)}</span>` : ""}</span>`;
+  const rua = abreviarRua(nomeProprio(o.logradouro).replace(/^Rua\s+/i, ""));
+  return `<span class="placa" title="${esc(endereco(o))}"><span class="placa-nome">${esc(rua)}</span>${o.numero ? `<span class="placa-numero"> · ${esc(o.numero)}</span>` : ""}</span>`;
+}
+function seloStatus(status) {
+  return `<span class="selo selo-${esc(status.toLowerCase())}">${STATUS_TEXTO[status] || esc(status)}</span>`;
+}
+function textoApoios(numero) { return Number(numero) === 0 ? "nenhum apoio" : `${numero} ${Number(numero) === 1 ? "apoio" : "apoios"}`; }
+function contarApoios(apoios) {
+  const contagem = {};
+  apoios.forEach((a) => { contagem[a.idOcorrencia] = (contagem[a.idOcorrencia] || 0) + 1; });
+  return contagem;
+}
+function linhaOcorrencia(o, categoria, apoios = 0, numero = null) {
+  return `<li class="item"><a class="cobrir" href="ocorrencia.html?id=${o.idOcorrencia}">
+    <span class="item-icone">${icone(categoriaVisual(categoria).icone)}${numero ? `<span class="numero">${numero}<span class="visualmente-oculto"> no mapa</span></span>` : ""}</span>
+    <div class="item-corpo"><div class="item-topo"><strong>${esc(nomeExibido(categoria?.nome || "Problema registrado"))}</strong>${seloStatus(o.status)}</div>
+    ${placaDeRua(o)}<p class="item-descricao">${esc(nomeExibido(o.descricao))}</p>
+    <p class="item-meta">há ${diasDesde(o.dataAbertura)} dias · ${textoApoios(apoios)}</p></div></a></li>`;
+}
+function montarCabecalho(links) {
+  const usuario = sessao.ler();
+  $("cabecalho").innerHTML = `<div class="cabecalho-linha"><a class="marca" href="index.html">${icone("local")}${esc(CONFIG.APP_NOME)}</a>
+    ${usuario ? '<button class="botao-texto" id="botao-sair" type="button">Trocar perfil</button>' : ""}</div>
+    <p class="quem">${esc(usuario?.perfil === "gestor" ? "Subprefeitura Sé · São Paulo" : usuario?.nome || "Liberdade · Sé · São Paulo")}</p>
+    <nav class="abas ${links.length === 2 ? "abas-gestor" : ""}" aria-label="Páginas">${links.map((link) => `<a href="${link.href}" ${link.atual ? 'aria-current="page"' : ""}${link.curto ? ` aria-label="${esc(link.texto)}"` : ""}>${link.curto ? `<span class="aba-completa">${esc(link.texto)}</span><span class="aba-curta" aria-hidden="true">${esc(link.curto)}</span>` : esc(link.texto)}</a>`).join("")}</nav>`;
+  $("botao-sair")?.addEventListener("click", () => sessao.sair());
+  document.title = document.title.replace("{app}", CONFIG.APP_NOME);
+}
 function avisar(mensagem, tipo = "sucesso", detalhes = []) {
-  const area = document.getElementById("aviso");
-  area.className = "aviso aviso-" + tipo;
-  area.innerHTML = `<p>${esc(mensagem)}</p>${
-    detalhes.length ? `<ul>${detalhes.map((d) => `<li>${esc(d)}</li>`).join("")}</ul>` : ""
-  }`;
+  const area = $("aviso");
+  area.className = `aviso aviso-${tipo}`;
+  area.innerHTML = `${icone(tipo === "erro" ? "alerta" : tipo === "sucesso" ? "check" : "info")}<div><p>${esc(mensagem)}</p>${detalhes.length ? `<ul>${detalhes.map((d) => `<li>${esc(d)}</li>`).join("")}</ul>` : ""}</div>`;
   area.hidden = false;
   area.focus();
 }
-
-function avisarErro(erro) {
-  avisar(erro.message, "erro", erro.campos || []);
+function avisarErro(erro) { avisar(erro.message || "Não foi possível concluir. Tente de novo.", "erro", erro.campos || []); }
+function limparAviso() { $("aviso").hidden = true; }
+function erroComTentativa(erro, tentar) {
+  avisarErro(erro);
+  const botao = document.createElement("button");
+  botao.className = "botao";
+  botao.type = "button";
+  botao.textContent = "Tentar de novo";
+  botao.addEventListener("click", tentar);
+  $("aviso").lastElementChild.append(botao);
 }
-
-function limparAviso() {
-  document.getElementById("aviso").hidden = true;
+async function enviarComBotao(botao, acao) {
+  const texto = botao.textContent;
+  botao.disabled = true;
+  botao.textContent = "Enviando…";
+  try { await acao(); }
+  catch (erro) { avisarErro(erro); }
+  finally { botao.disabled = false; botao.textContent = texto; }
 }
-
-// Carrega categorias e distritos uma vez e devolve mapas id -> objeto
+function limparErros(form) {
+  form.querySelectorAll(".erro-campo").forEach((erro) => erro.remove());
+  form.querySelectorAll('[aria-invalid="true"]').forEach((campo) => {
+    campo.removeAttribute("aria-invalid");
+    const ids = (campo.getAttribute("aria-describedby") || "").split(" ").filter((id) => !id.endsWith("-erro"));
+    if (ids.length) campo.setAttribute("aria-describedby", ids.join(" "));
+    else campo.removeAttribute("aria-describedby");
+  });
+}
+function erroCampo(campo, mensagem) {
+  const id = campo.id + "-erro";
+  campo.setAttribute("aria-invalid", "true");
+  campo.setAttribute("aria-describedby", `${campo.getAttribute("aria-describedby") || ""} ${id}`.trim());
+  const erro = document.createElement("p");
+  erro.id = id;
+  erro.className = "erro-campo";
+  erro.innerHTML = `${icone("alerta")} ${esc(mensagem)}`;
+  campo.insertAdjacentElement("afterend", erro);
+}
+function validarFormulario(form) {
+  limparErros(form);
+  let valido = true;
+  form.querySelectorAll("input, select, textarea").forEach((campo) => {
+    if (!campo.validity.valid) {
+      erroCampo(campo, campo.validationMessage);
+      valido = false;
+    }
+  });
+  if (!valido) avisar("Confira os campos indicados antes de continuar.", "erro");
+  return valido;
+}
 async function carregarApoio() {
   const [categorias, distritos] = await Promise.all([api.get("/categorias"), api.get("/distritos")]);
-  return {
-    categorias,
-    distritos,
+  return { categorias, distritos,
     categoria: Object.fromEntries(categorias.map((c) => [c.idCategoria, c])),
     distrito: Object.fromEntries(distritos.map((d) => [d.idDistrito, d])),
   };
+}
+async function mostrarComposicao(id, area) {
+  area.innerHTML = '<p class="texto-suave">Carregando composição…</p>';
+  try {
+    const dados = await api.get(`/ocorrencias/${id}/prioridade`);
+    if (!Array.isArray(dados?.itens) || !Number.isFinite(dados.total)) throw new Error("Composição inválida");
+    area.innerHTML = `<dl class="composicao">${dados.itens.map((item) => `<div><dt>${esc(nomeExibido(item.motivo))}</dt><dd>${esc(item.pontos)}</dd></div>`).join("")}<div><dt><strong>Total</strong></dt><dd>${dados.total}</dd></div></dl>`;
+  } catch {
+    area.innerHTML = `<p>${icone("info")} Composição indisponível</p><button type="button" class="botao-texto">Tentar de novo</button>`;
+    area.querySelector("button").addEventListener("click", () => mostrarComposicao(id, area));
+  }
 }

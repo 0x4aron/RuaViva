@@ -48,3 +48,21 @@ web/
 ├── js/mapa.js        mapa (Leaflet + OpenStreetMap)
 └── *.html            uma página por tela
 ```
+
+## Redesenho v2
+
+A especificação visual está em `DESIGN.md`. Os componentes compartilhados ficam em
+`js/ui.js`, o mapa e a geocodificação em `js/mapa.js`, e cada tela tem um
+`js/pagina-*.js`. O sprite próprio e o favicon estão em `img/`.
+
+O registro tem três passos e guarda o rascunho por morador em `sessionStorage`.
+A busca de endereço só acontece pelo botão; ao marcar ou arrastar o ponto, a busca
+reversa espera 600 ms. Se o serviço de endereço falhar, o ponto continua escolhido
+e a rua pode ser preenchida manualmente. A descrição é opcional na interface:
+quando vazia, o nome da categoria é enviado como descrição, conforme avisado no
+resumo, para manter compatibilidade com a validação atual da API.
+
+A fila oferece apenas equipes ativas cuja `idSubprefeitura` corresponde à do
+distrito da ocorrência. A composição dos pontos vem de
+`GET /ocorrencias/{id}/prioridade`; falhas mostram “Composição indisponível” e
+permitem tentar novamente.

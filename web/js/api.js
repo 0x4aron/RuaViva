@@ -19,7 +19,7 @@ async function chamarApi(metodo, caminho, corpo) {
   try {
     resposta = await fetch(CONFIG.API_URL + caminho, opcoes);
   } catch (e) {
-    throw new ErroApi(0, "Nao foi possivel falar com o servidor. Confira a internet e tente de novo.");
+    throw new ErroApi(0, "Não foi possível falar com o servidor. Confira a internet e tente de novo.");
   }
 
   if (resposta.status === 204) return null;
