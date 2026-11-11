@@ -30,7 +30,7 @@ public class PontoSensivelBO {
     }
 
     public PontoSensivel buscar(Long id) {
-        return dao.buscarPorId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Ponto sensivel", id));
+        return dao.buscarPorId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Ponto sensível", id));
     }
 
     @Transactional

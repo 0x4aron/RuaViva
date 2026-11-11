@@ -40,7 +40,7 @@ public class ApoioController {
         return bo.buscar(id);
     }
 
-    @Operation(summary = "\"Tambem me afeta\": registra o apoio e recalcula a prioridade da ocorrencia")
+    @Operation(summary = "\"Também me afeta\": registra o apoio e recalcula a prioridade da ocorrência")
     @PostMapping
     public ResponseEntity<Apoio> cadastrar(@Valid @RequestBody Apoio a) {
         Apoio criado = bo.cadastrar(a);

@@ -43,13 +43,13 @@ public class ApoioBO {
         cidadaoBO.buscar(a.getIdCidadao());
 
         if (ocorrencia.getStatus() == StatusOcorrencia.RESOLVIDA || ocorrencia.getStatus() == StatusOcorrencia.CANCELADA) {
-            throw new RegraNegocioException("So e possivel apoiar ocorrencias que ainda nao foram resolvidas ou canceladas");
+            throw new RegraNegocioException("Só é possível apoiar ocorrências que ainda não foram resolvidas ou canceladas");
         }
         if (ocorrencia.getIdCidadao().equals(a.getIdCidadao())) {
-            throw new RegraNegocioException("O cidadao nao pode apoiar a propria ocorrencia");
+            throw new RegraNegocioException("O cidadão não pode apoiar a própria ocorrência");
         }
         if (dao.existe(a.getIdOcorrencia(), a.getIdCidadao())) {
-            throw new RegraNegocioException("Este cidadao ja apoiou esta ocorrencia");
+            throw new RegraNegocioException("Este cidadão já apoiou esta ocorrência");
         }
 
         a.setDataApoio(Datas.hoje());

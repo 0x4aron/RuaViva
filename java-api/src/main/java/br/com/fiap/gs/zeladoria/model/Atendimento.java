@@ -10,20 +10,20 @@ public class Atendimento {
 
     private Long idAtendimento;
 
-    @NotNull(message = "A ocorrencia e obrigatoria")
+    @NotNull(message = "A ocorrência é obrigatória")
     private Long idOcorrencia;
 
-    @NotNull(message = "A equipe e obrigatoria")
+    @NotNull(message = "A equipe é obrigatória")
     private Long idEquipe;
 
-    @NotNull(message = "A data agendada e obrigatoria")
+    @NotNull(message = "A data agendada é obrigatória")
     private LocalDate dataAgendada;
 
     private LocalDate dataExecucao;
 
     private StatusAtendimento status;
 
-    @Size(max = 500, message = "A observacao pode ter no maximo 500 caracteres")
+    @Size(max = 500, message = "A observação pode ter no máximo 500 caracteres")
     private String observacao;
 
     public Long getIdAtendimento() { return idAtendimento; }

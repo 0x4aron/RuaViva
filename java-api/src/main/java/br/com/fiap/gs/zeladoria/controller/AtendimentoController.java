@@ -37,14 +37,14 @@ public class AtendimentoController {
         return bo.buscar(id);
     }
 
-    @Operation(summary = "Agenda uma visita de equipe; a ocorrencia passa para EM_ANDAMENTO")
+    @Operation(summary = "Agenda uma visita de equipe; a ocorrência passa para EM_ANDAMENTO")
     @PostMapping
     public ResponseEntity<Atendimento> cadastrar(@Valid @RequestBody Atendimento a) {
         Atendimento criado = bo.cadastrar(a);
         return ResponseEntity.created(URI.create("/atendimentos/" + criado.getIdAtendimento())).body(criado);
     }
 
-    @Operation(summary = "Atualiza o atendimento; com status CONCLUIDO a ocorrencia vira RESOLVIDA")
+    @Operation(summary = "Atualiza o atendimento; com status CONCLUIDO a ocorrência vira RESOLVIDA")
     @PutMapping("/{id}")
     public Atendimento atualizar(@PathVariable Long id, @Valid @RequestBody Atendimento a) {
         return bo.atualizar(id, a);

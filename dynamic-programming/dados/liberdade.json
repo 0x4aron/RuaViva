@@ -9,7 +9,7 @@
     },
     {
       "id": 2,
-      "nome": "Remocao de entulho",
+      "nome": "Remoção de entulho",
       "horas_estimadas": 2,
       "peso_gravidade": 3
     },
@@ -21,7 +21,7 @@
     },
     {
       "id": 4,
-      "nome": "Calcada danificada",
+      "nome": "Calçada danificada",
       "horas_estimadas": 4,
       "peso_gravidade": 5
     },
@@ -33,13 +33,13 @@
     },
     {
       "id": 6,
-      "nome": "Falta de varricao",
+      "nome": "Falta de varrição",
       "horas_estimadas": 1,
       "peso_gravidade": 2
     },
     {
       "id": 7,
-      "nome": "Lixeira publica",
+      "nome": "Lixeira pública",
       "horas_estimadas": 1,
       "peso_gravidade": 1
     }
@@ -47,7 +47,7 @@
   "equipes": [
     {
       "id": 1,
-      "nome": "Zeladoria Se - Equipe A",
+      "nome": "Zeladoria Sé - Equipe A",
       "subprefeitura_id": 1,
       "horas_dia": 8,
       "ativa": true,
@@ -58,7 +58,7 @@
     },
     {
       "id": 2,
-      "nome": "Zeladoria Se - Equipe B",
+      "nome": "Zeladoria Sé - Equipe B",
       "subprefeitura_id": 1,
       "horas_dia": 6,
       "ativa": true,
@@ -69,7 +69,7 @@
     },
     {
       "id": 3,
-      "nome": "Zeladoria Se - Equipe Noturna",
+      "nome": "Zeladoria Sé - Equipe Noturna",
       "subprefeitura_id": 1,
       "horas_dia": 6,
       "ativa": false,
@@ -108,7 +108,7 @@
       "categoria": "Limpeza de bueiro",
       "distrito_id": 1,
       "descricao": "Bueiro entupido, rua alaga quando chove",
-      "endereco": "Rua Barao de Iguape, 288",
+      "endereco": "Rua Barão de Iguape, 288",
       "latitude": -23.5584177,
       "longitude": -46.6341792,
       "status": "ABERTA",
@@ -121,7 +121,7 @@
       "categoria": "Limpeza de bueiro",
       "distrito_id": 1,
       "descricao": "Boca de lobo com mau cheiro e lixo acumulado",
-      "endereco": "Rua Barao de Iguape, 277",
+      "endereco": "Rua Barão de Iguape, 277",
       "latitude": -23.5582016,
       "longitude": -46.6341396,
       "status": "EM_ANDAMENTO",
@@ -133,8 +133,8 @@
       "categoria_id": 5,
       "categoria": "Guias e sarjetas",
       "distrito_id": 1,
-      "descricao": "Guia quebrada na frente do comercio",
-      "endereco": "Rua Barao de Iguape, 664",
+      "descricao": "Guia quebrada na frente do comércio",
+      "endereco": "Rua Barão de Iguape, 664",
       "latitude": -23.5581837,
       "longitude": -46.6304707,
       "status": "ABERTA",
@@ -146,8 +146,8 @@
       "categoria_id": 5,
       "categoria": "Guias e sarjetas",
       "distrito_id": 1,
-      "descricao": "Sarjeta afundada, idosos tropecam ao atravessar",
-      "endereco": "Rua Barao de Iguape, 319",
+      "descricao": "Sarjeta afundada, idosos tropeçam ao atravessar",
+      "endereco": "Rua Barão de Iguape, 319",
       "latitude": -23.5584036,
       "longitude": -46.6342574,
       "status": "ABERTA",
@@ -171,35 +171,35 @@
   "pontos_sensiveis": [
     {
       "id": 1,
-      "nome": "Escola Estadual Barao (ficticia)",
+      "nome": "Escola Estadual Barão (fictícia)",
       "tipo": "ESCOLA",
       "latitude": -23.5586,
       "longitude": -46.6338
     },
     {
       "id": 2,
-      "nome": "UBS Liberdade Centro (ficticia)",
+      "nome": "UBS Liberdade Centro (fictícia)",
       "tipo": "UBS",
       "latitude": -23.5598,
       "longitude": -46.6322
     },
     {
       "id": 3,
-      "nome": "Casa de Repouso Sakura (ficticia)",
+      "nome": "Casa de Repouso Sakura (fictícia)",
       "tipo": "ILPI",
       "latitude": -23.5578,
       "longitude": -46.6302
     },
     {
       "id": 4,
-      "nome": "Creche Municipal Jardim (ficticia)",
+      "nome": "Creche Municipal Jardim (fictícia)",
       "tipo": "CRECHE",
       "latitude": -23.5628,
       "longitude": -46.6392
     },
     {
       "id": 5,
-      "nome": "Estacao Japao-Liberdade (Metro)",
+      "nome": "Estação Japão-Liberdade (Metrô)",
       "tipo": "TERMINAL",
       "latitude": -23.5554,
       "longitude": -46.6357

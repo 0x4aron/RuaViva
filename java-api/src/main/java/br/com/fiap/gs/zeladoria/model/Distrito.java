@@ -9,11 +9,11 @@ public class Distrito {
 
     private Long idDistrito;
 
-    @NotNull(message = "A subprefeitura e obrigatoria")
+    @NotNull(message = "A subprefeitura é obrigatória")
     private Long idSubprefeitura;
 
-    @NotBlank(message = "O nome do distrito e obrigatorio")
-    @Size(max = 60, message = "O nome pode ter no maximo 60 caracteres")
+    @NotBlank(message = "O nome do distrito é obrigatório")
+    @Size(max = 60, message = "O nome pode ter no máximo 60 caracteres")
     private String nome;
 
     public Long getIdDistrito() { return idDistrito; }

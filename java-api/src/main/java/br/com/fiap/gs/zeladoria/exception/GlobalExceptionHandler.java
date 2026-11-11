@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     // 404 - rota que nao existe
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErroResposta> rotaInexistente(NoResourceFoundException e, HttpServletRequest req) {
-        return resposta(HttpStatus.NOT_FOUND, "Endereco nao encontrado", req, List.of());
+        return resposta(HttpStatus.NOT_FOUND, "Endereço não encontrado", req, List.of());
     }
 
     // 422 - regra de negocio violada (camada BO)
@@ -51,27 +51,27 @@ public class GlobalExceptionHandler {
         List<String> campos = e.getBindingResult().getFieldErrors().stream()
                 .map(erro -> erro.getField() + ": " + erro.getDefaultMessage())
                 .toList();
-        return resposta(HttpStatus.BAD_REQUEST, "Dados invalidos", req, campos);
+        return resposta(HttpStatus.BAD_REQUEST, "Dados inválidos", req, campos);
     }
 
     // 400 - JSON mal formado ou valor invalido (ex.: status que nao existe)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErroResposta> jsonInvalido(HttpMessageNotReadableException e, HttpServletRequest req) {
-        return resposta(HttpStatus.BAD_REQUEST, "JSON invalido ou com valor nao aceito", req, List.of());
+        return resposta(HttpStatus.BAD_REQUEST, "JSON inválido ou com valor não aceito", req, List.of());
     }
 
     // 400 - parametro da URL com tipo errado (ex.: /ocorrencias/abc)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErroResposta> parametroInvalido(MethodArgumentTypeMismatchException e, HttpServletRequest req) {
-        return resposta(HttpStatus.BAD_REQUEST, "Parametro invalido: " + e.getName(), req, List.of());
+        return resposta(HttpStatus.BAD_REQUEST, "Parâmetro inválido: " + e.getName(), req, List.of());
     }
 
     // 409 - o banco recusou por integridade (FK, UNIQUE, CHECK)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErroResposta> integridade(DataIntegrityViolationException e, HttpServletRequest req) {
-        log.warn("Violacao de integridade: {}", e.getMostSpecificCause().getMessage());
+        log.warn("Violação de integridade: {}", e.getMostSpecificCause().getMessage());
         return resposta(HttpStatus.CONFLICT,
-                "Operacao recusada pelo banco: o registro esta em uso por outros dados ou repete um valor unico",
+                "Operação recusada pelo banco: o registro está em uso por outros dados ou repete um valor único",
                 req, List.of());
     }
 
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErroResposta> banco(DataAccessException e, HttpServletRequest req) {
         log.error("Erro de acesso ao banco", e);
-        return resposta(HttpStatus.SERVICE_UNAVAILABLE, "Banco de dados indisponivel no momento", req, List.of());
+        return resposta(HttpStatus.SERVICE_UNAVAILABLE, "Banco de dados indisponível no momento", req, List.of());
     }
 
     // 500 - qualquer outro erro inesperado
@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
         // Erros HTTP do proprio Spring (metodo nao permitido, Content-Type errado...) mantem o status certo
         if (e instanceof ErrorResponse erroHttp) {
             HttpStatus status = HttpStatus.valueOf(erroHttp.getStatusCode().value());
-            return resposta(status, status.getReasonPhrase(), req, List.of());
+            return resposta(status, descricaoStatus(status), req, List.of());
         }
         log.error("Erro inesperado", e);
         return resposta(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno no servidor", req, List.of());
@@ -97,7 +97,22 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErroResposta> resposta(HttpStatus status, String mensagem,
                                                   HttpServletRequest req, List<String> campos) {
         ErroResposta corpo = new ErroResposta(LocalDateTime.now(), status.value(),
-                status.getReasonPhrase(), mensagem, req.getRequestURI(), campos);
+                descricaoStatus(status), mensagem, req.getRequestURI(), campos);
         return ResponseEntity.status(status).body(corpo);
+    }
+
+    private String descricaoStatus(HttpStatus status) {
+        return switch (status) {
+            case BAD_REQUEST -> "Requisição inválida";
+            case NOT_FOUND -> "Recurso não encontrado";
+            case METHOD_NOT_ALLOWED -> "Método HTTP não permitido";
+            case NOT_ACCEPTABLE -> "Formato de resposta não aceito";
+            case CONFLICT -> "Conflito de dados";
+            case UNSUPPORTED_MEDIA_TYPE -> "Tipo de conteúdo não aceito";
+            case UNPROCESSABLE_ENTITY -> "Regra de negócio violada";
+            case INTERNAL_SERVER_ERROR -> "Erro interno no servidor";
+            case SERVICE_UNAVAILABLE -> "Serviço indisponível";
+            default -> "Erro na requisição HTTP (" + status.value() + ")";
+        };
     }
 }

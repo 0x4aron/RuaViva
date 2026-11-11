@@ -3,6 +3,7 @@ package br.com.fiap.gs.zeladoria.controller;
 import br.com.fiap.gs.zeladoria.bo.ApoioBO;
 import br.com.fiap.gs.zeladoria.bo.AtendimentoBO;
 import br.com.fiap.gs.zeladoria.bo.OcorrenciaBO;
+import br.com.fiap.gs.zeladoria.dto.ComposicaoPrioridadeDTO;
 import br.com.fiap.gs.zeladoria.model.Apoio;
 import br.com.fiap.gs.zeladoria.model.Atendimento;
 import br.com.fiap.gs.zeladoria.model.Ocorrencia;
@@ -37,13 +38,13 @@ public class OcorrenciaController {
         this.atendimentoBO = atendimentoBO;
     }
 
-    @Operation(summary = "Lista as ocorrencias da maior para a menor prioridade (filtro opcional por status)")
+    @Operation(summary = "Lista as ocorrências da maior para a menor prioridade (filtro opcional por status)")
     @GetMapping
     public List<Ocorrencia> listar(@RequestParam(required = false) StatusOcorrencia status) {
         return bo.listar(status);
     }
 
-    @Operation(summary = "Fila do gestor: ocorrencias abertas ainda sem atendimento, por prioridade")
+    @Operation(summary = "Fila do gestor: ocorrências abertas ainda sem atendimento, por prioridade")
     @GetMapping("/fila")
     public List<Ocorrencia> fila() {
         return bo.filaSemAtendimento();
@@ -52,6 +53,15 @@ public class OcorrenciaController {
     @GetMapping("/{id}")
     public Ocorrencia buscar(@PathVariable Long id) {
         return bo.buscar(id);
+    }
+
+    @Operation(summary = "Explica a prioridade da ocorrência por gravidade, apoios, proximidade e cidadão",
+            description = "Usa o ponto sensível mais próximo em até 200 m e arredonda a distância para dezenas de metros. "
+                    + "Só leitura: não altera o banco. Nas pendentes, o total é igual à prioridade gravada. "
+                    + "Retorna 404 se o ID não existir.")
+    @GetMapping("/{id}/prioridade")
+    public ComposicaoPrioridadeDTO prioridade(@PathVariable Long id) {
+        return bo.explicarPrioridade(id);
     }
 
     @GetMapping("/{id}/apoios")
@@ -66,7 +76,7 @@ public class OcorrenciaController {
         return atendimentoBO.listar(id);
     }
 
-    @Operation(summary = "Registra uma ocorrencia; status, data de abertura e prioridade sao definidos pelo sistema")
+    @Operation(summary = "Registra uma ocorrência; status, data de abertura e prioridade são definidos pelo sistema")
     @PostMapping
     public ResponseEntity<Ocorrencia> cadastrar(@Valid @RequestBody Ocorrencia o) {
         Ocorrencia criada = bo.cadastrar(o);
@@ -78,7 +88,7 @@ public class OcorrenciaController {
         return bo.atualizar(id, o);
     }
 
-    @Operation(summary = "Exclui a ocorrencia junto com seus apoios e atendimentos")
+    @Operation(summary = "Exclui a ocorrência junto com seus apoios e atendimentos")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         bo.excluir(id);

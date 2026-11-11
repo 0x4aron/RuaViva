@@ -33,7 +33,7 @@ public class CategoriaController {
         return bo.listar();
     }
 
-    @Operation(summary = "Regua sugerida ao gestor para escolher o peso (1 a 5) de uma categoria")
+    @Operation(summary = "Régua sugerida ao gestor para escolher o peso (1 a 5) de uma categoria")
     @GetMapping("/regua-peso")
     public List<ReguaPesoDTO> reguaPeso() {
         return bo.reguaPeso();

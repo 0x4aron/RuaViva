@@ -12,7 +12,7 @@ br.com.fiap.gs.zeladoria
 ├── controller/  endpoints REST (GET, POST, PUT, DELETE)
 ├── exception/   tratamento de exceções → respostas HTTP padronizadas
 ├── config/      configuração do CORS
-└── dto/         objetos de resposta que não são tabelas (régua de pesos)
+└── dto/         objetos de resposta que não são tabelas (régua de pesos e composição da prioridade)
 ```
 
 Fluxo de uma requisição: **Controller → BO → DAO → Oracle**.
@@ -68,11 +68,31 @@ Documentação interativa (Swagger): **`/swagger-ui.html`**
 | `/cidadaos` | listar, `/{id}` | ✔ | `/{id}` | `/{id}` |
 | `/pontos-sensiveis` | listar, `/{id}` | ✔ | `/{id}` | `/{id}` |
 | `/equipes` | listar, `/{id}` | ✔ | `/{id}` | `/{id}` |
-| `/ocorrencias` | listar (`?status=ABERTA`), `/{id}`, `/fila`, `/{id}/apoios`, `/{id}/atendimentos` | ✔ | `/{id}` | `/{id}` |
+| `/ocorrencias` | listar (`?status=ABERTA`), `/{id}`, `/fila`, `/{id}/apoios`, `/{id}/atendimentos`, `/{id}/prioridade` | ✔ | `/{id}` | `/{id}` |
 | `/apoios` | listar, `/{id}` | ✔ | não tem* | `/{id}` |
 | `/atendimentos` | listar, `/{id}` | ✔ | `/{id}` | `/{id}` |
 
 \* Um apoio só registra "este cidadão apoia esta ocorrência", então não há o que editar. Para desfazer, usa-se o DELETE.
+
+### Composição da prioridade
+
+`GET /ocorrencias/{id}/prioridade` retorna `total` e `itens` (`motivo` e `pontos`) a partir da mesma composição usada pelo cálculo da prioridade. A gravidade sempre aparece; as outras parcelas só aparecem quando pontuam. O texto usa “apoio” para 1 e “apoios” para os demais valores. O bônus de proximidade considera o ponto sensível mais próximo dentro de 200 m, com distância exibida arredondada para múltiplos de 10 m.
+
+A consulta é só de leitura: explica a prioridade com as regras atuais e não altera o banco. Nas ocorrências pendentes o total é igual a `NR_PRIORIDADE`, que é recalculada a cada apoio ou mudança de peso, ponto sensível ou cidadão. Nas encerradas, mostra a conta pelas regras atuais sem reescrever o histórico. ID inexistente retorna `404`.
+
+Exemplo para a ocorrência 3 dos dados iniciais:
+
+```json
+{
+  "total": 71.0,
+  "itens": [
+    {"motivo": "Gravidade da categoria (peso 4)", "pontos": 40.0},
+    {"motivo": "3 apoios de vizinhos", "pontos": 6.0},
+    {"motivo": "A 40 m de Escola Estadual Barão (fictícia)", "pontos": 15.0},
+    {"motivo": "Registrado por pessoa idosa ou com deficiência", "pontos": 10.0}
+  ]
+}
+```
 
 ### Exemplo: registrar uma ocorrência
 
@@ -85,7 +105,7 @@ Content-Type: application/json
   "idCategoria": 1,
   "idDistrito": 1,
   "descricao": "Buraco grande perto da esquina",
-  "logradouro": "Rua Barao de Iguape",
+  "logradouro": "Rua Barão de Iguape",
   "numero": "300",
   "latitude": -23.5584,
   "longitude": -46.6340

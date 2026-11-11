@@ -8,8 +8,8 @@ public class Subprefeitura {
 
     private Long idSubprefeitura;
 
-    @NotBlank(message = "O nome da subprefeitura e obrigatorio")
-    @Size(max = 60, message = "O nome pode ter no maximo 60 caracteres")
+    @NotBlank(message = "O nome da subprefeitura é obrigatório")
+    @Size(max = 60, message = "O nome pode ter no máximo 60 caracteres")
     private String nome;
 
     public Long getIdSubprefeitura() { return idSubprefeitura; }

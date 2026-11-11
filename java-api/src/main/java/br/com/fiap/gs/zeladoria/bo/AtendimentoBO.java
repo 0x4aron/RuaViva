@@ -79,7 +79,7 @@ public class AtendimentoBO {
         Atendimento atual = buscar(id);
         if (atual.getStatus() != StatusAtendimento.AGENDADO) {
             throw new RegraNegocioException("Atendimento " + atual.getStatus()
-                    + " faz parte do historico e nao pode ser alterado");
+                    + " faz parte do histórico e não pode ser alterado");
         }
 
         dados.setIdAtendimento(id);
@@ -134,7 +134,7 @@ public class AtendimentoBO {
 
         Atendimento atendimento = buscar(id);
         if (atendimento.getStatus() == StatusAtendimento.CONCLUIDO) {
-            throw new RegraNegocioException("Atendimento concluido faz parte do historico e nao pode ser excluido");
+            throw new RegraNegocioException("Atendimento concluído faz parte do histórico e não pode ser excluído");
         }
         dao.excluir(id);
         voltarParaAbertaSeSemAgendamento(ocorrenciaBO.buscar(atendimento.getIdOcorrencia()));
@@ -151,20 +151,20 @@ public class AtendimentoBO {
 
     private void validarOcorrenciaPendente(Ocorrencia ocorrencia) {
         if (ocorrencia.getStatus() != StatusOcorrencia.ABERTA && ocorrencia.getStatus() != StatusOcorrencia.EM_ANDAMENTO) {
-            throw new RegraNegocioException("So e possivel agendar atendimento para ocorrencias abertas ou em andamento");
+            throw new RegraNegocioException("Só é possível agendar atendimento para ocorrências abertas ou em andamento");
         }
     }
 
     private void validarEquipeAtiva(Long idEquipe) {
         Equipe equipe = equipeBO.buscar(idEquipe);
         if (!equipe.getAtiva()) {
-            throw new RegraNegocioException("A equipe " + equipe.getNome() + " esta inativa");
+            throw new RegraNegocioException("A equipe " + equipe.getNome() + " está inativa");
         }
     }
 
     private void validarDataAgendada(Atendimento a, Ocorrencia ocorrencia) {
         if (a.getDataAgendada().isBefore(ocorrencia.getDataAbertura())) {
-            throw new RegraNegocioException("A data agendada nao pode ser anterior a abertura da ocorrencia ("
+            throw new RegraNegocioException("A data agendada não pode ser anterior à abertura da ocorrência ("
                     + ocorrencia.getDataAbertura() + ")");
         }
     }

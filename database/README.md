@@ -17,6 +17,8 @@ Banco: **Oracle** (servidor da FIAP). Os scripts usam sintaxe compatível com Or
 
 Ordem de execução: `00_drop.sql` (só se as tabelas já existirem) → `01_ddl.sql` → `02_dml.sql` → `03_dql.sql`.
 
+Os scripts de dados e consultas estão em **UTF-8**. No SQL Developer, abra com essa codificação (`Tools > Preferences > Environment > Encoding`) para preservar nomes como Rua Barão de Iguape, Zeladoria Sé - Equipe A e Estação Japão-Liberdade (Metrô). Os limites `VARCHAR2(n CHAR)` contam caracteres, e todos os textos do DML cabem nos tamanhos definidos no DDL.
+
 ## Tabelas
 
 | Tabela | Para que serve |

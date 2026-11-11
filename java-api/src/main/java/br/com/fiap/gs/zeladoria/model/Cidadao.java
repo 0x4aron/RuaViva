@@ -14,16 +14,16 @@ public class Cidadao {
 
     private Long idCidadao;
 
-    @NotBlank(message = "O nome e obrigatorio")
-    @Size(max = 100, message = "O nome pode ter no maximo 100 caracteres")
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(max = 100, message = "O nome pode ter no máximo 100 caracteres")
     private String nome;
 
-    @NotBlank(message = "O email e obrigatorio")
-    @Email(message = "Email invalido")
-    @Size(max = 120, message = "O email pode ter no maximo 120 caracteres")
+    @NotBlank(message = "O email é obrigatório")
+    @Email(message = "Email inválido")
+    @Size(max = 120, message = "O email pode ter no máximo 120 caracteres")
     private String email;
 
-    @Size(max = 20, message = "O telefone pode ter no maximo 20 caracteres")
+    @Size(max = 20, message = "O telefone pode ter no máximo 20 caracteres")
     private String telefone;
 
     /** Se nao vier no cadastro, vale false; se nao vier no PUT, mantem o valor atual. */

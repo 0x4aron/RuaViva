@@ -9,10 +9,10 @@ public class Apoio {
 
     private Long idApoio;
 
-    @NotNull(message = "A ocorrencia e obrigatoria")
+    @NotNull(message = "A ocorrência é obrigatória")
     private Long idOcorrencia;
 
-    @NotNull(message = "O cidadao e obrigatorio")
+    @NotNull(message = "O cidadão é obrigatório")
     private Long idCidadao;
 
     /** Preenchida pelo sistema. */

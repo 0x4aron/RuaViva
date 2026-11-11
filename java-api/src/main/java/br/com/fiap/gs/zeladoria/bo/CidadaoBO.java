@@ -26,7 +26,7 @@ public class CidadaoBO {
     }
 
     public Cidadao buscar(Long id) {
-        return dao.buscarPorId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Cidadao", id));
+        return dao.buscarPorId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Cidadão", id));
     }
 
     public Cidadao cadastrar(Cidadao c) {
@@ -66,7 +66,7 @@ public class CidadaoBO {
     private void validarEmailUnico(String email, Long idAtual) {
         dao.buscarPorEmail(email).ifPresent(existente -> {
             if (!existente.getIdCidadao().equals(idAtual)) {
-                throw new RegraNegocioException("Ja existe um cidadao com o email " + email);
+                throw new RegraNegocioException("Já existe um cidadão com o email " + email);
             }
         });
     }

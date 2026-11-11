@@ -16,34 +16,34 @@ public class Ocorrencia {
 
     private Long idOcorrencia;
 
-    @NotNull(message = "O cidadao que registra e obrigatorio")
+    @NotNull(message = "O cidadão que registra é obrigatório")
     private Long idCidadao;
 
-    @NotNull(message = "A categoria e obrigatoria")
+    @NotNull(message = "A categoria é obrigatória")
     private Long idCategoria;
 
-    @NotNull(message = "O distrito e obrigatorio")
+    @NotNull(message = "O distrito é obrigatório")
     private Long idDistrito;
 
-    @NotBlank(message = "A descricao e obrigatoria")
-    @Size(max = 500, message = "A descricao pode ter no maximo 500 caracteres")
+    @NotBlank(message = "A descrição é obrigatória")
+    @Size(max = 500, message = "A descrição pode ter no máximo 500 caracteres")
     private String descricao;
 
-    @NotBlank(message = "O logradouro e obrigatorio")
-    @Size(max = 120, message = "O logradouro pode ter no maximo 120 caracteres")
+    @NotBlank(message = "O logradouro é obrigatório")
+    @Size(max = 120, message = "O logradouro pode ter no máximo 120 caracteres")
     private String logradouro;
 
-    @Size(max = 10, message = "O numero pode ter no maximo 10 caracteres")
+    @Size(max = 10, message = "O número pode ter no máximo 10 caracteres")
     private String numero;
 
-    @NotNull(message = "A latitude e obrigatoria")
-    @DecimalMin(value = "-90", message = "Latitude invalida")
-    @DecimalMax(value = "90", message = "Latitude invalida")
+    @NotNull(message = "A latitude é obrigatória")
+    @DecimalMin(value = "-90", message = "Latitude inválida")
+    @DecimalMax(value = "90", message = "Latitude inválida")
     private Double latitude;
 
-    @NotNull(message = "A longitude e obrigatoria")
-    @DecimalMin(value = "-180", message = "Longitude invalida")
-    @DecimalMax(value = "180", message = "Longitude invalida")
+    @NotNull(message = "A longitude é obrigatória")
+    @DecimalMin(value = "-180", message = "Longitude inválida")
+    @DecimalMax(value = "180", message = "Longitude inválida")
     private Double longitude;
 
     private StatusOcorrencia status;

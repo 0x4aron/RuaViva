@@ -15,15 +15,15 @@ public class CategoriaBO {
 
     /** Regua sugerida ao gestor para escolher o peso (nao e obrigatoria). */
     private static final List<ReguaPesoDTO> REGUA_PESO = List.of(
-            new ReguaPesoDTO(5, "Impede a passagem ou poe a pessoa em risco imediato",
-                    "Calcada que um cadeirante nao consegue usar, fiacao solta"),
-            new ReguaPesoDTO(4, "Risco de acidente, alagamento ou doenca",
+            new ReguaPesoDTO(5, "Impede a passagem ou põe a pessoa em risco imediato",
+                    "Calçada que um cadeirante não consegue usar, fiação solta"),
+            new ReguaPesoDTO(4, "Risco de acidente, alagamento ou doença",
                     "Buraco no asfalto, bueiro entupido"),
             new ReguaPesoDTO(3, "Obstrui a via ou deixa o local insalubre",
                     "Entulho, guia ou sarjeta quebrada"),
             new ReguaPesoDTO(2, "Afeta a limpeza e o conforto",
-                    "Falta de varricao"),
-            new ReguaPesoDTO(1, "Mobiliario urbano, sem risco",
+                    "Falta de varrição"),
+            new ReguaPesoDTO(1, "Mobiliário urbano, sem risco",
                     "Lixeira quebrada"));
 
     private final CategoriaDAO dao;

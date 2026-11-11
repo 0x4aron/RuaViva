@@ -6,6 +6,8 @@ import br.com.fiap.gs.zeladoria.dao.CategoriaDAO;
 import br.com.fiap.gs.zeladoria.dao.CidadaoDAO;
 import br.com.fiap.gs.zeladoria.dao.OcorrenciaDAO;
 import br.com.fiap.gs.zeladoria.dao.PontoSensivelDAO;
+import br.com.fiap.gs.zeladoria.dto.ComposicaoPrioridadeDTO;
+import br.com.fiap.gs.zeladoria.dto.ItemPrioridadeDTO;
 import br.com.fiap.gs.zeladoria.exception.RecursoNaoEncontradoException;
 import br.com.fiap.gs.zeladoria.exception.RegraNegocioException;
 import br.com.fiap.gs.zeladoria.model.Categoria;
@@ -68,7 +70,16 @@ public class OcorrenciaBO {
     }
 
     public Ocorrencia buscar(Long id) {
-        return dao.buscarPorId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Ocorrencia", id));
+        return dao.buscarPorId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Ocorrência", id));
+    }
+
+    /**
+     * Explica a prioridade com as regras atuais (so leitura: um GET nao altera o banco).
+     * Nas pendentes o total e igual a NR_PRIORIDADE, que e recalculada a cada mudanca.
+     */
+    public ComposicaoPrioridadeDTO explicarPrioridade(Long id) {
+        Ocorrencia ocorrencia = buscar(id);
+        return montarComposicaoPrioridade(ocorrencia, apoioDAO.contarPorOcorrencia(id));
     }
 
     public Ocorrencia cadastrar(Ocorrencia o) {
@@ -94,7 +105,7 @@ public class OcorrenciaBO {
         dao.travar(id); // evita que um apoio ou uma visita mude a ocorrencia enquanto ela e editada
         Ocorrencia atual = buscar(id);
         if (atual.getStatus() == StatusOcorrencia.RESOLVIDA || atual.getStatus() == StatusOcorrencia.CANCELADA) {
-            throw new RegraNegocioException("Ocorrencia " + atual.getStatus() + " faz parte do historico e nao pode ser alterada");
+            throw new RegraNegocioException("Ocorrência " + atual.getStatus() + " faz parte do histórico e não pode ser alterada");
         }
         buscarCategoria(dados.getIdCategoria());
         distritoBO.buscar(dados.getIdDistrito());
@@ -102,7 +113,7 @@ public class OcorrenciaBO {
         StatusOcorrencia novoStatus = dados.getStatus() == null ? atual.getStatus() : dados.getStatus();
         if (novoStatus != atual.getStatus() && novoStatus != StatusOcorrencia.CANCELADA) {
             throw new RegraNegocioException("O status muda pelos atendimentos: agendar coloca EM_ANDAMENTO "
-                    + "e concluir coloca RESOLVIDA. Por aqui so e possivel cancelar a ocorrencia");
+                    + "e concluir coloca RESOLVIDA. Por aqui só é possível cancelar a ocorrência");
         }
 
         // Quem registrou, a data de abertura e a data de resolucao nao mudam por aqui
@@ -125,7 +136,7 @@ public class OcorrenciaBO {
         dao.travar(id);
         Ocorrencia ocorrencia = buscar(id);
         if (ocorrencia.getStatus() == StatusOcorrencia.RESOLVIDA) {
-            throw new RegraNegocioException("Ocorrencia resolvida faz parte do historico e nao pode ser excluida");
+            throw new RegraNegocioException("Ocorrência resolvida faz parte do histórico e não pode ser excluída");
         }
         dao.excluir(id);
     }
@@ -162,27 +173,40 @@ public class OcorrenciaBO {
     }
 
     double calcularPrioridade(Ocorrencia o, int quantidadeApoios) {
+        return montarComposicaoPrioridade(o, quantidadeApoios).total();
+    }
+
+    private ComposicaoPrioridadeDTO montarComposicaoPrioridade(Ocorrencia o, int quantidadeApoios) {
         Categoria categoria = buscarCategoria(o.getIdCategoria());
         Cidadao cidadao = buscarCidadao(o.getIdCidadao());
 
-        double prioridade = categoria.getPesoGravidade() * PONTOS_POR_PESO;
-        prioridade += quantidadeApoios * PONTOS_POR_APOIO;
-        if (estaPertoDePontoSensivel(o.getLatitude(), o.getLongitude())) {
-            prioridade += BONUS_PONTO_SENSIVEL;
+        List<ItemPrioridadeDTO> itens = new ArrayList<>();
+        itens.add(new ItemPrioridadeDTO("Gravidade da categoria (peso " + categoria.getPesoGravidade() + ")",
+                categoria.getPesoGravidade() * PONTOS_POR_PESO));
+        if (quantidadeApoios > 0) {
+            itens.add(new ItemPrioridadeDTO(quantidadeApoios
+                    + (quantidadeApoios == 1 ? " apoio de vizinho" : " apoios de vizinhos"),
+                    quantidadeApoios * PONTOS_POR_APOIO));
         }
-        if (cidadao.getPrioritario()) {
-            prioridade += BONUS_CIDADAO_PRIORITARIO;
-        }
-        return prioridade;
-    }
 
-    private boolean estaPertoDePontoSensivel(double latitude, double longitude) {
+        PontoSensivel maisProximo = null;
+        double menorDistancia = Double.POSITIVE_INFINITY;
         for (PontoSensivel p : pontoSensivelDAO.listar()) {
-            if (distanciaEmMetros(latitude, longitude, p.getLatitude(), p.getLongitude()) <= RAIO_PONTO_SENSIVEL_METROS) {
-                return true;
+            double distancia = distanciaEmMetros(o.getLatitude(), o.getLongitude(), p.getLatitude(), p.getLongitude());
+            if (distancia <= RAIO_PONTO_SENSIVEL_METROS && distancia < menorDistancia) {
+                maisProximo = p;
+                menorDistancia = distancia;
             }
         }
-        return false;
+        if (maisProximo != null) {
+            long metros = Math.round(menorDistancia / 10) * 10;
+            itens.add(new ItemPrioridadeDTO("A " + metros + " m de " + maisProximo.getNome(), BONUS_PONTO_SENSIVEL));
+        }
+        if (cidadao.getPrioritario()) {
+            itens.add(new ItemPrioridadeDTO("Registrado por pessoa idosa ou com deficiência", BONUS_CIDADAO_PRIORITARIO));
+        }
+        double total = itens.stream().mapToDouble(ItemPrioridadeDTO::pontos).sum();
+        return new ComposicaoPrioridadeDTO(total, List.copyOf(itens));
     }
 
     /** Distancia entre duas coordenadas pela formula de Haversine (raio da Terra = 6.371 km). */
@@ -200,6 +224,6 @@ public class OcorrenciaBO {
     }
 
     private Cidadao buscarCidadao(Long id) {
-        return cidadaoDAO.buscarPorId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Cidadao", id));
+        return cidadaoDAO.buscarPorId(id).orElseThrow(() -> new RecursoNaoEncontradoException("Cidadão", id));
     }
 }
