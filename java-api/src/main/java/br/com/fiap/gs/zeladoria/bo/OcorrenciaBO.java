@@ -16,6 +16,7 @@ import br.com.fiap.gs.zeladoria.model.StatusOcorrencia;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -90,6 +91,7 @@ public class OcorrenciaBO {
      */
     @Transactional
     public Ocorrencia atualizar(Long id, Ocorrencia dados) {
+        dao.travar(id); // evita que um apoio ou uma visita mude a ocorrencia enquanto ela e editada
         Ocorrencia atual = buscar(id);
         if (atual.getStatus() == StatusOcorrencia.RESOLVIDA || atual.getStatus() == StatusOcorrencia.CANCELADA) {
             throw new RegraNegocioException("Ocorrencia " + atual.getStatus() + " faz parte do historico e nao pode ser alterada");
@@ -118,12 +120,23 @@ public class OcorrenciaBO {
         return buscar(id);
     }
 
+    @Transactional
     public void excluir(Long id) {
-        buscar(id);
+        dao.travar(id);
+        Ocorrencia ocorrencia = buscar(id);
+        if (ocorrencia.getStatus() == StatusOcorrencia.RESOLVIDA) {
+            throw new RegraNegocioException("Ocorrencia resolvida faz parte do historico e nao pode ser excluida");
+        }
         dao.excluir(id);
     }
 
+    /** Trava a linha da ocorrencia ate o fim da transacao. */
+    public void travar(Long id) {
+        dao.travar(id);
+    }
+
     /** Recalcula a prioridade de uma ocorrencia (usado quando ela ganha ou perde um apoio). */
+    @Transactional
     public void recalcularPrioridade(Long id) {
         dao.travar(id); // evita contagem errada com dois apoios ao mesmo tempo
         Ocorrencia o = buscar(id);
@@ -136,10 +149,15 @@ public class OcorrenciaBO {
      */
     @Transactional
     public void recalcularPrioridadeDasPendentes() {
+        List<Long> ids = new ArrayList<>();
         for (StatusOcorrencia status : List.of(StatusOcorrencia.ABERTA, StatusOcorrencia.EM_ANDAMENTO)) {
             for (Ocorrencia o : dao.listarPorStatus(status)) {
-                recalcularPrioridade(o.getIdOcorrencia());
+                ids.add(o.getIdOcorrencia());
             }
+        }
+        ids.sort(Long::compareTo);
+        for (Long id : ids) {
+            recalcularPrioridade(id);
         }
     }
 

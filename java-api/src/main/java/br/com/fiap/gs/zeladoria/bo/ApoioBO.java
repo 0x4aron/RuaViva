@@ -38,6 +38,7 @@ public class ApoioBO {
 
     @Transactional
     public Apoio cadastrar(Apoio a) {
+        ocorrenciaBO.travar(a.getIdOcorrencia());
         Ocorrencia ocorrencia = ocorrenciaBO.buscar(a.getIdOcorrencia());
         cidadaoBO.buscar(a.getIdCidadao());
 
@@ -60,6 +61,8 @@ public class ApoioBO {
     @Transactional
     public void excluir(Long id) {
         Apoio a = buscar(id);
+        ocorrenciaBO.travar(a.getIdOcorrencia());
+        a = buscar(id);
         dao.excluir(id);
         ocorrenciaBO.recalcularPrioridade(a.getIdOcorrencia());
     }

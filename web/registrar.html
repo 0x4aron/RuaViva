@@ -25,10 +25,11 @@
       </fieldset>
 
       <div class="campo">
-        <label for="mapa">Onde fica?</label>
-        <p class="dica">Toque no mapa no ponto exato do problema, ou use a sua localização.</p>
-        <div id="mapa" class="mapa mapa-pequeno"></div>
+        <p class="rotulo-campo">Onde fica?</p>
+        <p class="dica">Toque no mapa no ponto do problema. Sem mouse? Mova o mapa com as setas do teclado até a mira e use "Marcar o centro do mapa".</p>
+        <div id="mapa" class="mapa mapa-pequeno mapa-com-mira" role="region" aria-label="Mapa do local do problema. Use as setas do teclado para mover o mapa e marque o centro atual."></div>
         <button class="botao" type="button" id="minha-localizacao">Usar minha localização</button>
+        <button class="botao" type="button" id="marcar-centro">Marcar o centro do mapa</button>
         <p class="dica" id="local-escolhido" aria-live="polite">Nenhum ponto marcado ainda.</p>
       </div>
 
@@ -83,6 +84,11 @@
     }
 
     mapa.on("click", (e) => marcar(e.latlng.lat, e.latlng.lng));
+
+    document.getElementById("marcar-centro").addEventListener("click", () => {
+      const centro = mapa.getCenter();
+      marcar(centro.lat, centro.lng);
+    });
 
     document.getElementById("minha-localizacao").addEventListener("click", () => {
       if (!navigator.geolocation) return avisar("Seu navegador não informa a localização. Toque no mapa.", "erro");

@@ -62,13 +62,11 @@
     document.getElementById("form-morador").addEventListener("submit", (e) => {
       e.preventDefault();
       const c = select.cidadaos.find((x) => String(x.idCidadao) === select.value);
-      sessao.salvar({ perfil: "cidadao", idCidadao: c.idCidadao, nome: c.nome });
-      location.href = "mapa.html";
+      if (sessao.salvar({ perfil: "cidadao", idCidadao: c.idCidadao, nome: c.nome })) location.href = "mapa.html";
     });
 
     document.getElementById("entrar-gestor").addEventListener("click", () => {
-      sessao.salvar({ perfil: "gestor" });
-      location.href = "gestor.html";
+      if (sessao.salvar({ perfil: "gestor" })) location.href = "gestor.html";
     });
   </script>
 </body>

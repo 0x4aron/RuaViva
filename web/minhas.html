@@ -41,22 +41,38 @@
         </li>`;
     }
 
-    Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios")])
-      .then(([apoio, ocorrencias, apoios]) => {
-        const minhas = ocorrencias
-          .filter((o) => o.idCidadao === usuario.idCidadao)
-          .sort((a, b) => b.dataAbertura.localeCompare(a.dataAbertura));
-        document.getElementById("lista").innerHTML = minhas.length
-          ? minhas.map((o) => itemOcorrencia(o, apoio)).join("")
-          : '<li class="vazio">Você ainda não registrou nenhum problema. <a href="registrar.html">Registrar agora</a></li>';
+    function carregarDados() {
+      limparAviso();
+      const lista = document.getElementById("lista");
+      const apoiados = document.getElementById("apoiados");
+      lista.innerHTML = '<li>Carregando...</li>';
+      apoiados.innerHTML = '<li>Carregando...</li>';
+      Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios")])
+        .then(([apoio, ocorrencias, apoios]) => {
+          const minhas = ocorrencias
+            .filter((o) => o.idCidadao === usuario.idCidadao)
+            .sort((a, b) => b.dataAbertura.localeCompare(a.dataAbertura));
+          document.getElementById("lista").innerHTML = minhas.length
+            ? minhas.map((o) => itemOcorrencia(o, apoio)).join("")
+            : '<li class="vazio">Você ainda não registrou nenhum problema. <a href="registrar.html">Registrar agora</a></li>';
 
-        const idsApoiados = new Set(apoios.filter((a) => a.idCidadao === usuario.idCidadao).map((a) => a.idOcorrencia));
-        const apoiadas = ocorrencias.filter((o) => idsApoiados.has(o.idOcorrencia));
-        document.getElementById("apoiados").innerHTML = apoiadas.length
-          ? apoiadas.map((o) => itemOcorrencia(o, apoio)).join("")
-          : '<li class="vazio">Você ainda não apoiou nenhum registro. <a href="mapa.html">Ver o mapa do bairro</a></li>';
-      })
-      .catch(avisarErro);
+          const idsApoiados = new Set(apoios.filter((a) => a.idCidadao === usuario.idCidadao).map((a) => a.idOcorrencia));
+          const apoiadas = ocorrencias.filter((o) => idsApoiados.has(o.idOcorrencia));
+          document.getElementById("apoiados").innerHTML = apoiadas.length
+            ? apoiadas.map((o) => itemOcorrencia(o, apoio)).join("")
+            : '<li class="vazio">Você ainda não apoiou nenhum registro. <a href="mapa.html">Ver o mapa do bairro</a></li>';
+        })
+        .catch((erro) => {
+          const mensagem = '<li class="vazio">Não foi possível carregar os registros. <button class="botao" type="button" data-tentar-novamente>Tentar de novo</button></li>';
+          lista.innerHTML = mensagem;
+          apoiados.innerHTML = mensagem;
+          avisarErro(erro);
+          document.querySelectorAll("[data-tentar-novamente]").forEach((botao) =>
+            botao.addEventListener("click", carregarDados, { once: true }));
+        });
+    }
+
+    carregarDados();
   </script>
 </body>
 </html>

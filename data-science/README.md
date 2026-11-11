@@ -36,4 +36,4 @@ Um ZIP com:
 - `zeladoria_sp156.ipynb`;
 - `integrantes.txt` (nomes, RMs e fonte);
 - `preparar_base.py` (como a base foi gerada);
-- `dados/sp156_zeladoria_2025.csv` (a base descompactada; o notebook lê esse arquivo se ele existir).
+- `dados/sp156_zeladoria_2025.csv` (versão descompactada do `.csv.gz` gerado por `preparar_base.py`; para gerar, rode `gunzip -k dados/sp156_zeladoria_2025.csv.gz`; o notebook lê esse arquivo se ele existir).

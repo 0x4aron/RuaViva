@@ -25,7 +25,7 @@ Ordem de execução: `00_drop.sql` (só se as tabelas já existirem) → `01_ddl
 | `GS_DISTRITO` | Distritos/bairros oficiais (ex.: Liberdade) |
 | `GS_CATEGORIA` | Tipos de problema, com prazo, gravidade (1–5) e horas de trabalho estimadas |
 | `GS_CIDADAO` | Quem registra e apoia (dados simulados). `FL_PRIORITARIO = 'S'` para idoso/PcD |
-| `GS_PONTO_SENSIVEL` | Escola, creche, UBS, hospital, ILPI (casa de repouso para idosos) ou terminal de ônibus. Uma ocorrência perto deles ganha prioridade |
+| `GS_PONTO_SENSIVEL` | Escola, creche, UBS, hospital, ILPI (casa de repouso para idosos), terminal de ônibus ou estação de metrô. Uma ocorrência perto deles ganha prioridade |
 | `GS_EQUIPE` | Equipe de campo, com horas por dia e ponto de saída (lat/long) |
 | `GS_OCORRENCIA` | O problema registrado: local, status e prioridade |
 | `GS_APOIO` | "Também me afeta": cada cidadão apoia uma ocorrência uma única vez |

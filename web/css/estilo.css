@@ -246,6 +246,12 @@ p {
   margin-bottom: 0.35rem;
 }
 
+.campo .rotulo-campo {
+  display: block;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+}
+
 .campo .dica {
   font-size: 0.9rem;
   color: var(--asfalto-suave);
@@ -331,6 +337,7 @@ fieldset {
   margin-bottom: 1rem;
   border-left: 6px solid;
   background: var(--papel);
+  color: var(--asfalto);
 }
 
 .aviso p {
@@ -458,6 +465,20 @@ fieldset {
 
 .mapa-pequeno {
   height: 16rem;
+}
+
+/* Mira no centro do mapa: mostra o ponto que "Marcar o centro do mapa" usa */
+.mapa-com-mira::after {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 500;
+  pointer-events: none;
+  font: 700 2rem/1 var(--fonte-titulo);
+  color: var(--lanterna);
+  text-shadow: 0 0 3px #fff, 0 0 3px #fff;
 }
 
 .legenda {

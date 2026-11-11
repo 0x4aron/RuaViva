@@ -46,6 +46,8 @@ public class AtendimentoBO {
 
     @Transactional
     public Atendimento cadastrar(Atendimento a) {
+        // Trava a ocorrencia ate o fim da transacao: quem cancelar ou concluir ao mesmo tempo espera
+        ocorrenciaDAO.travar(a.getIdOcorrencia());
         Ocorrencia ocorrencia = ocorrenciaBO.buscar(a.getIdOcorrencia());
         validarOcorrenciaPendente(ocorrencia);
         validarEquipeAtiva(a.getIdEquipe());
@@ -68,20 +70,27 @@ public class AtendimentoBO {
      */
     @Transactional
     public Atendimento atualizar(Long id, Atendimento dados) {
+        // Trava a ocorrencia e so depois le o atendimento de novo: se outra requisicao
+        // concluiu ou cancelou enquanto esperavamos, vemos o status ja atualizado
+        Atendimento inicial = buscar(id);
+        ocorrenciaDAO.travar(inicial.getIdOcorrencia());
+        Ocorrencia ocorrencia = ocorrenciaBO.buscar(inicial.getIdOcorrencia());
+
         Atendimento atual = buscar(id);
         if (atual.getStatus() != StatusAtendimento.AGENDADO) {
             throw new RegraNegocioException("Atendimento " + atual.getStatus()
                     + " faz parte do historico e nao pode ser alterado");
         }
-        Ocorrencia ocorrencia = ocorrenciaBO.buscar(atual.getIdOcorrencia());
 
         dados.setIdAtendimento(id);
         dados.setIdOcorrencia(atual.getIdOcorrencia()); // o atendimento nao muda de ocorrencia
-        if (!dados.getIdEquipe().equals(atual.getIdEquipe())) {
-            validarEquipeAtiva(dados.getIdEquipe());
-        }
         if (dados.getStatus() == null) {
             dados.setStatus(StatusAtendimento.AGENDADO);
+        }
+        if (dados.getStatus() == StatusAtendimento.AGENDADO
+                || (dados.getStatus() == StatusAtendimento.CONCLUIDO
+                && dados.getIdEquipe() != null && !dados.getIdEquipe().equals(atual.getIdEquipe()))) {
+            validarEquipeAtiva(dados.getIdEquipe());
         }
 
         switch (dados.getStatus()) {
@@ -107,6 +116,8 @@ public class AtendimentoBO {
                 ocorrenciaDAO.atualizar(ocorrencia);
             }
             case CANCELADO -> {
+                dados.setDataAgendada(atual.getDataAgendada());
+                dados.setIdEquipe(atual.getIdEquipe());
                 dados.setDataExecucao(null);
                 dao.atualizar(dados);
                 voltarParaAbertaSeSemAgendamento(ocorrencia);
@@ -117,6 +128,10 @@ public class AtendimentoBO {
 
     @Transactional
     public void excluir(Long id) {
+        // Mesma trava do atualizar: le o atendimento de novo depois de travar a ocorrencia
+        Atendimento inicial = buscar(id);
+        ocorrenciaDAO.travar(inicial.getIdOcorrencia());
+
         Atendimento atendimento = buscar(id);
         if (atendimento.getStatus() == StatusAtendimento.CONCLUIDO) {
             throw new RegraNegocioException("Atendimento concluido faz parte do historico e nao pode ser excluido");

@@ -11,7 +11,13 @@ const sessao = {
     }
   },
   salvar(dados) {
-    localStorage.setItem("sessao", JSON.stringify(dados));
+    try {
+      localStorage.setItem("sessao", JSON.stringify(dados));
+      return true;
+    } catch {
+      avisar("O navegador bloqueou o armazenamento. Permita o armazenamento neste navegador para continuar.", "erro");
+      return false;
+    }
   },
   sair() {
     localStorage.removeItem("sessao");
