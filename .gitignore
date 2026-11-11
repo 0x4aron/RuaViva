@@ -34,3 +34,4 @@ data-science/dados/raw/
 # ZIPs prontos para enviar no Teams/Portal
 entregas/
 .playwright-mcp/
+docs/.chrome-pdf.*/

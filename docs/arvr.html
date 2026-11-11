@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RuaViva em 3D · RuaViva</title><link rel="stylesheet" href="estilo.css"><script>
+function prepararImagens(){document.querySelectorAll('img').forEach(img=>{function falta(){if(img.dataset.ausente)return;img.dataset.ausente='true';const box=document.createElement('div');box.className='imagem-ausente';const titulo=document.createElement('strong');titulo.textContent='Imagem pendente de inclusão';const nome=document.createElement('code');nome.textContent=img.getAttribute('src');box.append(titulo,nome);img.hidden=true;img.style.display='none';img.after(box);}img.addEventListener('error',falta);if(img.complete&&!img.naturalWidth)falta();});}
+document.addEventListener('DOMContentLoaded',prepararImagens);
+</script></head><body class="curta">
+<header class="capa">
+<div>
+<p class="instituicao">FIAP · Global Solution 2026.2<br>Engenharia de Software</p>
+<div class="placa">RuaViva</div>
+<p class="territorio">Liberdade · Sé · São Paulo</p>
+<h1>RuaViva em 3D</h1>
+<p class="disciplina">AR-VR Modelling</p>
+</div>
+<div>
+<div class="integrantes">
+<p class="eyebrow">Equipe RuaViva</p>
+<p><strong>Anthony Gonçalves Sforzin</strong> <span class="rm">· RM 562096</span>
+</p>
+<p><strong>Cesar Aaron Herrera</strong> <span class="rm">· RM 565398</span>
+</p>
+</div>
+<div class="rodape-capa">
+<p>19/11/2026</p><a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a>
+</div>
+</div>
+</header>
+<main>
+<div class="video">
+<p class="pendente">Link do vídeo: LINK_VIDEO_3D</p>
+<h2>Uma rua, do registro à resolução</h2>
+<p>O vídeo 3D de 48 segundos, em Full HD (1920 × 1080), apresenta uma maquete low-poly da Rua Barão de Iguape, na Liberdade. Mostra buraco, bueiro entupido e calçada quebrada; os apoios dos moradores alimentam uma fila ilustrativa de prioridades, com destaque para escola e creche. Uma van visita os pontos e os reparos transformam os marcadores em verde. O encerramento apresenta a mensagem da solução e os créditos da Equipe RuaViva. A cena é uma representação ilustrativa do bairro, com apoios, pontuações e atendimentos simulados.</p>
+<p class="nota">Disciplina: AR-VR Modelling · Referência: ar-vr/README.md. Substituir o marcador pelo endereço do vídeo publicado com acesso de visualização.</p>
+</div>
+</main></body></html>

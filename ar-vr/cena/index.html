@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <meta name="theme-color" content="#1A4D8F">
+  <title>RuaViva — Liberdade em movimento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./estilo.css">
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+  </script>
+</head>
+<body>
+  <main id="filme" aria-label="Filme de 48 segundos sobre a zeladoria urbana RuaViva">
+    <div id="cena"></div>
+    <div id="overlay">
+      <section id="abertura" class="cartela">
+        <h1 class="placa">RuaViva</h1>
+        <p class="local">Liberdade · São Paulo</p>
+      </section>
+      <div id="identidade" aria-hidden="true"><span class="marca">RuaViva</span><span>R. Barão de Iguape</span></div>
+      <div id="etiquetas" aria-label="Ocorrências e prioridades"></div>
+      <p id="legenda"></p>
+      <section id="fecho" class="cartela">
+        <div class="placa">RuaViva</div>
+        <h2>Zeladoria que prioriza<br>quem mais precisa</h2>
+        <p class="equipe">Equipe RuaViva — Anthony Gonçalves Sforzin · Cesar Aaron Herrera</p>
+        <p class="fiap">FIAP · Global Solution 2026</p>
+      </section>
+      <p id="nota">Maquete e reparos ilustrativos · dados do projeto</p>
+    </div>
+    <p id="carregamento" role="status">Preparando a rua…</p>
+  </main>
+  <script type="module">
+    window.cenaPronta = false;
+    import('./cena.js').catch((error) => {
+      window.cenaErro = String(error);
+      document.querySelector('#carregamento').textContent = 'Não foi possível carregar a cena. Verifique a conexão com o CDN e recarregue.';
+      console.error(error);
+    });
+  </script>
+</body>
+</html>

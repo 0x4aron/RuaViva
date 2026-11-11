@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>API de zeladoria urbana · RuaViva</title><link rel="stylesheet" href="estilo.css"><script>
+function prepararImagens(){document.querySelectorAll('img').forEach(img=>{function falta(){if(img.dataset.ausente)return;img.dataset.ausente='true';const box=document.createElement('div');box.className='imagem-ausente';const titulo=document.createElement('strong');titulo.textContent='Imagem pendente de inclusão';const nome=document.createElement('code');nome.textContent=img.getAttribute('src');box.append(titulo,nome);img.hidden=true;img.style.display='none';img.after(box);}img.addEventListener('error',falta);if(img.complete&&!img.naturalWidth)falta();});}
+document.addEventListener('DOMContentLoaded',prepararImagens);
+</script><script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script><script>
+window.diagramasProntos=false;
+if(window.mermaid){
+  mermaid.initialize({
+    startOnLoad:true,
+    securityLevel:'strict',
+    theme:'base',
+    themeVariables:{
+      primaryColor:'#FFFFFF', secondaryColor:'#FFFFFF', tertiaryColor:'#FFFFFF',
+      primaryTextColor:'#1F2A30', secondaryTextColor:'#1F2A30', tertiaryTextColor:'#1F2A30',
+      primaryBorderColor:'#1A4D8F', secondaryBorderColor:'#1A4D8F', tertiaryBorderColor:'#1A4D8F',
+      lineColor:'#1A4D8F', textColor:'#1F2A30', mainBkg:'#FFFFFF',
+      nodeBorder:'#1A4D8F', classText:'#1F2A30', edgeLabelBackground:'#FFFFFF',
+      attributeBackgroundColorOdd:'#FFFFFF', attributeBackgroundColorEven:'#FFFFFF',
+      fontFamily:'Atkinson Hyperlegible, Arial, sans-serif', fontSize:'18px'
+    },
+    flowchart:{useMaxWidth:true,nodeSpacing:12,rankSpacing:28,diagramPadding:8},
+    class:{useMaxWidth:true,diagramPadding:8,nodeSpacing:12,rankSpacing:28,hideEmptyMembersBox:true},
+    er:{useMaxWidth:true,layoutDirection:'LR',entityPadding:12,nodeSpacing:24,rankSpacing:36,fontSize:18}
+  });
+}
+// Observe the automatic render instead of running Mermaid twice on window.load.
+function falhaDiagramas(erro){
+  document.documentElement.dataset.diagramas='erro';
+  const p=document.createElement('p');
+  p.className='pendente';
+  p.textContent='FALHA NA RENDERIZAÇÃO: verifique a conexão com o jsDelivr e gere novamente.';
+  document.querySelector('main').prepend(p);
+  console.error(erro);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  if(!window.mermaid){falhaDiagramas(new Error('CDN indisponível'));return;}
+  const total=document.querySelectorAll('.mermaid').length;
+  let limite;
+  const observador=new MutationObserver(conferir);
+  function conferir(){
+    const diagramas=[...document.querySelectorAll('.mermaid > svg')];
+    if(diagramas.length!==total)return;
+    observador.disconnect();
+    clearTimeout(limite);
+    if(diagramas.some(svg=>svg.querySelector('.error-icon, .error-text'))){
+      falhaDiagramas(new Error('Sintaxe Mermaid inválida'));return;
+    }
+    window.diagramasProntos=true;
+    document.documentElement.dataset.diagramas='prontos';
+  }
+  observador.observe(document.querySelector('main'),{childList:true,subtree:true});
+  limite=setTimeout(()=>{
+    observador.disconnect();
+    falhaDiagramas(new Error('Tempo de renderização excedido'));
+  },12000);
+  conferir();
+});
+</script></head><body class="">
+<header class="capa">
+<div>
+<p class="instituicao">FIAP · Global Solution 2026.2<br>Engenharia de Software</p>
+<div class="placa">RuaViva</div>
+<p class="territorio">Liberdade · Sé · São Paulo</p>
+<h1>API de zeladoria urbana</h1>
+<p class="disciplina">Domain Driven Design · Java</p>
+</div>
+<div>
+<div class="integrantes">
+<p class="eyebrow">Equipe RuaViva</p>
+<p><strong>Anthony Gonçalves Sforzin</strong> <span class="rm">· RM 562096</span>
+</p>
+<p><strong>Cesar Aaron Herrera</strong> <span class="rm">· RM 565398</span>
+</p>
+</div>
+<div class="rodape-capa">
+<p>19/11/2026</p><a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a>
+</div>
+</div>
+</header>
+<main>
+<section class="secao" id="sumario">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Entrega acadêmica · 19/11/2026</span>
+</div>
+<h2>Índice</h2>
+<nav aria-label="Índice">
+<ol>
+<li><a href="#solucao">1. Solução, justificativa e objetivos</a>
+</li>
+<li><a href="#classes">2. Diagrama de classes</a>
+</li>
+<li><a href="#prototipos">3. Protótipos de tela</a>
+</li>
+<li><a href="#endpoints">4. Endpoints e respostas HTTP</a>
+</li>
+<li><a href="#der">5. Diagrama entidade-relacionamento</a>
+</li>
+<li><a href="#executar">6. Execução, deploy e regressão</a>
+</li>
+</ol>
+</nav>
+<p class="nota">Os títulos são links para as seções. A paginação final acompanha o conteúdo e as imagens inseridas.</p>
+</section>
+<section class="secao" id="solucao">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
+</div>
+<h2>1. Solução, justificativa e objetivos</h2>
+<p>O projeto RuaViva oferece uma API REST em Java 21 e Spring Boot 3.5 com Oracle para conectar o registro do morador ao atendimento da subprefeitura. O recorte inicial é a Liberdade, especialmente a Rua Barão de Iguape.</p>
+<h3>Justificativa e objetivos</h3>
+<p>A ausência de acompanhamento claro e a repetição de pedidos dificultam a organização do atendimento. A solução reúne registro, apoio, prioridade explicável e histórico de visitas. Objetivos: localizar demandas, considerar o impacto sobre idosos/PcD, expor a fila e manter consistência ao agendar, cancelar e concluir serviços.</p>
+<h3>Arquitetura e regras</h3>
+<p>Controller → BO → DAO → Oracle. Controllers expõem HTTP; BOs validam negócio e transações; DAOs usam SQL via JdbcTemplate; models representam as nove tabelas e enums; DTOs expõem composição e régua. GlobalExceptionHandler padroniza falhas.</p>
+<p>Prioridade: peso × 10 + 2 por apoio + 15 se houver ponto sensível a até 200 m + 10 por autor prioritário. A distância usa Haversine; o ponto mais próximo gera um único bônus. Cadastros relevantes e apoios recalculam a pontuação.</p>
+<p>Agendar coloca a ocorrência EM_ANDAMENTO; concluir coloca RESOLVIDA e cancela outras visitas agendadas. Cancelar a última visita reabre a pendência. A API recusa apoio próprio/duplicado, edição de histórico, exclusão de ocorrência resolvida e exclusão de atendimento concluído. Datas usam America/Sao_Paulo.</p>
+<p>Os perfis do site são demonstrativos: não há autenticação/autorização no servidor. O notebook e o planejador são componentes separados. O prazo por categoria não equivale ao corte estatístico de sete dias.</p>
+</section>
+<section class="secao" id="classes">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
+</div>
+<h2>2. Diagrama de classes</h2>
+<p>Vistas do mesmo modelo de classes, divididas para leitura em A4 paisagem. Setas contínuas representam referências mantidas em campos; setas tracejadas, dependências de uso. Models guardam IDs estrangeiros como Long; relações por ID são indicadas como tal, sem inventar objetos JPA.</p>
+<article class="diagrama pagina-paisagem">
+<h3>2.1 Model · entidades e enums</h3>
+<figure><pre class="mermaid">classDiagram
+direction LR
+class Subprefeitura {
+&lt;&lt;model&gt;&gt;
+-Long idSubprefeitura
+-String nome
+}
+class Distrito {
+&lt;&lt;model&gt;&gt;
+-Long idDistrito
+-Long idSubprefeitura
+-String nome
+}
+class Equipe {
+&lt;&lt;model&gt;&gt;
+-Long idEquipe
+-Long idSubprefeitura
+-String nome
+-Integer horasDia
+-Double latitude
+-Double longitude
+-Boolean ativa
+}
+class PontoSensivel {
+&lt;&lt;model&gt;&gt;
+-Long idPontoSensivel
+-Long idDistrito
+-String nome
+-TipoPonto tipo
+-Double latitude
+-Double longitude
+}
+class TipoPonto {
+&lt;&lt;enumeration&gt;&gt;
+ESCOLA
+CRECHE
+UBS
+HOSPITAL
+ILPI
+TERMINAL
+}
+class Cidadao {
+&lt;&lt;model&gt;&gt;
+-Long idCidadao
+-String nome
+-String email
+-String telefone
+-Boolean prioritario
+-LocalDate dataCadastro
+}
+class Categoria {
+&lt;&lt;model&gt;&gt;
+-Long idCategoria
+-String nome
+-String descricao
+-Integer prazoDias
+-Integer pesoGravidade
+-Integer horasEstimadas
+}
+class Ocorrencia {
+&lt;&lt;model&gt;&gt;
+-Long idOcorrencia
+-Long idCidadao
+-Long idCategoria
+-Long idDistrito
+-String descricao
+-String logradouro
+-String numero
+-Double latitude
+-Double longitude
+-StatusOcorrencia status
+-Double prioridade
+-LocalDate dataAbertura
+-LocalDate dataResolucao
+}
+class StatusOcorrencia {
+&lt;&lt;enumeration&gt;&gt;
+ABERTA
+EM_ANDAMENTO
+RESOLVIDA
+CANCELADA
+}
+class Apoio {
+&lt;&lt;model&gt;&gt;
+-Long idApoio
+-Long idOcorrencia
+-Long idCidadao
+-LocalDate dataApoio
+}
+class Atendimento {
+&lt;&lt;model&gt;&gt;
+-Long idAtendimento
+-Long idOcorrencia
+-Long idEquipe
+-LocalDate dataAgendada
+-LocalDate dataExecucao
+-StatusAtendimento status
+-String observacao
+}
+class StatusAtendimento {
+&lt;&lt;enumeration&gt;&gt;
+AGENDADO
+CONCLUIDO
+CANCELADO
+}
+PontoSensivel --&gt; TipoPonto : tipo
+Distrito ..&gt; Subprefeitura : idSubprefeitura
+Equipe ..&gt; Subprefeitura : idSubprefeitura
+PontoSensivel ..&gt; Distrito : idDistrito
+Ocorrencia --&gt; StatusOcorrencia : status
+Atendimento --&gt; StatusAtendimento : status
+Ocorrencia ..&gt; Cidadao : idCidadao
+Ocorrencia ..&gt; Categoria : idCategoria
+Ocorrencia ..&gt; Distrito : idDistrito
+Apoio ..&gt; Ocorrencia : idOcorrencia
+Apoio ..&gt; Cidadao : idCidadao
+Atendimento ..&gt; Ocorrencia : idOcorrencia
+Atendimento ..&gt; Equipe : idEquipe</pre><figcaption>2.1 Model · nove entidades e três enums, com atributos. Setas tracejadas representam IDs estrangeiros, sem associações JPA.</figcaption>
+</figure>
+</article>
+<article class="diagrama pagina-paisagem">
+<h3>2.2 DAO · persistência</h3>
+<figure><pre class="mermaid">classDiagram
+direction TB
+class SubprefeituraDAO {
++listar()
++buscarPorId()
++inserir()
++atualizar()
++excluir()
+}
+class DistritoDAO {
++listar()
++buscarPorId()
++inserir()
++atualizar()
++excluir()
+}
+class EquipeDAO {
++listar()
++buscarPorId()
++inserir()
++atualizar()
++excluir()
+}
+class PontoSensivelDAO {
++listar()
++buscarPorId()
++inserir()
++atualizar()
++excluir()
+}
+class CategoriaDAO {
++listar()
++buscarPorId()
++inserir()
++atualizar()
++excluir()
+}
+class CidadaoDAO {
++buscarPorId()
++buscarPorEmail()
++inserir()
++atualizar()
+}
+class OcorrenciaDAO {
++listarPorStatus()
++listarFilaSemAtendimento()
++travar()
++atualizarPrioridade()
+}
+class ApoioDAO {
++listarPorOcorrencia()
++existe()
++contarPorOcorrencia()
++inserir()
++excluir()
+}
+class AtendimentoDAO {
++listarPorOcorrencia()
++contarAgendados()
++cancelarAgendados()
++inserir()
++atualizar()
+}
+class JdbcTemplate
+class DaoUtil
+SubprefeituraDAO --&gt; JdbcTemplate : jdbc
+SubprefeituraDAO ..&gt; DaoUtil : usa
+DistritoDAO --&gt; JdbcTemplate : jdbc
+DistritoDAO ..&gt; DaoUtil : usa
+EquipeDAO --&gt; JdbcTemplate : jdbc
+EquipeDAO ..&gt; DaoUtil : usa
+PontoSensivelDAO --&gt; JdbcTemplate : jdbc
+PontoSensivelDAO ..&gt; DaoUtil : usa
+CategoriaDAO --&gt; JdbcTemplate : jdbc
+CategoriaDAO ..&gt; DaoUtil : usa
+CidadaoDAO --&gt; JdbcTemplate : jdbc
+CidadaoDAO ..&gt; DaoUtil : usa
+OcorrenciaDAO --&gt; JdbcTemplate : jdbc
+OcorrenciaDAO ..&gt; DaoUtil : usa
+ApoioDAO --&gt; JdbcTemplate : jdbc
+ApoioDAO ..&gt; DaoUtil : usa
+AtendimentoDAO --&gt; JdbcTemplate : jdbc
+AtendimentoDAO ..&gt; DaoUtil : usa
+DaoUtil ..&gt; JdbcTemplate : inserir</pre><figcaption>2.2 DAO · métodos públicos principais; JdbcTemplate executa SQL e DaoUtil auxilia inserções e conversões.</figcaption>
+</figure>
+</article>
+<article class="diagrama pagina-paisagem">
+<h3>2.3 BO · ocorrências, apoio e atendimento</h3>
+<figure><pre class="mermaid">classDiagram
+direction LR
+class OcorrenciaBO {
++listar()
++filaSemAtendimento()
++explicarPrioridade()
++cadastrar()
++atualizar()
++travar()
++recalcularPrioridade()
+}
+class ApoioBO {
++listar()
++buscar()
++cadastrar()
++excluir()
+}
+class AtendimentoBO {
++listar()
++buscar()
++cadastrar()
++atualizar()
++excluir()
+}
+OcorrenciaBO --&gt; OcorrenciaDAO
+OcorrenciaBO --&gt; CategoriaDAO
+OcorrenciaBO --&gt; CidadaoDAO
+OcorrenciaBO --&gt; ApoioDAO
+OcorrenciaBO --&gt; AtendimentoDAO
+OcorrenciaBO --&gt; PontoSensivelDAO
+OcorrenciaBO --&gt; DistritoBO
+ApoioBO --&gt; ApoioDAO
+ApoioBO --&gt; OcorrenciaBO
+ApoioBO --&gt; CidadaoBO
+AtendimentoBO --&gt; AtendimentoDAO
+AtendimentoBO --&gt; OcorrenciaDAO
+AtendimentoBO --&gt; OcorrenciaBO
+AtendimentoBO --&gt; EquipeBO
+</pre><figcaption>2.3 BO · dependências de negócio e persistência. As três classes usam Datas; contratos e exceções: vista 2.6.</figcaption>
+</figure>
+</article>
+<article class="diagrama pagina-paisagem">
+<h3>2.4 BO · cadastros e Datas</h3>
+<figure><pre class="mermaid">classDiagram
+direction TB
+class SubprefeituraBO {
++listar()
++buscar()
++cadastrar()
++atualizar()
++excluir()
+}
+class DistritoBO {
++listar()
++buscar()
++cadastrar()
++atualizar()
++excluir()
+}
+class CategoriaBO {
++listar()
++buscar()
++reguaPeso()
++cadastrar()
++atualizar()
++excluir()
+}
+class CidadaoBO {
++listar()
++buscar()
++cadastrar()
++atualizar()
++excluir()
+}
+class PontoSensivelBO {
++listar()
++buscar()
++cadastrar()
++atualizar()
++excluir()
+}
+class EquipeBO {
++listar()
++buscar()
++cadastrar()
++atualizar()
++excluir()
+}
+class Datas
+class OcorrenciaBO {
++recalcularPrioridadeDasPendentes()
+}
+SubprefeituraBO --&gt; SubprefeituraDAO : dao
+DistritoBO --&gt; DistritoDAO : dao
+CategoriaBO --&gt; CategoriaDAO : dao
+CidadaoBO --&gt; CidadaoDAO : dao
+PontoSensivelBO --&gt; PontoSensivelDAO : dao
+EquipeBO --&gt; EquipeDAO : dao
+DistritoBO --&gt; SubprefeituraBO
+EquipeBO --&gt; SubprefeituraBO
+CategoriaBO --&gt; OcorrenciaBO : recalcula
+CidadaoBO --&gt; OcorrenciaBO : recalcula
+PontoSensivelBO --&gt; OcorrenciaBO : recalcula
+PontoSensivelBO --&gt; DistritoBO
+CidadaoBO ..&gt; Datas : usa</pre><figcaption>2.4 Cadastros e dependências. Datas fornece hoje() com visibilidade de pacote e fuso America/Sao_Paulo.</figcaption>
+</figure>
+</article>
+<article class="diagrama pagina-paisagem">
+<h3>2.5 Controller → BO</h3>
+<figure><pre class="mermaid">classDiagram
+direction TB
+class SubprefeituraController {
++listar()
++cadastrar()
+}
+class DistritoController {
++listar()
++cadastrar()
+}
+class CategoriaController {
++listar()
++reguaPeso()
++cadastrar()
+}
+class CidadaoController {
++listar()
++cadastrar()
+}
+class PontoSensivelController {
++listar()
++cadastrar()
+}
+class EquipeController {
++listar()
++cadastrar()
+}
+class OcorrenciaController {
++fila()
++prioridade()
++cadastrar()
+}
+class ApoioController {
++listar()
++cadastrar()
++excluir()
+}
+class AtendimentoController {
++listar()
++cadastrar()
++atualizar()
+}
+SubprefeituraController --&gt; SubprefeituraBO : bo
+DistritoController --&gt; DistritoBO : bo
+CategoriaController --&gt; CategoriaBO : bo
+CidadaoController --&gt; CidadaoBO : bo
+PontoSensivelController --&gt; PontoSensivelBO : bo
+EquipeController --&gt; EquipeBO : bo
+OcorrenciaController --&gt; OcorrenciaBO : bo
+ApoioController --&gt; ApoioBO : bo
+AtendimentoController --&gt; AtendimentoBO : bo</pre><figcaption>2.5 Métodos principais; OcorrenciaController também usa ApoioBO e AtendimentoBO. Rotas completas e HomeController: seção 4.</figcaption>
+</figure>
+</article>
+<article class="diagrama pagina-paisagem">
+<h3>2.6 Exception + DTO · contratos e falhas</h3>
+<figure><pre class="mermaid">classDiagram
+direction TB
+class ComposicaoPrioridadeDTO {
+&lt;&lt;record&gt;&gt;
++double total
++List~ItemPrioridadeDTO~ itens
+}
+class ItemPrioridadeDTO {
+&lt;&lt;record&gt;&gt;
++String motivo
++double pontos
+}
+class ReguaPesoDTO {
+&lt;&lt;record&gt;&gt;
++int peso
++String criterio
++String exemplos
+}
+class ErroResposta {
+&lt;&lt;record&gt;&gt;
++LocalDateTime dataHora
++int status
++String erro
++String mensagem
++String caminho
++List~String~ campos
+}
+class RecursoNaoEncontradoException {
+&lt;&lt;exception&gt;&gt;
+}
+class RegraNegocioException {
+&lt;&lt;exception&gt;&gt;
+}
+class GlobalExceptionHandler {
++naoEncontrado()
++regraNegocio()
++validacao()
++integridade()
++inesperado()
+}
+RuntimeException &lt;|-- RecursoNaoEncontradoException
+RuntimeException &lt;|-- RegraNegocioException
+GlobalExceptionHandler ..&gt; RecursoNaoEncontradoException : trata
+GlobalExceptionHandler ..&gt; RegraNegocioException : trata
+GlobalExceptionHandler ..&gt; ErroResposta : retorna
+ComposicaoPrioridadeDTO "1" o-- "*" ItemPrioridadeDTO : itens
+OcorrenciaBO ..&gt; ComposicaoPrioridadeDTO : retorna
+CategoriaBO ..&gt; ReguaPesoDTO : retorna</pre><figcaption>2.6 Exception + DTO · contratos, tratamento de falhas e herança. Métodos de acesso e construtores foram omitidos.</figcaption>
+</figure>
+</article>
+</section>
+<section class="secao" id="prototipos">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
+</div>
+<h2>3. Protótipos de tela</h2>
+<p>As telas conectam o fluxo de morador às operações da API. A identidade segue web/DESIGN.md. As capturas abaixo devem mostrar o protótipo real e preservar a indicação de demonstração.</p>
+<article class="tela">
+<h3>Entrada</h3>
+<p class="nota">UC01 · US01</p>
+<figure><img src="img/tela-entrada.png" alt="Escolher um perfil permite conhecer o fluxo; moradores e atendimentos são simulados."><figcaption>Escolher um perfil permite conhecer o fluxo; moradores e atendimentos são simulados.</figcaption>
+</figure>
+<p>A placa identifica o serviço e o território. Morador e gestor têm caminhos claros; o amarelo destaca a ação principal. O aviso de demonstração explica a escolha de perfil.</p>
+</article>
+<article class="tela">
+<h3>Mapa do bairro</h3>
+<p class="nota">UC02 · US02</p>
+<figure><img src="img/tela-mapa.png" alt="O mapa localiza; a lista permite ler e agir sem depender de precisão no toque."><figcaption>O mapa localiza; a lista permite ler e agir sem depender de precisão no toque.</figcaption>
+</figure>
+<p>A lista aparece primeiro no celular. Números ligam registros e marcadores; os filtros Não resolvidos, Resolvidos e Todos apoiam a busca. Endereço e status escritos atendem quem usa zoom ou tem baixa visão.</p>
+</article>
+<article class="tela">
+<h3>Registrar problema</h3>
+<p class="nota">UC03–UC07 · US03–US05 e US09</p>
+<figure><img src="img/tela-registrar.png" alt="Uma decisão por etapa, revisão antes do envio e confirmação clara. O rascunho permanece na sessão do navegador."><figcaption>Uma decisão por etapa, revisão antes do envio e confirmação clara. O rascunho permanece na sessão do navegador.</figcaption>
+</figure>
+<p>Três passos: categoria com exemplos; localização por endereço, GPS ou mapa; detalhes e revisão. O endereço em texto confirma o ponto. Um pendente da mesma categoria a até 60 m oferece a alternativa de apoio. A descrição é opcional na tela; vazia, a API recebe o nome da categoria.</p>
+</article>
+<article class="tela">
+<h3>Detalhe do problema</h3>
+<p class="nota">UC07–UC09 e UC11 · US06–US07 e US09–US10</p>
+<figure><img src="img/tela-detalhe.png" alt="Aguardando equipe, visita agendada e resolução registrada comunicam fatos; o prazo da categoria é uma referência."><figcaption>Aguardando equipe, visita agendada e resolução registrada comunicam fatos; o prazo da categoria é uma referência.</figcaption>
+</figure>
+<p>Endereço e situação aparecem antes do mapa. A linha do tempo apresenta datas disponíveis. “Isso também me afeta” explica o apoio; autor não apoia o próprio registro e casos encerrados não recebem novos apoios. A composição da prioridade é consultável na visão do gestor.</p>
+</article>
+<article class="tela">
+<h3>Fila do gestor</h3>
+<p class="nota">UC11–UC15 · US10–US13</p>
+<figure><img src="img/tela-fila.png" alt="O gestor entende a pontuação e agenda no contexto do caso. Reagendamento permanece na API."><figcaption>O gestor entende a pontuação e agenda no contexto do caso. Reagendamento permanece na API.</figcaption>
+</figure>
+<p>A fila compara prioridade, endereço, apoios e prazo. O formulário abre na própria linha; oferece equipes ativas da mesma subprefeitura e datas a partir de hoje. Visitas ficam separadas e permitem concluir ou cancelar. Alta ≥ 60; média ≥ 40; baixa abaixo de 40.</p>
+</article>
+</section>
+<section class="secao" id="endpoints">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
+</div>
+<h2>4. Endpoints e respostas HTTP</h2>
+<p>Inventário dos dez controllers. Corpo de entrada em JSON; POST retorna <strong>201</strong> com Location; PUT retorna <strong>200</strong>; DELETE retorna <strong>204</strong>, sem corpo. Listas vazias retornam 200.</p>
+<p>As colunas listam sucesso e erros de aplicação pertinentes. Comuns: <strong>500</strong> (inesperado); <strong>503</strong> em operações que acessam Oracle; <strong>405</strong> para método não permitido; <strong>406</strong> para Accept incompatível; <strong>415</strong> para Content-Type incompatível com corpo JSON. <strong>400</strong> cobre validação/JSON/parâmetros; <strong>404</strong>, recurso ou referência inexistente; <strong>409</strong>, integridade; <strong>422</strong>, regra BO.</p>
+<h3>ApoioController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/apoios</code></td><td>Listar registros.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/apoios/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/apoios</code></td><td>Apoiar ocorrência; validar autor, duplicidade e estado.</td><td>201, 400, 404, 409, 422</td>
+</tr>
+<tr><td>DELETE</td><td><code>/apoios/{id}</code></td><td>Retirar apoio e recalcular prioridade.</td><td>204, 400, 404</td>
+</tr>
+</tbody>
+</table>
+<h3>AtendimentoController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/atendimentos</code></td><td>Listar registros.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/atendimentos/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/atendimentos</code></td><td>Agendar equipe ativa; ocorrência passa a EM_ANDAMENTO.</td><td>201, 400, 404, 409, 422</td>
+</tr>
+<tr><td>PUT</td><td><code>/atendimentos/{id}</code></td><td>Reagendar, concluir ou cancelar atendimento AGENDADO.</td><td>200, 400, 404, 409, 422</td>
+</tr>
+<tr><td>DELETE</td><td><code>/atendimentos/{id}</code></td><td>Excluir visita não concluída; reabrir se último agendamento.</td><td>204, 400, 404, 409, 422</td>
+</tr>
+</tbody>
+</table>
+<h3>CategoriaController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/categorias</code></td><td>Listar registros.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/categorias/regua-peso</code></td><td>Consultar régua opcional de gravidade (1 a 5).</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/categorias/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/categorias</code></td><td>Cadastrar registro.</td><td>201, 400, 409</td>
+</tr>
+<tr><td>PUT</td><td><code>/categorias/{id}</code></td><td>Atualizar registro.</td><td>200, 400, 404, 409</td>
+</tr>
+<tr><td>DELETE</td><td><code>/categorias/{id}</code></td><td>Excluir registro.</td><td>204, 400, 404, 409</td>
+</tr>
+</tbody>
+</table>
+<h3>CidadaoController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/cidadaos</code></td><td>Listar registros.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/cidadaos/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/cidadaos</code></td><td>Cadastrar registro.</td><td>201, 400, 409, 422</td>
+</tr>
+<tr><td>PUT</td><td><code>/cidadaos/{id}</code></td><td>Atualizar registro.</td><td>200, 400, 404, 409, 422</td>
+</tr>
+<tr><td>DELETE</td><td><code>/cidadaos/{id}</code></td><td>Excluir registro.</td><td>204, 400, 404, 409</td>
+</tr>
+</tbody>
+</table>
+<h3>DistritoController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/distritos</code></td><td>Listar registros.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/distritos/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/distritos</code></td><td>Cadastrar registro.</td><td>201, 400, 404, 409</td>
+</tr>
+<tr><td>PUT</td><td><code>/distritos/{id}</code></td><td>Atualizar registro.</td><td>200, 400, 404, 409</td>
+</tr>
+<tr><td>DELETE</td><td><code>/distritos/{id}</code></td><td>Excluir registro.</td><td>204, 400, 404, 409</td>
+</tr>
+</tbody>
+</table>
+<h3>EquipeController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/equipes</code></td><td>Listar registros.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/equipes/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/equipes</code></td><td>Cadastrar registro.</td><td>201, 400, 404, 409</td>
+</tr>
+<tr><td>PUT</td><td><code>/equipes/{id}</code></td><td>Atualizar registro.</td><td>200, 400, 404, 409</td>
+</tr>
+<tr><td>DELETE</td><td><code>/equipes/{id}</code></td><td>Excluir registro.</td><td>204, 400, 404, 409</td>
+</tr>
+</tbody>
+</table>
+<h3>HomeController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/</code></td><td>Identificação, estado e links da API (HomeController).</td><td>200</td>
+</tr>
+</tbody>
+</table>
+<h3>OcorrenciaController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/ocorrencias</code></td><td>Listar por prioridade; filtro opcional ?status=ABERTA (enum).</td><td>200, 400</td>
+</tr>
+<tr><td>GET</td><td><code>/ocorrencias/fila</code></td><td>Listar ABERTA sem atendimento válido, por prioridade.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/ocorrencias/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>GET</td><td><code>/ocorrencias/{id}/prioridade</code></td><td>Explicar total e parcelas da prioridade; somente leitura.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>GET</td><td><code>/ocorrencias/{id}/apoios</code></td><td>Listar apoios de uma ocorrência existente.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>GET</td><td><code>/ocorrencias/{id}/atendimentos</code></td><td>Listar visitas de uma ocorrência existente.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/ocorrencias</code></td><td>Registrar; API define data de hoje, ABERTA e prioridade.</td><td>201, 400, 404, 409</td>
+</tr>
+<tr><td>PUT</td><td><code>/ocorrencias/{id}</code></td><td>Corrigir pendente ou cancelar; preserva autor e abertura.</td><td>200, 400, 404, 409, 422</td>
+</tr>
+<tr><td>DELETE</td><td><code>/ocorrencias/{id}</code></td><td>Excluir com apoios e visitas; recusa RESOLVIDA.</td><td>204, 400, 404, 422</td>
+</tr>
+</tbody>
+</table>
+<h3>PontoSensivelController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/pontos-sensiveis</code></td><td>Listar registros.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/pontos-sensiveis/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/pontos-sensiveis</code></td><td>Cadastrar registro.</td><td>201, 400, 404, 409</td>
+</tr>
+<tr><td>PUT</td><td><code>/pontos-sensiveis/{id}</code></td><td>Atualizar registro.</td><td>200, 400, 404, 409</td>
+</tr>
+<tr><td>DELETE</td><td><code>/pontos-sensiveis/{id}</code></td><td>Excluir registro.</td><td>204, 400, 404, 409</td>
+</tr>
+</tbody>
+</table>
+<h3>SubprefeituraController</h3>
+<table class="endpoints">
+<thead>
+<tr><th scope="col">Método</th><th scope="col">Rota</th><th scope="col">Descrição</th><th scope="col">Códigos HTTP</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/subprefeituras</code></td><td>Listar registros.</td><td>200</td>
+</tr>
+<tr><td>GET</td><td><code>/subprefeituras/{id}</code></td><td>Consultar por ID.</td><td>200, 400, 404</td>
+</tr>
+<tr><td>POST</td><td><code>/subprefeituras</code></td><td>Cadastrar registro.</td><td>201, 400, 409</td>
+</tr>
+<tr><td>PUT</td><td><code>/subprefeituras/{id}</code></td><td>Atualizar registro.</td><td>200, 400, 404, 409</td>
+</tr>
+<tr><td>DELETE</td><td><code>/subprefeituras/{id}</code></td><td>Excluir registro.</td><td>204, 400, 404, 409</td>
+</tr>
+</tbody>
+</table>
+<p class="nota">50 combinações método/rota extraídas dos controllers. Apoio não tem PUT. ErroResposta: dataHora, status, erro, mensagem, caminho e campos.</p>
+</section>
+<section class="secao pagina-paisagem diagrama-der" id="der">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
+</div>
+<h2>5. Diagrama entidade-relacionamento</h2>
+<p>DER das nove tabelas GS_, gerado a partir de database/01_ddl.sql. PK identifica a linha; FK referencia o pai. Cada filho possui um pai obrigatório; um pai pode ter zero ou muitos filhos. A vista exibe as chaves para preservar a legibilidade.</p>
+<figure><pre class="mermaid">erDiagram
+GS_SUBPREFEITURA ||--o{ GS_DISTRITO : &quot;ID_SUBPREFEITURA&quot;
+GS_DISTRITO ||--o{ GS_PONTO_SENSIVEL : &quot;ID_DISTRITO&quot;
+GS_SUBPREFEITURA ||--o{ GS_EQUIPE : &quot;ID_SUBPREFEITURA&quot;
+GS_CIDADAO ||--o{ GS_OCORRENCIA : &quot;ID_CIDADAO&quot;
+GS_CATEGORIA ||--o{ GS_OCORRENCIA : &quot;ID_CATEGORIA&quot;
+GS_DISTRITO ||--o{ GS_OCORRENCIA : &quot;ID_DISTRITO&quot;
+GS_OCORRENCIA ||--o{ GS_APOIO : &quot;ID_OCORRENCIA&quot;
+GS_CIDADAO ||--o{ GS_APOIO : &quot;ID_CIDADAO&quot;
+GS_OCORRENCIA ||--o{ GS_ATENDIMENTO : &quot;ID_OCORRENCIA&quot;
+GS_EQUIPE ||--o{ GS_ATENDIMENTO : &quot;ID_EQUIPE&quot;
+GS_SUBPREFEITURA {
+NUMBER ID_SUBPREFEITURA PK
+}
+GS_DISTRITO {
+NUMBER ID_DISTRITO PK
+NUMBER ID_SUBPREFEITURA FK
+}
+GS_CATEGORIA {
+NUMBER ID_CATEGORIA PK
+}
+GS_CIDADAO {
+NUMBER ID_CIDADAO PK
+}
+GS_PONTO_SENSIVEL {
+NUMBER ID_PONTO_SENSIVEL PK
+NUMBER ID_DISTRITO FK
+}
+GS_EQUIPE {
+NUMBER ID_EQUIPE PK
+NUMBER ID_SUBPREFEITURA FK
+}
+GS_OCORRENCIA {
+NUMBER ID_OCORRENCIA PK
+NUMBER ID_CIDADAO FK
+NUMBER ID_CATEGORIA FK
+NUMBER ID_DISTRITO FK
+}
+GS_APOIO {
+NUMBER ID_APOIO PK
+NUMBER ID_OCORRENCIA FK
+NUMBER ID_CIDADAO FK
+}
+GS_ATENDIMENTO {
+NUMBER ID_ATENDIMENTO PK
+NUMBER ID_OCORRENCIA FK
+NUMBER ID_EQUIPE FK
+}</pre><figcaption>DER Oracle: nove entidades, nove PKs e dez FKs. Atributos de negócio estão nos models e no documento Database.</figcaption>
+</figure>
+<p>GS_APOIO tem UNIQUE (ID_OCORRENCIA, ID_CIDADAO). Ocorrência → apoio/atendimento usa ON DELETE CASCADE; demais vínculos preservam integridade sem cascata.</p>
+</section>
+<section class="secao" id="executar">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
+</div>
+<h2>6. Execução, deploy e regressão</h2>
+<h3>Ferramentas</h3>
+<p>IntelliJ IDEA, JDK 21, Maven 3.9 ou superior, Oracle FIAP e SQL Developer. Docker é usado para empacotar/executar o deploy. Para regressão: Bash, curl, jq e bc.</p>
+<h3>Passo a passo local</h3>
+<ol>
+<li>Clonar o repositório e abrir java-api/pom.xml no IntelliJ IDEA; selecionar JDK 21 e importar o Maven.</li>
+<li>No Oracle FIAP, executar database/01_ddl.sql e database/02_dml.sql em UTF-8. Para recriar uma base de teste, conferir os nomes existentes antes de usar 00_drop.sql, que remove as tabelas e os dados.</li>
+<li>Configurar DB_URL, DB_USER e DB_PASSWORD no ambiente do terminal ou na configuração de execução do IntelliJ.</li>
+<li>Na pasta java-api, iniciar pelo Maven ou executar ZeladoriaApplication pela IDE.</li>
+<li>Abrir http://localhost:8080/ e a documentação em <strong>/swagger-ui.html</strong>. Exercitar cadastro, consulta, atualização e exclusão conforme as regras.</li>
+</ol><pre>git clone https://github.com/0x4aron/RuaViva.git
+cd RuaViva/java-api
+export DB_URL="jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL"
+export DB_USER="seu_usuario_oracle"
+export DB_PASSWORD="sua_senha_oracle"
+mvn spring-boot:run</pre><h3>Deploy com Docker</h3>
+<p>Conectar o repositório a um Web Service no Render. Selecionar a branch main, diretório raiz java-api e runtime Docker, utilizando o Dockerfile existente. Cadastrar DB_URL, DB_USER e DB_PASSWORD no ambiente e executar o deploy. Conferir a raiz e /swagger-ui.html no endereço publicado.</p><pre># Na pasta java-api, alternativa para conferir a imagem localmente:
+docker build -t ruaviva-api .
+docker run --rm -p 8080:8080   -e DB_URL -e DB_USER -e DB_PASSWORD ruaviva-api</pre><p class="pendente">Link do deploy: LINK_DEPLOY</p>
+<p>GitHub: <a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a>
+</p>
+<h3>Teste de regressão</h3>
+<p>Com a API ativa e uma base de teste recém-criada pelo DDL/DML, executar a partir da raiz do repositório:</p><pre>bash java-api/testes/regressao.sh http://localhost:8080</pre><p>O roteiro verifica ciclo de vida, equipe inativa, apoio, exclusões, integridade e concorrência. Ele cria e modifica dados; usar uma base destinada aos testes. Critério: todas as verificações aprovadas, sem linhas FALHA. Esta documentação não registra uma nova execução da regressão da API.</p>
+</section>
+</main></body></html>

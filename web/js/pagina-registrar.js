@@ -96,7 +96,7 @@ async function buscarEndereco() {
     resultados = await geocodificar("search", { q: consulta, limit: "5" });
     $("resultados").innerHTML = resultados.map((r, i) => `<label class="opcao"><input type="radio" name="endereco-buscado" value="${i}"><span>${esc(nomeProprio(r.display_name))}</span></label>`).join("");
     $("resultados-grupo").hidden = !resultados.length;
-    $("busca-estado").textContent = resultados.length ? `${resultados.length} endereços encontrados. Escolha uma opção.` : "Nenhum endereço encontrado. Confira a rua ou marque o ponto no mapa.";
+    $("busca-estado").textContent = resultados.length ? (resultados.length === 1 ? "1 endereço encontrado. Confira e escolha." : `${resultados.length} endereços encontrados. Escolha uma opção.`) : "Nenhum endereço encontrado. Confira a rua ou marque o ponto no mapa.";
   } catch {
     avisar("Não foi possível buscar o endereço. Tente de novo ou marque o ponto no mapa.", "erro");
     $("busca-estado").textContent = "Não foi possível buscar. Tente de novo em Buscar endereço ou marque o ponto no mapa.";

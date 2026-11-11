@@ -1,0 +1,399 @@
+{
+  "atores": [
+    {
+      "id": "A01",
+      "nome": "Morador",
+      "tipo": "primario"
+    },
+    {
+      "id": "A02",
+      "nome": "Morador prioritário",
+      "tipo": "primario",
+      "especializa": "A01"
+    },
+    {
+      "id": "A03",
+      "nome": "Gestor da subprefeitura",
+      "tipo": "primario"
+    },
+    {
+      "id": "A04",
+      "nome": "Equipe de campo",
+      "tipo": "primario"
+    },
+    {
+      "id": "A05",
+      "nome": "Sistema SP156/dados abertos",
+      "tipo": "secundario"
+    },
+    {
+      "id": "A06",
+      "nome": "Serviço de mapas",
+      "tipo": "secundario"
+    }
+  ],
+  "casos": [
+    {
+      "id": "UC01",
+      "nome": "Selecionar perfil de demonstração"
+    },
+    {
+      "id": "UC02",
+      "nome": "Consultar problemas do bairro"
+    },
+    {
+      "id": "UC03",
+      "nome": "Registrar ocorrência"
+    },
+    {
+      "id": "UC04",
+      "nome": "Informar localização"
+    },
+    {
+      "id": "UC05",
+      "nome": "Calcular prioridade"
+    },
+    {
+      "id": "UC06",
+      "nome": "Apoiar registro existente ao detectar possível repetição"
+    },
+    {
+      "id": "UC07",
+      "nome": "Apoiar ocorrência"
+    },
+    {
+      "id": "UC08",
+      "nome": "Retirar apoio"
+    },
+    {
+      "id": "UC09",
+      "nome": "Consultar detalhe e histórico"
+    },
+    {
+      "id": "UC10",
+      "nome": "Consultar meus registros e apoios"
+    },
+    {
+      "id": "UC11",
+      "nome": "Consultar composição da prioridade"
+    },
+    {
+      "id": "UC12",
+      "nome": "Consultar fila por prioridade"
+    },
+    {
+      "id": "UC13",
+      "nome": "Agendar atendimento"
+    },
+    {
+      "id": "UC14",
+      "nome": "Concluir atendimento"
+    },
+    {
+      "id": "UC15",
+      "nome": "Cancelar atendimento"
+    },
+    {
+      "id": "UC16",
+      "nome": "Reagendar atendimento"
+    },
+    {
+      "id": "UC17",
+      "nome": "Manter categorias e consultar régua de peso"
+    },
+    {
+      "id": "UC18",
+      "nome": "Manter cidadãos e condição prioritária"
+    },
+    {
+      "id": "UC19",
+      "nome": "Manter equipes"
+    },
+    {
+      "id": "UC20",
+      "nome": "Manter pontos sensíveis"
+    },
+    {
+      "id": "UC21",
+      "nome": "Manter subprefeituras"
+    },
+    {
+      "id": "UC22",
+      "nome": "Manter distritos"
+    },
+    {
+      "id": "UC23",
+      "nome": "Corrigir, cancelar ou excluir ocorrência"
+    },
+    {
+      "id": "UC24",
+      "nome": "Consultar ou excluir atendimento pela API"
+    },
+    {
+      "id": "UC25",
+      "nome": "Preparar base histórica do SP156"
+    },
+    {
+      "id": "UC26",
+      "nome": "Estimar demanda diária no notebook"
+    },
+    {
+      "id": "UC27",
+      "nome": "Estimar risco de atraso no notebook"
+    },
+    {
+      "id": "UC28",
+      "nome": "Selecionar ocorrências dentro da jornada"
+    },
+    {
+      "id": "UC29",
+      "nome": "Ordenar visitas e retorno à base"
+    },
+    {
+      "id": "UC30",
+      "nome": "Gerar plano do dia no terminal"
+    },
+    {
+      "id": "UC31",
+      "nome": "Consultar previsões no site"
+    },
+    {
+      "id": "UC32",
+      "nome": "Planejar visitas pelo site"
+    },
+    {
+      "id": "UC33",
+      "nome": "Consultar visitas no aplicativo de campo"
+    },
+    {
+      "id": "UC34",
+      "nome": "Informar execução no aplicativo de campo"
+    },
+    {
+      "id": "UC35",
+      "nome": "Autenticar usuário e controlar permissões"
+    },
+    {
+      "id": "UC36",
+      "nome": "Unificar registros duplicados"
+    }
+  ],
+  "ligacoes": [
+    {
+      "ator": "A01",
+      "caso": "UC01"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC02"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC03"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC04"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC06"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC07"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC08"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC09"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC10"
+    },
+    {
+      "ator": "A01",
+      "caso": "UC35"
+    },
+    {
+      "ator": "A02",
+      "caso": "UC05"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC01"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC09"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC11"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC12"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC13"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC14"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC15"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC16"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC17"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC18"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC19"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC20"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC21"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC22"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC23"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC24"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC25"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC26"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC27"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC30"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC31"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC32"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC35"
+    },
+    {
+      "ator": "A03",
+      "caso": "UC36"
+    },
+    {
+      "ator": "A04",
+      "caso": "UC33"
+    },
+    {
+      "ator": "A04",
+      "caso": "UC34"
+    },
+    {
+      "ator": "A04",
+      "caso": "UC35"
+    },
+    {
+      "ator": "A05",
+      "caso": "UC25"
+    },
+    {
+      "ator": "A06",
+      "caso": "UC02"
+    },
+    {
+      "ator": "A06",
+      "caso": "UC04"
+    },
+    {
+      "ator": "A06",
+      "caso": "UC09"
+    }
+  ],
+  "relacoes": [
+    {
+      "de": "UC03",
+      "para": "UC04",
+      "tipo": "include"
+    },
+    {
+      "de": "UC03",
+      "para": "UC05",
+      "tipo": "include"
+    },
+    {
+      "de": "UC06",
+      "para": "UC03",
+      "tipo": "extend"
+    },
+    {
+      "de": "UC06",
+      "para": "UC07",
+      "tipo": "include"
+    },
+    {
+      "de": "UC07",
+      "para": "UC05",
+      "tipo": "include"
+    },
+    {
+      "de": "UC08",
+      "para": "UC05",
+      "tipo": "include"
+    },
+    {
+      "de": "UC11",
+      "para": "UC12",
+      "tipo": "extend"
+    },
+    {
+      "de": "UC30",
+      "para": "UC28",
+      "tipo": "include"
+    },
+    {
+      "de": "UC30",
+      "para": "UC29",
+      "tipo": "include"
+    }
+  ],
+  "sistema": "RuaViva"
+}

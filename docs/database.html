@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Modelo de dados · RuaViva</title><link rel="stylesheet" href="estilo.css"><script>
+function prepararImagens(){document.querySelectorAll('img').forEach(img=>{function falta(){if(img.dataset.ausente)return;img.dataset.ausente='true';const box=document.createElement('div');box.className='imagem-ausente';const titulo=document.createElement('strong');titulo.textContent='Imagem pendente de inclusão';const nome=document.createElement('code');nome.textContent=img.getAttribute('src');box.append(titulo,nome);img.hidden=true;img.style.display='none';img.after(box);}img.addEventListener('error',falta);if(img.complete&&!img.naturalWidth)falta();});}
+document.addEventListener('DOMContentLoaded',prepararImagens);
+</script></head><body class="">
+<header class="capa">
+<div>
+<p class="instituicao">FIAP · Global Solution 2026.2<br>Engenharia de Software</p>
+<div class="placa">RuaViva</div>
+<p class="territorio">Liberdade · Sé · São Paulo</p>
+<h1>Modelo de dados</h1>
+<p class="disciplina">Database Design</p>
+</div>
+<div>
+<div class="integrantes">
+<p class="eyebrow">Equipe RuaViva</p>
+<p><strong>Anthony Gonçalves Sforzin</strong> <span class="rm">· RM 562096</span>
+</p>
+<p><strong>Cesar Aaron Herrera</strong> <span class="rm">· RM 565398</span>
+</p>
+</div>
+<div class="rodape-capa">
+<p>19/11/2026</p><a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a>
+</div>
+</div>
+</header>
+<main>
+<section class="secao" id="sumario">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Entrega acadêmica · 19/11/2026</span>
+</div>
+<h2>Sumário</h2>
+<nav aria-label="Sumário">
+<ol>
+<li><a href="#objetivo">1. Objetivo e escopo</a>
+</li>
+<li><a href="#funcionalidades">2. Funcionalidades</a>
+</li>
+<li><a href="#tabelas">3. Tabelas e integridade</a>
+</li>
+<li><a href="#modelo">4. Diagrama do modelo lógico</a>
+</li>
+<li><a href="#scripts">5. Scripts e consultas</a>
+</li>
+</ol>
+</nav>
+<p class="nota">Os títulos são links para as seções. A paginação final acompanha o conteúdo e as imagens inseridas.</p>
+</section>
+<section class="secao" id="objetivo">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
+</div>
+<h2>1. Objetivo e escopo</h2>
+<p>Estruturar os dados do RuaViva para registrar problemas de zeladoria, indicar impacto coletivo e organizar atendimentos na Liberdade, com foco na Rua Barão de Iguape, Subprefeitura Sé.</p>
+<p>O modelo Oracle tem nove tabelas, chaves geradas por IDENTITY e integridade declarada por PK, FK, UNIQUE e CHECK. É a base da API Java e fornece coordenadas e tempos para o planejamento de campo.</p>
+<p>Os scripts usam sintaxe Oracle 19c ou superior; o README registra testes em Oracle XE 21. A implantação acadêmica usa Oracle FIAP.</p>
+</section>
+<section class="secao" id="funcionalidades">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
+</div>
+<h2>2. Funcionalidades</h2>
+<ol>
+<li>Manter territórios, categorias, cidadãos, equipes e pontos sensíveis.</li>
+<li>Registrar ocorrências com endereço, coordenadas e estado.</li>
+<li>Registrar um apoio por cidadão e ocorrência.</li>
+<li>Agendar e acompanhar visitas, preservando o histórico conforme as regras Java.</li>
+<li>Consultar problemas da rua, indicadores por categoria e fila sem atendimento válido.</li>
+</ol>
+<div class="destaque">
+<p class="formula">Peso × 10 + 2 por apoio + 15 por ponto sensível a até 200 m + 10 por autor prioritário.</p>
+<p>A API calcula e atualiza a prioridade; o DML já contém valores calculados com essa regra.</p>
+</div>
+<h3>Origem dos dados</h3>
+<p>São 69 linhas demonstrativas: 15 ocorrências, das quais nove na Barão de Iguape. Endereços, coordenadas, tipos e datas vêm de solicitações SP156 do 3º trimestre de 2026. Cidadãos, apoios, equipes, descrições e atendimentos são simulados; quatro pontos sensíveis são fictícios. Prazos e pesos são referências da equipe.</p>
+<p>O corte estatístico de sete dias do notebook é distinto de NR_PRAZO_DIAS, definido por categoria. As previsões não compõem a prioridade atual.</p>
+</section>
+<section class="secao" id="tabelas">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
+</div>
+<h2>3. Tabelas e integridade</h2>
+<table class="">
+<thead>
+<tr><th scope="col">Tabela / carga</th><th scope="col">Responsabilidade e atributos</th><th scope="col">Chaves</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><code>GS_SUBPREFEITURA</code><br>5 linhas</td><td>Unidade territorial responsável pelo atendimento; nome único.</td><td>PK: <code>ID_SUBPREFEITURA</code><br>Sem FK</td>
+</tr>
+<tr><td><code>GS_DISTRITO</code><br>5 linhas</td><td>Distrito vinculado a uma subprefeitura; nome único.</td><td>PK: <code>ID_DISTRITO</code><br><code>ID_SUBPREFEITURA → GS_SUBPREFEITURA</code></td>
+</tr>
+<tr><td><code>GS_CATEGORIA</code><br>7 linhas</td><td>Tipo de serviço com descrição, prazo positivo, gravidade de 1 a 5 e horas estimadas positivas.</td><td>PK: <code>ID_CATEGORIA</code><br>Sem FK</td>
+</tr>
+<tr><td><code>GS_CIDADAO</code><br>8 linhas</td><td>Autor ou apoiador; nome, email único, telefone opcional, condição prioritária S/N e data de cadastro.</td><td>PK: <code>ID_CIDADAO</code><br>Sem FK</td>
+</tr>
+<tr><td><code>GS_PONTO_SENSIVEL</code><br>5 linhas</td><td>Referência para o bônus de proximidade: nome, distrito, tipo e coordenadas. Tipos: ESCOLA, CRECHE, UBS, HOSPITAL, ILPI e TERMINAL; metrô está representado como TERMINAL.</td><td>PK: <code>ID_PONTO_SENSIVEL</code><br><code>ID_DISTRITO → GS_DISTRITO</code></td>
+</tr>
+<tr><td><code>GS_EQUIPE</code><br>5 linhas</td><td>Equipe de uma subprefeitura, com nome único, jornada de 1 a 24 horas, coordenadas da base e flag ativa S/N.</td><td>PK: <code>ID_EQUIPE</code><br><code>ID_SUBPREFEITURA → GS_SUBPREFEITURA</code></td>
+</tr>
+<tr><td><code>GS_OCORRENCIA</code><br>15 linhas</td><td>Problema localizado, com autor, categoria, distrito, descrição, endereço, coordenadas, prioridade não negativa e datas. Estados: ABERTA, EM_ANDAMENTO, RESOLVIDA e CANCELADA.</td><td>PK: <code>ID_OCORRENCIA</code><br><code>ID_CIDADAO → GS_CIDADAO</code><br><code>ID_CATEGORIA → GS_CATEGORIA</code><br><code>ID_DISTRITO → GS_DISTRITO</code></td>
+</tr>
+<tr><td><code>GS_APOIO</code><br>8 linhas</td><td>Associa cidadão e ocorrência; a chave única composta impede apoio duplicado para o mesmo par.</td><td>PK: <code>ID_APOIO</code><br><code>ID_OCORRENCIA → GS_OCORRENCIA</code><br><code>ID_CIDADAO → GS_CIDADAO</code></td>
+</tr>
+<tr><td><code>GS_ATENDIMENTO</code><br>11 linhas</td><td>Visita de uma equipe a uma ocorrência; agendamento, execução, observação e status AGENDADO, CONCLUIDO ou CANCELADO.</td><td>PK: <code>ID_ATENDIMENTO</code><br><code>ID_OCORRENCIA → GS_OCORRENCIA</code><br><code>ID_EQUIPE → GS_EQUIPE</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Integridade referencial</h3>
+<p>As dez FKs ligam cada registro filho a um pai obrigatório. A exclusão de ocorrência propaga-se a apoios e atendimentos por ON DELETE CASCADE. Outras exclusões dependem da ausência de filhos. A API acrescenta proteção ao histórico: ocorrência resolvida e atendimento concluído não podem ser excluídos.</p>
+<p>Coordenadas têm limites de latitude/longitude. Datas de resolução não antecedem abertura; execução não antecede agendamento. VARCHAR2 usa tamanho em caracteres (CHAR), preservando textos com acentos. A combinação (ID_OCORRENCIA, ID_CIDADAO) é única em GS_APOIO.</p>
+</section>
+<section class="secao" id="modelo">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
+</div>
+<h2>4. Diagrama do modelo lógico (Oracle Data Modeler)</h2>
+<figure><img src="img/modelo-logico-data-modeler.png" alt="Modelo lógico oficial do RuaViva, exportado do Oracle Data Modeler."><figcaption>Modelo lógico oficial do RuaViva, exportado do Oracle Data Modeler.</figcaption>
+</figure>
+<p>Importar database/01_ddl.sql em File → Import → DDL File no Oracle Data Modeler para obter o modelo relacional; conferir chaves e cardinalidades e derivar o modelo lógico pela ferramenta. Exportar o diagrama lógico legível para a imagem indicada.</p>
+</section>
+<section class="secao" id="scripts">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
+</div>
+<h2>5. Scripts e consultas</h2>
+<p><strong>Os scripts DDL, DML e DQL são entregues em arquivos .sql separados deste PDF.</strong>
+</p>
+<table class="">
+<thead>
+<tr><th scope="col">Arquivo</th><th scope="col">Conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>database/00_drop.sql</td><td>Recriação opcional: remove as nove tabelas. Conferir nomes existentes antes de executar; apaga os dados.</td>
+</tr>
+<tr><td>database/01_ddl.sql</td><td>Nove CREATE TABLE com PK, UNIQUE e CHECK; dez FKs via ALTER TABLE.</td>
+</tr>
+<tr><td>database/02_dml.sql</td><td>69 registros, COMMIT e ajuste de IDENTITY com START WITH LIMIT VALUE.</td>
+</tr>
+<tr><td>database/03_dql.sql</td><td>Três consultas exigidas.</td>
+</tr>
+</tbody>
+</table>
+<p>Execução: 01_ddl.sql → 02_dml.sql → 03_dql.sql. Usar 00_drop.sql apenas para recriação consciente. Abrir arquivos em UTF-8 no SQL Developer.</p>
+<table class="">
+<thead>
+<tr><th scope="col">Consulta</th><th scope="col">Recursos SQL</th><th scope="col">Finalidade</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>INNER JOIN entre ocorrência e categoria</td><td>Problemas da Rua Barão de Iguape com categoria, estado e prioridade.</td>
+</tr>
+<tr><td>2</td><td>INNER JOIN + funções de grupo + GROUP BY</td><td>Total, resolvidas, média de dias até resolução e prioridade média por categoria.</td>
+</tr>
+<tr><td>3</td><td>LEFT OUTER JOIN + WHERE + ORDER BY</td><td>Ocorrências ABERTA sem atendimento não cancelado, por prioridade decrescente e data de abertura.</td>
+</tr>
+</tbody>
+</table>
+<p>No estado inicial, a consulta 3 coloca o bueiro da Barão de Iguape, 288, com 71 pontos, em primeiro lugar.</p>
+<p class="nota">Fontes: database/README.md e os quatro scripts SQL do repositório.</p>
+</section>
+</main></body></html>

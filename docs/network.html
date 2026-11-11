@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Infraestrutura da base · RuaViva</title><link rel="stylesheet" href="estilo.css"><script>
+function prepararImagens(){document.querySelectorAll('img').forEach(img=>{function falta(){if(img.dataset.ausente)return;img.dataset.ausente='true';const box=document.createElement('div');box.className='imagem-ausente';const titulo=document.createElement('strong');titulo.textContent='Imagem pendente de inclusão';const nome=document.createElement('code');nome.textContent=img.getAttribute('src');box.append(titulo,nome);img.hidden=true;img.style.display='none';img.after(box);}img.addEventListener('error',falta);if(img.complete&&!img.naturalWidth)falta();});}
+document.addEventListener('DOMContentLoaded',prepararImagens);
+</script></head><body class="">
+<header class="capa">
+<div>
+<p class="instituicao">FIAP · Global Solution 2026.2<br>Engenharia de Software</p>
+<div class="placa">RuaViva</div>
+<p class="territorio">Liberdade · Sé · São Paulo</p>
+<h1>Infraestrutura da base</h1>
+<p class="disciplina">Network Architect Solutions</p>
+</div>
+<div>
+<div class="integrantes">
+<p class="eyebrow">Equipe RuaViva</p>
+<p><strong>Anthony Gonçalves Sforzin</strong> <span class="rm">· RM 562096</span>
+</p>
+<p><strong>Cesar Aaron Herrera</strong> <span class="rm">· RM 565398</span>
+</p>
+</div>
+<div class="rodape-capa">
+<p>19/11/2026</p><a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a>
+</div>
+</div>
+</header>
+<main>
+<section class="secao" id="sumario">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Entrega acadêmica · 19/11/2026</span>
+</div>
+<h2>Sumário</h2>
+<nav aria-label="Sumário">
+<ol>
+<li><a href="#ficha">1. Ficha da CitizenTech</a>
+</li>
+<li><a href="#topologia">2. Topologia e endereçamento</a>
+</li>
+<li><a href="#configs">3. Configurações de referência</a>
+</li>
+<li><a href="#testes">4. Testes e evidências</a>
+</li>
+</ol>
+</nav>
+<p class="nota">Os títulos são links para as seções. A paginação final acompanha o conteúdo e as imagens inseridas.</p>
+</section>
+<section class="secao" id="ficha">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Network Architect Solutions · 19/11/2026</span>
+</div>
+<h2>1. Ficha da CitizenTech</h2>
+<table class="">
+<thead>
+<tr><th scope="col">Campo</th><th scope="col">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>CitizenTech / solução</td><td>RuaViva · Equipe RuaViva</td>
+</tr>
+<tr><td>Cidade e bairro</td><td>São Paulo (SP), Liberdade, Rua Barão de Iguape, Subprefeitura Sé.</td>
+</tr>
+<tr><td>Cidadão beneficiado</td><td>Moradores, especialmente idosos, pessoas com deficiência e quem anda com carrinho de bebê.</td>
+</tr>
+<tr><td>Problema</td><td>O morador registra buracos, lixo e calçadas quebradas, mas não acompanha claramente a resolução; registros se repetem e o impacto coletivo precisa orientar a fila.</td>
+</tr>
+<tr><td>Funcionamento</td><td>Registro e apoio de vizinhos; prioridade por gravidade, apoios, proximidade sensível e autor prioritário. Notebook prevê demanda/risco; planejador de terminal organiza visitas.</td>
+</tr>
+<tr><td>Papel das disciplinas</td><td>Agile: personas, casos, backlog, UX e pitch. AR-VR: representação 3D. Data Science: modelos com SP156. Database: modelo Oracle. Java: API. Web: experiência do MVP. Dynamic Programming: seleção/rota. Network: infraestrutura da base.</td>
+</tr>
+<tr><td>Indicadores propostos</td><td>Tempo médio até resolução; percentual resolvido em sete dias; duplicatas unificadas (depende de evolução futura).</td>
+</tr>
+<tr><td>ODS</td><td>11: cidades sustentáveis; 10: redução das desigualdades; 9: indústria, inovação e infraestrutura.</td>
+</tr>
+<tr><td>Repositório</td><td><a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a></td>
+</tr>
+</tbody>
+</table>
+<p>A rede atende à base de zeladoria da Subprefeitura Sé. Separa funcionários, acesso Wi-Fi de cidadãos e servidores/sensores, mantendo serviços internos e acesso à internet simulada.</p>
+</section>
+<section class="secao" id="topologia">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Network Architect Solutions · 19/11/2026</span>
+</div>
+<h2>2. Topologia e endereçamento</h2>
+<figure><img src="img/topologia-pt.png" alt="Topologia completa no Cisco Packet Tracer 8.2, com nomes, portas, VLANs e redes."><figcaption>Topologia completa no Cisco Packet Tracer 8.2, com nomes, portas, VLANs e redes.</figcaption>
+</figure>
+<p>Dois Cisco 2911 (R1-BASE e ISP), um 2960-24TT (SW1), um AccessPoint-PT, dois Server-PT, dois PC-PT e um Laptop-PT com WPC300N. R1 usa router-on-a-stick; o trunk 802.1Q transporta VLANs 10, 20 e 30.</p>
+<table class="">
+<thead>
+<tr><th scope="col">Origem</th><th scope="col">Destino</th><th scope="col">Ligação</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>PC-EQUIPE Fa0</td><td>SW1 Fa0/1</td><td>Direto · VLAN 10</td>
+</tr>
+<tr><td>AP-WIFI Port 0</td><td>SW1 Fa0/2</td><td>Direto · VLAN 20</td>
+</tr>
+<tr><td>SRV-RUAVIVA Fa0</td><td>SW1 Fa0/3</td><td>Direto · VLAN 30</td>
+</tr>
+<tr><td>PC-SENSOR Fa0</td><td>SW1 Fa0/4</td><td>Direto · VLAN 30</td>
+</tr>
+<tr><td>LAPTOP-CIDADAO Wireless0</td><td>AP-WIFI Port 1</td><td>Wi-Fi · WPA2-PSK/AES</td>
+</tr>
+<tr><td>SW1 Gi0/1</td><td>R1 Gi0/0</td><td>Direto · trunk 10,20,30</td>
+</tr>
+<tr><td>R1 Gi0/1</td><td>ISP Gi0/0</td><td>Cruzado · WAN /30</td>
+</tr>
+<tr><td>ISP Gi0/1</td><td>SERVIDOR-INTERNET Fa0</td><td>Cruzado · rede externa</td>
+</tr>
+</tbody>
+</table>
+<h3>Plano de endereçamento</h3>
+<p>O plano aprovado usa uma rede /24 por setor. O “X” de 192.168.X.0/24 varia entre 10, 20 e 30.</p>
+<table class="">
+<thead>
+<tr><th scope="col">Setor</th><th scope="col">Rede / máscara</th><th scope="col">Gateway</th><th scope="col">DHCP / hosts</th><th scope="col">Broadcast</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Equipe<br>VLAN 10</td><td>192.168.10.0/24<br>255.255.255.0</td><td>192.168.10.1</td><td>192.168.10.10–254</td><td>192.168.10.255</td>
+</tr>
+<tr><td>Cidadão / Wi-Fi<br>VLAN 20</td><td>192.168.20.0/24<br>255.255.255.0</td><td>192.168.20.1</td><td>192.168.20.10–254</td><td>192.168.20.255</td>
+</tr>
+<tr><td>Servidores / Sensores<br>VLAN 30</td><td>192.168.30.0/24<br>255.255.255.0</td><td>192.168.30.1</td><td>192.168.30.11–254</td><td>192.168.30.255</td>
+</tr>
+<tr><td>WAN</td><td>200.10.0.0/30<br>255.255.255.252</td><td>R1 → 200.10.0.1</td><td>Sem DHCP<br>Hosts .1 e .2</td><td>200.10.0.3</td>
+</tr>
+<tr><td>Externa simulada</td><td>8.8.8.0/24<br>255.255.255.0</td><td>8.8.8.1</td><td>Sem DHCP<br>Hosts .1–.254</td><td>8.8.8.255</td>
+</tr>
+</tbody>
+</table>
+<table class="">
+<thead>
+<tr><th scope="col">Endereço fixo</th><th scope="col">Equipamento / uso</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>192.168.10.2/24</td><td>SW1 Vlan10; gateway 192.168.10.1.</td>
+</tr>
+<tr><td>192.168.30.10/24</td><td>SRV-RUAVIVA; gateway 192.168.30.1; DNS local.</td>
+</tr>
+<tr><td>200.10.0.2/30</td><td>R1 Gi0/1; IP compartilhado do PAT.</td>
+</tr>
+<tr><td>200.10.0.1/30</td><td>ISP Gi0/0; próximo salto do R1.</td>
+</tr>
+<tr><td>8.8.8.1/24</td><td>ISP Gi0/1; gateway externo.</td>
+</tr>
+<tr><td>8.8.8.8/24</td><td>SERVIDOR-INTERNET; gateway 8.8.8.1.</td>
+</tr>
+</tbody>
+</table>
+<p>Hosts internos utilizáveis: .1–.254. Todos os pools entregam DNS 192.168.30.10; .1–.9 e o servidor .30.10 estão reservados. O AP é uma ponte sem IP. Clientes recebem endereços por DHCP.</p>
+<p>Os endereços públicos são usados apenas no laboratório isolado. 8.8.8.8 representa o Server-PT, não o serviço real da internet.</p>
+</section>
+<section class="secao" id="configs">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Network Architect Solutions · 19/11/2026</span>
+</div>
+<h2>3. Configurações de referência</h2>
+<p>Trechos dos arquivos de network/configs para conferência com <code>show running-config</code>. São a configuração prevista, copiada das fontes, e não uma saída coletada de um .pkt executado. Após aplicar os comandos, conferir no modo privilegiado e salvar com write memory.</p>
+<article class="bloco-config">
+<h3>3.1 SW1 · VLANs e trunk</h3>
+<p>Uma VLAN por setor; Gi0/1 transporta as três até o R1. O 2960 já usa 802.1Q.</p><pre>vlan 10
+ name EQUIPE
+exit
+vlan 20
+ name CIDADAO_WIFI
+exit
+vlan 30
+ name SERVIDORES_SENSORES
+exit
+!
+! O 2960 usa 802.1Q; nao inserir switchport trunk encapsulation dot1q.
+interface GigabitEthernet0/1
+ description TRUNK_PARA_R1_G0/0
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30
+ no shutdown
+exit
+!</pre><p class="nota">Fonte: network/configs/SW1.txt.</p>
+</article>
+<article class="bloco-config">
+<h3>3.2 SW1 · portas e gerenciamento</h3>
+<p>Fa0/1 é Equipe; Fa0/2 é Wi-Fi; Fa0/3–4 são servidor e sensor. O endereço de gerenciamento fica na VLAN 10; SW1 não roteia.</p><pre>interface FastEthernet0/1
+ description PC_EQUIPE
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+ no shutdown
+exit
+interface FastEthernet0/2
+ description AP_WIFI_PORT0
+ switchport mode access
+ switchport access vlan 20
+ spanning-tree portfast
+ no shutdown
+exit
+interface FastEthernet0/3
+ description SRV_RUAVIVA
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ no shutdown
+exit
+interface FastEthernet0/4
+ description PC_SENSOR_SIMULADO
+ switchport mode access
+ switchport access vlan 30
+ spanning-tree portfast
+ no shutdown
+exit
+!
+! IP de gerencia reservado e excluido do DHCP; switch nao roteia VLANs.
+interface Vlan10
+ ip address 192.168.10.2 255.255.255.0
+ no shutdown
+exit
+ip default-gateway 192.168.10.1
+!</pre><p class="nota">Fonte: network/configs/SW1.txt.</p>
+</article>
+<article class="bloco-config">
+<h3>3.3 R1 · subinterfaces e WAN</h3>
+<p>Cada subinterface é gateway de uma VLAN e lado interno do NAT. A interface física do trunk fica sem IP. Gi0/1 é o lado externo.</p><pre>interface GigabitEthernet0/0
+ description TRUNK_8021Q_PARA_SW1_G0/1
+ no ip address
+ no shutdown
+exit
+interface GigabitEthernet0/0.10
+ description VLAN10_EQUIPE
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+exit
+interface GigabitEthernet0/0.20
+ description VLAN20_CIDADAO_WIFI
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip nat inside
+ ip access-group WIFI_CIDADAO_IN in
+exit
+interface GigabitEthernet0/0.30
+ description VLAN30_SERVIDORES_SENSORES
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+ ip nat inside
+exit
+!
+! Saida para o provedor; IP publico compartilhado pelo PAT.
+interface GigabitEthernet0/1
+ description WAN_PARA_ISP_G0/0
+ ip address 200.10.0.2 255.255.255.252
+ ip nat outside
+ no shutdown
+exit</pre><p class="nota">Fonte: network/configs/R1-BASE.txt.</p>
+</article>
+<article class="bloco-config">
+<h3>3.4 R1 · DHCP</h3>
+<p>O R1 distribui IP, máscara, gateway e DNS nas três redes; reservas evitam conflito com gateways, switch e servidor. Não é necessário ip helper-address.</p><pre>service dhcp
+ip dhcp excluded-address 192.168.10.1 192.168.10.9
+ip dhcp excluded-address 192.168.20.1 192.168.20.9
+ip dhcp excluded-address 192.168.30.1 192.168.30.9
+ip dhcp excluded-address 192.168.30.10
+ip dhcp pool EQUIPE
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+exit
+ip dhcp pool CIDADAO
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+exit
+ip dhcp pool SERVIDORES_SENSORES
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+exit
+!</pre><p class="nota">Fonte: network/configs/R1-BASE.txt.</p>
+</article>
+<article class="bloco-config">
+<h3>3.5 R1 · ACL do cidadão</h3>
+<p>Ordem: DHCP broadcast e renovação; DNS UDP 53 e HTTP TCP 80 para .30.10; negar VLANs 10 e 30; permitir demais destinos da VLAN 20. Aplicada na entrada de Gi0/0.20. O ping ao servidor é bloqueado, embora HTTP seja permitido.</p><pre>ip access-list extended WIFI_CIDADAO_IN
+ permit udp any eq 68 host 255.255.255.255 eq 67
+ permit udp 192.168.20.0 0.0.0.255 eq 68 host 192.168.20.1 eq 67
+ permit udp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 53
+ permit tcp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 80
+ deny ip any 192.168.10.0 0.0.0.255
+ deny ip any 192.168.30.0 0.0.0.255
+ permit ip 192.168.20.0 0.0.0.255 any
+exit
+!</pre><p class="nota">Fonte: network/configs/R1-BASE.txt.</p>
+</article>
+<article class="bloco-config">
+<h3>3.6 R1 · PAT e rota padrão</h3>
+<p>A ACL 1 seleciona origens para tradução, não é o filtro Wi-Fi. Overload compartilha 200.10.0.2 por portas; a rota padrão aponta ao ISP.</p><pre>access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 1 permit 192.168.20.0 0.0.0.255
+access-list 1 permit 192.168.30.0 0.0.0.255
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+ip route 0.0.0.0 0.0.0.0 200.10.0.1
+!</pre><p class="nota">Fonte: network/configs/R1-BASE.txt.</p>
+</article>
+<article class="bloco-config">
+<h3>3.7 ISP · retorno conectado</h3>
+<p>As redes WAN e externa são diretamente conectadas. O retorno ao PAT alcança 200.10.0.2 sem rotas privadas no ISP; não adicionar rotas às VLANs.</p><pre>interface GigabitEthernet0/0
+ description WAN_PARA_R1_G0/1
+ ip address 200.10.0.1 255.255.255.252
+ no shutdown
+exit
+!
+! Rede do servidor externo que representa a internet.
+interface GigabitEthernet0/1
+ description SERVIDOR_INTERNET_FASTETHERNET0
+ ip address 8.8.8.1 255.255.255.0
+ no shutdown
+exit</pre><p class="nota">Fonte: network/configs/ISP.txt.</p>
+</article>
+<article class="bloco-config">
+<h3>3.8 R1 · restrição do SSH</h3>
+<p>Acesso remoto somente SSH e apenas da VLAN Equipe. As fontes também configuram usuário local, SSH v2 e credenciais de exemplo; substituir as senhas antes da entrega e não expô-las nas capturas.</p><pre>ip access-list standard VTY_EQUIPE
+ permit 192.168.10.0 0.0.0.255
+ deny any
+exit
+line vty 0 4
+ login local
+ transport input ssh
+ access-class VTY_EQUIPE in
+ exec-timeout 5 0
+exit
+!</pre><p class="nota">Fonte: network/configs/R1-BASE.txt.</p>
+</article>
+<h3>Serviços e Wi-Fi</h3>
+<p>No SRV-RUAVIVA, ligar DNS e HTTP; DHCP permanece desligado. Registros A: ruaviva.gs → 192.168.30.10 e internet.gs → 8.8.8.8. Publicar network/servidor/index.html como index.html. No servidor externo, publicar network/servidor/internet.html como index.html, com HTTP ligado.</p>
+<p>No AP: SSID RuaViva-Cidadao, canal 6, WPA2-PSK e AES. Associar o laptop com WPC300N e solicitar DHCP. Portas não utilizadas ficam desligadas. Conferir também SSH da Equipe e recusa de Telnet.</p>
+</section>
+<section class="secao" id="testes">
+<div class="cabecalho"><span class="placa">RuaViva</span><span>Network Architect Solutions · 19/11/2026</span>
+</div>
+<h2>4. Testes e evidências</h2>
+<p>Pré-condições: interfaces up/up, VLANs/portas corretas, trunk encaminhando 10,20,30, DNS/HTTP ligados e rotas conectadas no ISP. Conferir show vlan brief, show interfaces trunk, show ip interface brief e show ip route.</p>
+<p class="destaque">As cinco verificações abaixo são critérios de aceitação. As imagens e os resultados observados estão pendentes de execução no Packet Tracer; nenhum resultado esperado é apresentado como teste aprovado.</p>
+<article class="teste">
+<h3>1. Ping entre VLANs</h3>
+<p><strong>Origem e destino:</strong> PC-EQUIPE → gateway local e SRV-RUAVIVA; PC-SENSOR → gateway da VLAN 10.</p><pre>PC-EQUIPE:
+ping 192.168.10.1
+ping 192.168.30.10
+PC-SENSOR:
+ping 192.168.10.1</pre><p><strong>Resultado esperado:</strong> Respostas estáveis entre VLANs 10 e 30. Repetir após resolução ARP inicial. Não usar laptop como destino da Equipe: a ACL bloqueia o retorno ICMP.</p>
+<figure><img src="img/teste-ping-vlans.png" alt="1. Ping entre VLANs · evidência real com origem, destino e resultado observado."><figcaption>1. Ping entre VLANs · evidência real com origem, destino e resultado observado.</figcaption>
+</figure>
+<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+</article>
+<article class="teste">
+<h3>2. DHCP nos três setores</h3>
+<p><strong>Origem e destino:</strong> PC-EQUIPE, LAPTOP-CIDADAO associado e PC-SENSOR, com ACL já aplicada.</p><pre>Em cada cliente:
+ipconfig /release
+ipconfig /renew
+ipconfig /all
+No R1:
+show ip dhcp binding
+show ip dhcp pool</pre><p><strong>Resultado esperado:</strong> Equipe .10.10–254; cidadão .20.10–254; sensor .30.11–254. Máscara /24, gateway .1 da própria VLAN e DNS 192.168.30.10. Capturar concessões e renovação com a ACL ativa.</p>
+<figure><img src="img/teste-dhcp.png" alt="2. DHCP nos três setores · evidência real com origem, destino e resultado observado."><figcaption>2. DHCP nos três setores · evidência real com origem, destino e resultado observado.</figcaption>
+</figure>
+<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+</article>
+<article class="teste">
+<h3>3. Página acessada pelo nome</h3>
+<p><strong>Origem e destino:</strong> Navegador do PC-EQUIPE e do LAPTOP-CIDADAO.</p><pre>http://ruaviva.gs</pre><p><strong>Resultado esperado:</strong> Ficha da CitizenTech com localização, nomes e RMs; URL visível. Demonstra resolução DNS e HTTP. No cidadão, confirma as permissões UDP 53/TCP 80 anteriores ao bloqueio da VLAN 30.</p>
+<figure><img src="img/teste-pagina-nome.png" alt="3. Página acessada pelo nome · evidência real com origem, destino e resultado observado."><figcaption>3. Página acessada pelo nome · evidência real com origem, destino e resultado observado.</figcaption>
+</figure>
+<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+</article>
+<article class="teste">
+<h3>4. NAT/PAT e internet simulada</h3>
+<p><strong>Origem e destino:</strong> PC-EQUIPE e LAPTOP-CIDADAO → servidor externo 8.8.8.8.</p><pre>Navegadores:
+http://internet.gs
+No R1, imediatamente após o acesso:
+show ip nat translations
+show ip nat statistics</pre><p><strong>Resultado esperado:</strong> Página “Internet simulada”. Tradução TCP: Inside local = IP/porta reais do cliente; Inside global = 200.10.0.2:porta; destino = 8.8.8.8:80. Registrar a tabela antes de expirar; DNS interno não precisa gerar NAT.</p>
+<figure><img src="img/teste-nat.png" alt="4. NAT/PAT e internet simulada · evidência real com origem, destino e resultado observado."><figcaption>4. NAT/PAT e internet simulada · evidência real com origem, destino e resultado observado.</figcaption>
+</figure>
+<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+</article>
+<article class="teste">
+<h3>5. Bloqueio por ACL</h3>
+<p><strong>Origem e destino:</strong> LAPTOP-CIDADAO → IP concedido ao PC-EQUIPE e SRV-RUAVIVA.</p><pre>No PC-EQUIPE: ipconfig
+No laptop (substituir pelo IP observado):
+ping 192.168.10.10
+ping 192.168.30.10
+No R1, antes e depois:
+show access-lists
+show access-lists WIFI_CIDADAO_IN</pre><p><strong>Resultado esperado:</strong> Sem respostas de eco aos dois destinos; os contadores deny das redes 10 e 30 aumentam. HTTP da solução continua funcionando. Se o PT não exibir contadores, capturar também a PDU ICMP descartada em Simulation.</p>
+<figure><img src="img/teste-acl.png" alt="5. Bloqueio por ACL · evidência real com origem, destino e resultado observado."><figcaption>5. Bloqueio por ACL · evidência real com origem, destino e resultado observado.</figcaption>
+</figure>
+<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+</article>
+<p>Salvar como network/RuaViva.pkt, reabrir e repetir os testes para verificar persistência. A ACL não isola cidadãos dentro do mesmo segmento Wi-Fi. A página HTTP do laboratório apresenta a ficha; não executa a API.</p>
+</section>
+</main></body></html>

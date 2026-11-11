@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap');
+
+:root { --placa:#1A4D8F; --faixa:#F2C200; --urgente:#C8102E; --resolvido:#1E7D4F; --texto:#1F2A30; --suave:#4A5961; --linha:#D3DAD7; }
+@page { size:A4; margin:18mm;
+  @bottom-left { content:'RuaViva · FIAP · GS 2026.2'; font:8pt 'Atkinson Hyperlegible',sans-serif; color:#4A5961; }
+  @bottom-right { content:counter(page); font:9pt 'Barlow Semi Condensed',sans-serif; color:#1A4D8F; }
+}
+@page paisagem { size: A4 landscape; margin: 12mm; }
+.pagina-paisagem { page: paisagem; break-before: page; break-after: page; }
+* { box-sizing:border-box; }
+html { color:var(--texto); background:#e8ecea; font:11pt/1.46 'Atkinson Hyperlegible',Arial,sans-serif; }
+body { max-width:210mm; margin:24px auto; background:white; padding:18mm; }
+h1,h2,h3,h4,.placa,.numero { font-family:'Barlow Semi Condensed',Arial,sans-serif; line-height:1.12; }
+h1 { font-size:34pt; margin:15mm 0 5mm; max-width:15ch; }
+h2 { font-size:24pt; color:var(--placa); margin:8mm 0 6mm; }
+h3 { font-size:16pt; margin:7mm 0 3mm; }
+h4 { font-size:13pt; margin:5mm 0 2mm; }
+p { margin:0 0 3.5mm; orphans:3; widows:3; }
+a { color:var(--placa); text-underline-offset:2px; overflow-wrap:anywhere; }
+.placa { display:inline-block; background:var(--placa); color:white; border-radius:4px; font-size:18pt; font-weight:700; padding:2mm 5mm; }
+.capa { min-height:248mm; display:flex; flex-direction:column; justify-content:space-between; break-after:page; }
+.capa .placa { font-size:52pt; padding:8mm 12mm; outline:1.5px solid white; outline-offset:-4mm; }
+.instituicao,.eyebrow { font-size:9pt; letter-spacing:.08em; text-transform:uppercase; color:var(--suave); }
+.disciplina { font-size:15pt; max-width:34ch; }
+.territorio { font-size:11pt; color:var(--suave); margin-top:4mm; }
+.integrantes { margin:9mm 0 6mm; border-top:1px solid var(--linha); padding-top:6mm; }
+.integrantes p { margin:1.5mm 0; }
+.rm { color:var(--suave); }
+.rodape-capa { border-top:1px solid var(--linha); padding-top:4mm; font-size:9pt; }
+.secao { break-before:page; }
+.cabecalho { display:flex; justify-content:space-between; align-items:center; gap:5mm; padding-bottom:3mm; border-bottom:1px solid var(--linha); }
+.cabecalho span:last-child { color:var(--suave); font-size:9pt; text-align:right; }
+.pontos { font:11pt 'Atkinson Hyperlegible',sans-serif; color:var(--suave); white-space:nowrap; }
+table { width:100%; border-collapse:collapse; margin:4mm 0 6mm; font-size:9.5pt; table-layout:fixed; }
+th { background:#E8EFF8; color:#123A6D; text-align:left; font-weight:700; }
+td,th { border-bottom:1px solid var(--linha); padding:2.5mm 2mm; vertical-align:top; overflow-wrap:anywhere; }
+thead { display:table-header-group; }
+tr { break-inside:avoid; }
+tbody tr:nth-child(even) { background:#F4F6F5; }
+caption { text-align:left; font-weight:700; margin-bottom:2mm; }
+.mvp { display:inline-block; color:var(--resolvido); background:#E6F3EC; border:1px solid #9fcbb3; padding:.5mm 1.5mm; border-radius:3px; font-weight:700; white-space:nowrap; }
+.prioridade { font-weight:700; }
+.pendente { border:1px solid var(--urgente); background:#FCEBEE; padding:4mm; font-weight:700; color:var(--urgente); overflow-wrap:anywhere; }
+.destaque { border:1px solid var(--linha); padding:4mm; background:#F4F6F5; }
+.formula { color:var(--placa); font-weight:700; font-size:13pt; }
+.nota,figcaption { color:var(--suave); font-size:9pt; line-height:1.35; }
+ul,ol { padding-left:6mm; margin:3mm 0 5mm; }
+li { margin:2mm 0; }
+nav ol { list-style:none; padding:0; }
+nav li { border-bottom:1px solid var(--linha); padding:3mm 0; margin:0; }
+nav a { text-decoration:none; }
+figure { margin:5mm 0; break-inside:avoid; }
+figure img { display:block; width:100%; height:auto; max-height:177mm; object-fit:contain; }
+figcaption { margin-top:2mm; }
+.imagem-ausente { min-height:42mm; border:1px dashed #9aa6ad; background:#F4F6F5; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:5mm; gap:2mm; font-size:10pt; color:var(--suave); }
+.imagem-ausente code { font-size:9pt; }
+.tela { break-inside:avoid; margin-bottom:8mm; }
+.tela img { max-height:145mm; }
+.tela h3 { margin-top:0; }
+pre { font:8.5pt/1.35 'DejaVu Sans Mono',monospace; white-space:pre-wrap; overflow-wrap:anywhere; background:#F4F6F5; border:1px solid var(--linha); padding:4mm; margin:3mm 0; tab-size:2; }
+code { font-family:'DejaVu Sans Mono',monospace; font-size:.87em; overflow-wrap:anywhere; }
+.bloco-config { break-inside:avoid; }
+.diagrama { break-before:page; }
+.mermaid { background:white; border:0; padding:0; text-align:center; white-space:pre; }
+.mermaid svg { width: 100% !important; height: auto; max-width: 100% !important; max-height: 175mm; }
+.diagrama figcaption { margin-top:.8mm; font-size:8pt; line-height:1.25; }
+.pagina-paisagem { break-inside:avoid; }
+.pagina-paisagem > h3 { margin:0 0 1mm; font-size:14pt; }
+.pagina-paisagem figure { margin:0; }
+.pagina-paisagem .mermaid { margin:0; line-height:1; }
+.diagrama-casos { margin:0; }
+.diagrama-casos img { width:100%; height:auto; max-height:175mm; object-fit:contain; }
+/* Compact section furniture leaves room for the landscape DER. */
+.diagrama-der h2 { margin:4mm 0 3mm; }
+.diagrama-der > p { font-size:10pt; margin-bottom:3mm; }
+@media screen and (min-width: 1150px) {
+  .pagina-paisagem { width:273mm; margin-left:calc((174mm - 273mm) / 2); background:white; }
+}
+.endpoints th:nth-child(1) { width:13%; }
+.endpoints th:nth-child(2) { width:34%; }
+.endpoints th:nth-child(4) { width:21%; }
+.backlog th:nth-child(1) { width:10%; }
+.backlog th:nth-child(2) { width:55%; }
+.backlog th:nth-child(3) { width:15%; }
+.backlog th:nth-child(4) { width:9%; }
+.backlog th:nth-child(5) { width:11%; }
+.catalogo th:nth-child(1) { width:10%; }
+.catalogo th:nth-child(2) { width:42%; }
+.catalogo th:nth-child(3) { width:30%; }
+.catalogo th:nth-child(4) { width:18%; }
+.pitch th:nth-child(1) { width:13%; }
+.pitch th:nth-child(2) { width:49%; }
+.pitch th:nth-child(3) { width:38%; }
+.teste { break-before:page; }
+.curta { font-size:10pt; line-height:1.4; }
+.curta .capa { min-height:0; break-after:auto; display:block; }
+.curta .capa .placa { font-size:32pt; margin:5mm 0 0; padding:6mm 10mm; }
+.curta h1 { font-size:26pt; margin-top:6mm; }
+.curta h2 { font-size:20pt; margin:5mm 0 3mm; }
+.curta .integrantes { margin:5mm 0 3mm; padding-top:3mm; }
+.curta .rodape-capa { margin-top:3mm; padding-top:3mm; }
+.curta .video { margin-top:6mm; }
+@media print {
+  html { background:white; }
+  body { padding:0; margin:0; max-width:none; }
+  * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  h2,h3,h4 { break-after:avoid; }
+  .capa { height:253mm; min-height:0; }
+  .curta .capa { height:auto; }
+}
+
+/* Página deitada: título + diagrama + legenda cabem em ~186 mm de altura útil */
+.pagina-paisagem .mermaid svg { max-height: 150mm; }
+.pagina-paisagem figure img { max-height: 160mm; }
+.diagrama-der .mermaid svg { max-height: 125mm; }
