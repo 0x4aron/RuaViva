@@ -23,6 +23,7 @@ Hipótese testada e confirmada: quanto mais pedidos do mesmo tipo chegaram à me
 ## Como executar
 
 ```bash
+cd data-science
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/jupyter notebook zeladoria_sp156.ipynb

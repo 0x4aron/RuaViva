@@ -18,6 +18,12 @@
   <h1>Meus registros</h1>
   <section aria-labelledby="titulo-meus"><h2 id="titulo-meus">Problemas que eu registrei</h2><ul id="lista" class="lista" aria-live="polite"><li class="carregando">Carregando…</li></ul></section>
   <section aria-labelledby="titulo-apoiados"><h2 id="titulo-apoiados">Problemas que eu apoiei</h2><ul id="apoiados" class="lista" aria-live="polite"><li class="carregando">Carregando…</li></ul></section>
+  <form id="buscar-registro" class="bloco formulario-acompanhamento acompanhar-fim" novalidate>
+    <h2>Acompanhar um registro pelo número</h2>
+    <div class="campo"><label for="numero-registro">Número do registro</label><p id="numero-registro-dica" class="dica">Digite os números exibidos depois de “Registro nº”.</p>
+      <input id="numero-registro" name="numero" type="text" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" required aria-describedby="numero-registro-dica" placeholder="Ex.: 0003"></div>
+    <button id="acompanhar-registro" class="botao" type="submit">Acompanhar registro</button>
+  </form>
 </main>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>

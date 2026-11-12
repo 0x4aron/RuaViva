@@ -143,7 +143,8 @@ A ACL estendida `WIFI_CIDADAO_IN` é aplicada com `ip access-group WIFI_CIDADAO_
 | 4 | `permit tcp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 80` | Libera HTTP para o mesmo servidor. |
 | 5 | `deny ip any 192.168.10.0 0.0.0.255` | Bloqueia a Equipe, inclusive seu gateway e o gerenciamento do switch. |
 | 6 | `deny ip any 192.168.30.0 0.0.0.255` | Bloqueia o restante da VLAN 30: outros hosts e demais protocolos do servidor, inclusive ping e HTTPS. |
-| 7 | `permit ip 192.168.20.0 0.0.0.255 any` | Libera outros destinos, incluindo a internet simulada, para clientes com IP da VLAN 20. |
+| 7 | `deny tcp 192.168.20.0 0.0.0.255 any eq 22` | Impede que o Wi-Fi público tente SSH em qualquer roteador, inclusive a administração do ISP (200.10.0.1). |
+| 8 | `permit ip 192.168.20.0 0.0.0.255 any` | Libera outros destinos, incluindo a internet simulada, para clientes com IP da VLAN 20. |
 | Implícita | `deny ip any any` | Descarta o que não correspondeu às linhas anteriores; não precisa ser digitada. |
 
 **DHCP:** Discover/Request podem sair de `0.0.0.0:68` para `255.255.255.255:67`. Uma permissão limitada à origem `192.168.20.0/24` não bastaria. Por isso a regra 1 aceita o broadcast mesmo sem IP; a regra 2 permite renovação unicast ao gateway. Offer/ACK saem pela subinterface e esta ACL filtra somente a entrada. As exceções UDP 68→67 não liberam destinos nas VLANs 10 ou 30. No SRV-RUAVIVA o DHCP fica desligado e os únicos serviços disponíveis ao cidadão são DNS UDP e HTTP.

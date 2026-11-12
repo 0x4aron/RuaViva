@@ -278,13 +278,14 @@ exit
 </article>
 <article class="bloco-config">
 <h3>3.5 R1 · ACL do cidadão</h3>
-<p>Ordem: DHCP broadcast e renovação; DNS UDP 53 e HTTP TCP 80 para .30.10; negar VLANs 10 e 30; permitir demais destinos da VLAN 20. Aplicada na entrada de Gi0/0.20. O ping ao servidor é bloqueado, embora HTTP seja permitido.</p><pre>ip access-list extended WIFI_CIDADAO_IN
+<p>Ordem: DHCP broadcast e renovação; DNS UDP 53 e HTTP TCP 80 para .30.10; negar VLANs 10 e 30; negar SSH a qualquer destino, inclusive o ISP; permitir demais destinos da VLAN 20. Aplicada na entrada de Gi0/0.20. O ping ao servidor é bloqueado, embora HTTP seja permitido.</p><pre>ip access-list extended WIFI_CIDADAO_IN
  permit udp any eq 68 host 255.255.255.255 eq 67
  permit udp 192.168.20.0 0.0.0.255 eq 68 host 192.168.20.1 eq 67
  permit udp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 53
  permit tcp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 80
  deny ip any 192.168.10.0 0.0.0.255
  deny ip any 192.168.30.0 0.0.0.255
+ deny tcp 192.168.20.0 0.0.0.255 any eq 22
  permit ip 192.168.20.0 0.0.0.255 any
 exit
 !</pre><p class="nota">Fonte: network/configs/R1-BASE.txt.</p>

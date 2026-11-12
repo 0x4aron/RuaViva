@@ -28,10 +28,7 @@ target/
 # Bases brutas grandes (baixar pelo link do README)
 data-science/dados/raw/
 
-# Configuracao local do Claude Code
-.claude/
 
 # ZIPs prontos para enviar no Teams/Portal
 entregas/
-.playwright-mcp/
 docs/.chrome-pdf.*/

@@ -66,6 +66,7 @@ ip access-list extended WIFI_CIDADAO_IN
  permit tcp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq 80
  deny ip any 192.168.10.0 0.0.0.255
  deny ip any 192.168.30.0 0.0.0.255
+ deny tcp 192.168.20.0 0.0.0.255 any eq 22
  permit ip 192.168.20.0 0.0.0.255 any
 exit
 !

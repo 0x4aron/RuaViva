@@ -242,6 +242,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <h2>4. Backlog do produto <span class="pontos">20 pontos</span>
 </h2>
 <p><strong>MoSCoW:</strong> Must = essencial; Should = complemento importante; Could = evolução possível; Won’t = fora desta entrega. Story points são estimativas relativas de esforço e complexidade.</p>
+<p><strong>Planning Poker:</strong> os pontos foram estimados pela dupla com cartas Fibonacci 1, 2, 3, 5, 8 e 13. Cada um lê os critérios e escolhe uma carta sem mostrar; as cartas são reveladas juntas, as diferenças são discutidas e a votação se repete até um valor comum. Referências: escolher perfil = 2, dar/retirar apoio = 3, localizar com alternativas = 5, registrar em etapas = 8. Sessão realizada em DATA_PLANNING.</p>
 <p><strong>14 Must no MVP: 64 pontos.</strong> Seis Should existentes; quatro Could e um Won’t futuros.</p>
 <table class="backlog">
 <thead>
@@ -251,7 +252,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <tbody>
 <tr><td>US01</td><td>Como Morador, quero escolher um perfil de demonstração, para experimentar os registros do bairro.<p class="nota">UC01</p><strong>Aceite:</strong> Listar moradores da API e exigir escolha. Guardar perfil no navegador. Oferecer entrada de gestor e informar que não é login.</td><td><span class="prioridade">Must</span></td><td>2</td><td><span class="mvp">MVP</span></td>
 </tr>
-<tr><td>US02</td><td>Como Morador, quero consultar problemas em lista e mapa, para reconhecer o que já foi registrado na Liberdade.<p class="nota">UC02</p><strong>Aceite:</strong> Filtrar Não resolvidos, Resolvidos e Todos. Listar apenas a Liberdade. Usar os mesmos números na lista e no mapa.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
+<tr><td>US02</td><td>Como Morador, quero consultar problemas em lista e mapa, para reconhecer o que já foi registrado na Liberdade.<p class="nota">UC02</p><strong>Aceite:</strong> Filtrar Pendentes, Resolvidos e Todos. Listar apenas a Liberdade. Usar os mesmos números na lista e no mapa.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
 <tr><td>US03</td><td>Como Morador, quero registrar um problema em três passos, para enviar categoria, local e detalhes sem preencher tudo de uma vez.<p class="nota">UC03,UC04,UC05</p><strong>Aceite:</strong> Exigir categoria, coordenadas, rua e bairro. Aceitar descrição opcional na tela e enviar nome da categoria se vazia. API criar ABERTA com data de hoje e prioridade calculada. Mostrar confirmação.</td><td><span class="prioridade">Must</span></td><td>8</td><td><span class="mvp">MVP</span></td>
 </tr>
@@ -324,7 +325,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <p class="nota">UC02 · US02</p>
 <figure><img src="img/tela-mapa.png" alt="O mapa localiza; a lista permite ler e agir sem depender de precisão no toque."><figcaption>O mapa localiza; a lista permite ler e agir sem depender de precisão no toque.</figcaption>
 </figure>
-<p>A lista aparece primeiro no celular. Números ligam registros e marcadores; os filtros Não resolvidos, Resolvidos e Todos apoiam a busca. Endereço e status escritos atendem quem usa zoom ou tem baixa visão.</p>
+<p>A lista aparece primeiro no celular. Números ligam registros e marcadores; os filtros Pendentes, Resolvidos e Todos apoiam a busca. Endereço e status escritos atendem quem usa zoom ou tem baixa visão.</p>
 </article>
 <article class="tela">
 <h3>Registrar problema</h3>

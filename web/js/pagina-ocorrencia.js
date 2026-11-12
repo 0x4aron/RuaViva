@@ -1,7 +1,7 @@
 const usuario = sessao.ler();
-if (!usuario) location.replace("index.html");
 const ehCidadao = usuario?.perfil === "cidadao";
-montarCabecalho(ehCidadao ? LINKS_CIDADAO("") : LINKS_GESTOR(""));
+const ehGestor = usuario?.perfil === "gestor";
+montarCabecalho(ehCidadao ? LINKS_CIDADAO("") : ehGestor ? LINKS_GESTOR("") : []);
 const id = Number(new URLSearchParams(location.search).get("id"));
 let mapa;
 function eventosDaOcorrencia(o, atendimentos, equipes) {
@@ -10,7 +10,7 @@ function eventosDaOcorrencia(o, atendimentos, equipes) {
     const equipe = nomeExibido(equipes.find((e) => e.idEquipe === a.idEquipe)?.nome || "equipe não informada");
     if (a.status === "AGENDADO") eventos.push({ data: a.dataAgendada, texto: `Visita agendada com ${equipe}`, agendado: true });
     if (a.status === "CONCLUIDO") eventos.push({ data: a.dataExecucao, texto: `Visita concluída por ${equipe}${a.observacao ? ": " + a.observacao : ""}` });
-    // A API não informa quando ocorreu o cancelamento.
+    // A API não guarda a data do cancelamento.
     if (a.status === "CANCELADO") eventos.push({ data: null, texto: `Visita prevista para ${formatarData(a.dataAgendada)} cancelada. Data do cancelamento não informada.` });
   });
   if (o.status === "RESOLVIDA" && !eventos.some((e) => e.data === o.dataResolucao && e.texto.startsWith("Visita concluída"))) eventos.push({ data: o.dataResolucao, texto: "Problema resolvido" });
@@ -29,6 +29,29 @@ function situacao(o, visita, equipes) {
   if (o.status === "EM_ANDAMENTO") return { frase: "Atendimento em andamento", proxima: "Nenhuma visita agendada consta no sistema neste momento." };
   return { frase: "Aguardando equipe", proxima: "O registro está na fila da subprefeitura. Ainda não há visita agendada." };
 }
+function resumoApoios(total) {
+  if (total === 0) return "Ainda não há apoios de vizinhos neste registro.";
+  return `${total} ${total === 1 ? "vizinho apoia" : "vizinhos apoiam"} este registro.`;
+}
+async function copiarLink() {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("Cópia indisponível");
+    await navigator.clipboard.writeText(location.href);
+    $("compartilhamento-estado").textContent = "Link copiado.";
+  } catch {
+    const campo = document.createElement("textarea");
+    campo.value = location.href;
+    campo.setAttribute("readonly", "");
+    campo.style.position = "fixed";
+    campo.style.left = "-1000px";
+    document.body.append(campo);
+    campo.select();
+    let copiado = false;
+    try { copiado = document.execCommand?.("copy") === true; } catch {}
+    campo.remove();
+    $("compartilhamento-estado").textContent = copiado ? "Link copiado." : "Não foi possível copiar. Selecione o endereço na barra do navegador.";
+  }
+}
 async function carregar() {
   limparAviso();
   if (!Number.isInteger(id) || id <= 0) {
@@ -42,7 +65,7 @@ async function carregar() {
     const categoria = apoio.categoria[o.idCategoria];
     const pendente = ["ABERTA", "EM_ANDAMENTO"].includes(o.status);
     const minha = ehCidadao && o.idCidadao === usuario.idCidadao;
-    const meuApoio = apoios.find((a) => a.idCidadao === usuario.idCidadao);
+    const meuApoio = ehCidadao ? apoios.find((a) => a.idCidadao === usuario.idCidadao) : null;
     const visita = atendimentos.find((a) => a.status === "AGENDADO");
     const eventos = eventosDaOcorrencia(o, atendimentos, equipes);
     const atual = situacao(o, visita, equipes);
@@ -56,24 +79,32 @@ async function carregar() {
       : '<button id="apoiar" class="botao botao-principal" type="button">Isso também me afeta</button>';
     if (minha) acao = '<p>Este registro é seu. Vizinhos afetados podem apoiá-lo; cada apoio entra no cálculo da prioridade.</p>';
     if (!pendente) acao += '<p class="texto-suave">Este registro está encerrado e não recebe novos apoios.</p>';
+    if (!usuario && pendente) acao = '<p><a href="index.html">Escolha um perfil de morador</a> para apoiar este registro.</p>';
     mapa?.remove();
+    const linkWhatsapp = `https://wa.me/?text=${encodeURIComponent(`${numeroRegistro(o)}: ${location.href}`)}`;
     $("detalhe").innerHTML = `<h1>${placaDeRua(o, true)}</h1>
+      <p class="protocolo">${esc(numeroRegistro(o))}</p>
       <div class="item-topo"><strong>${icone(categoriaVisual(categoria).icone)} ${esc(nomeExibido(categoria.nome))}</strong>${seloStatus(o.status)}</div>
       <p>${esc(nomeExibido(o.descricao))}</p>
+      <div class="acoes acoes-comprovante" aria-label="Ações do registro"><button id="copiar-link" class="botao" type="button">Copiar link</button><a class="botao" href="${linkWhatsapp}" target="_blank" rel="noopener noreferrer">Enviar pelo WhatsApp</a><button id="imprimir" class="botao" type="button">Imprimir</button></div>
+      <p id="compartilhamento-estado" class="texto-suave" aria-live="polite"></p>
       <section class="bloco situacao" aria-labelledby="titulo-situacao"><h2 id="titulo-situacao">Situação do registro</h2>
         <p class="situacao-frase">${esc(atual.frase)}</p><p><strong>Última movimentação:</strong> ${ultima ? `${esc(ultima.texto)} · ${formatarData(ultima.data)}` : "Nenhuma movimentação com data informada."}</p>
         <p><strong>Próxima etapa:</strong> ${esc(atual.proxima)}</p>
-        <p class="${atrasado ? "atrasado" : "texto-suave"}">${atrasado ? icone("relogio") + " Passou do prazo de referência. " : ""}Prazo de referência da categoria: ${categoria.prazoDias} dias.${pendente ? ` Aberto há ${dias} dias.` : ""}</p>
+        <p class="${atrasado ? "atrasado" : "texto-suave"}">${atrasado ? icone("relogio") + " Passou do prazo de referência. " : ""}Prazo de referência da categoria: ${textoPrazo(categoria.prazoDias)}.${pendente ? ` Aberto ${textoTempoDesde(o.dataAbertura)}.` : ""}</p>
       </section>
+      ${atrasado ? `<aside class="aviso aviso-ouvidoria"><svg class="icone" aria-hidden="true"><use href="img/icones.svg#info"></use></svg><div><p>Fez um pedido oficial no SP156 e ele também não foi atendido? Você pode reclamar na <a href="https://sp156.prefeitura.sp.gov.br/portal/servicos/informacao?servico=2630" target="_blank" rel="noopener noreferrer">Ouvidoria Geral do Município</a>.</p><p class="texto-suave">O número RuaViva não substitui o protocolo do SP156.</p></div></aside>` : ""}
       <section aria-labelledby="titulo-historico"><h2 id="titulo-historico">O que já aconteceu</h2><ol class="linha-tempo">${eventos.map((evento) => `<li>${esc(evento.texto)}${evento.data ? `<time datetime="${evento.data}">${evento.agendado ? "Data prevista: " : ""}${formatarData(evento.data)}</time>` : ""}</li>`).join("")}</ol></section>
       <section class="bloco" aria-labelledby="titulo-apoio"><h2 id="titulo-apoio">Isso também me afeta</h2>
-        <p>${icone("pessoas")} <strong>${textoApoios(apoios.length)}</strong> de vizinhos neste registro.</p>
+        <p>${icone("pessoas")} ${resumoApoios(apoios.length)}</p>
         ${minha ? "" : '<p>Apoios ajudam a subprefeitura a ver quantas pessoas são afetadas. Cada apoio entra no cálculo da prioridade.</p>'}${acao}
       </section>
-      ${!ehCidadao ? `<section class="bloco"><h2>Prioridade</h2><p class="prioridade ${nivel.classe}"><span class="prioridade-valor">${o.prioridade}</span>${nivel.texto}</p><button id="por-que" class="botao-texto" aria-expanded="false" aria-controls="composicao" type="button">Por que ${o.prioridade} pontos?</button><div id="composicao" hidden aria-live="polite"></div></section>` : ""}
+      ${ehGestor ? `<section class="bloco"><h2>Prioridade</h2><p class="prioridade ${nivel.classe}"><span class="prioridade-valor">${o.prioridade}</span>${nivel.texto}</p><button id="por-que" class="botao-texto" aria-expanded="false" aria-controls="composicao" type="button">Por que ${o.prioridade} pontos?</button><div id="composicao" hidden aria-live="polite"></div></section>` : ""}
       <section aria-labelledby="titulo-local"><h2 id="titulo-local">Local do problema</h2><p>${esc(endereco(o))} — ${esc(nomeProprio(apoio.distrito[o.idDistrito]?.nome))}</p><div id="mapa" class="mapa mapa-pequeno" role="region" aria-label="Local do problema no mapa"></div></section>`;
     mapa = criarMapa("mapa", [o.latitude, o.longitude], 18);
     if (mapa) marcadorOcorrencia(o).addTo(mapa);
+    $("copiar-link").addEventListener("click", copiarLink);
+    $("imprimir").addEventListener("click", () => window.print());
     $("apoiar")?.addEventListener("click", (evento) => enviarComBotao(evento.currentTarget, async () => {
       await api.post("/apoios", { idOcorrencia: id, idCidadao: usuario.idCidadao });
       if (await carregar()) avisar("Apoio registrado. Obrigado por avisar que isso também afeta você.");

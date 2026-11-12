@@ -4,6 +4,6 @@ package br.com.fiap.gs.zeladoria.exception;
 public class RecursoNaoEncontradoException extends RuntimeException {
 
     public RecursoNaoEncontradoException(String recurso, Long id) {
-        super(recurso + " com ID " + id + " não encontrado(a)");
+        super("Registro não encontrado: " + recurso + " com ID " + id);
     }
 }

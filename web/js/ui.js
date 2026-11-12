@@ -1,4 +1,3 @@
-// Componentes e funções comuns, sem dependência de framework.
 const $ = (id) => document.getElementById(id);
 const sessao = {
   ler() {
@@ -49,7 +48,6 @@ function esc(texto) {
   })[letra]);
 }
 
-// Corrige a grafia dos nomes legados, sem alterar os dados da API.
 function nomeExibido(texto) {
   if (String(texto).toUpperCase() === "SE") return "Sé";
   const palavras = {
@@ -96,6 +94,19 @@ function formatarData(iso) {
 function diasDesde(iso, fim = hoje()) {
   return Math.max(0, Math.floor((Date.parse(fim + "T12:00:00Z") - Date.parse(iso + "T12:00:00Z")) / 86400000));
 }
+function textoTempoDesde(iso, fim = hoje()) {
+  const dias = diasDesde(iso, fim);
+  if (dias === 0) return "hoje";
+  return `há ${dias} ${dias === 1 ? "dia" : "dias"}`;
+}
+function textoPrazo(dias) {
+  const valor = Number(dias);
+  if (valor === 0) return "hoje";
+  return `${valor} ${valor === 1 ? "dia" : "dias"}`;
+}
+function numeroRegistro(o) {
+  return `Registro nº ${String(o.idOcorrencia).padStart(4, "0")}`;
+}
 function nivelPrioridade(valor) {
   if (valor >= 60) return { classe: "alta", texto: "Alta" };
   if (valor >= 40) return { classe: "media", texto: "Média" };
@@ -104,7 +115,6 @@ function nivelPrioridade(valor) {
 function endereco(o) {
   return nomeProprio(o.logradouro) + (o.numero ? `, ${o.numero}` : "");
 }
-// Abrevia títulos comuns em nomes de rua para a placa compacta caber em uma linha
 function abreviarRua(nome) {
   return nome.replace(/^Doutor\s/, "Dr. ").replace(/^Professor\s/, "Prof. ").replace(/^Conselheiro\s/, "Cons. ").replace(/^Senador\s/, "Sen. ").replace(/^General\s/, "Gen. ");
 }
@@ -122,19 +132,19 @@ function contarApoios(apoios) {
   apoios.forEach((a) => { contagem[a.idOcorrencia] = (contagem[a.idOcorrencia] || 0) + 1; });
   return contagem;
 }
-function linhaOcorrencia(o, categoria, apoios = 0, numero = null) {
+function linhaOcorrencia(o, categoria, apoios = 0, numero = null, mostrarRegistro = false) {
   return `<li class="item"><a class="cobrir" href="ocorrencia.html?id=${o.idOcorrencia}">
-    <span class="item-icone">${icone(categoriaVisual(categoria).icone)}${numero ? `<span class="numero">${numero}<span class="visualmente-oculto"> no mapa</span></span>` : ""}</span>
+    <span class="item-icone">${icone(categoriaVisual(categoria).icone)}${numero ? `<span class="numero numero-mapa numero-${esc(String(o.status).toLowerCase())}">${numero}<span class="visualmente-oculto"> na lista do mapa</span></span>` : ""}</span>
     <div class="item-corpo"><div class="item-topo"><strong>${esc(nomeExibido(categoria?.nome || "Problema registrado"))}</strong>${seloStatus(o.status)}</div>
     ${placaDeRua(o)}<p class="item-descricao">${esc(nomeExibido(o.descricao))}</p>
-    <p class="item-meta">há ${diasDesde(o.dataAbertura)} dias · ${textoApoios(apoios)}</p></div></a></li>`;
+    <p class="item-meta">${mostrarRegistro ? `${numeroRegistro(o)} · ` : ""}${textoTempoDesde(o.dataAbertura)} · ${textoApoios(apoios)}</p></div></a></li>`;
 }
 function montarCabecalho(links) {
   const usuario = sessao.ler();
   $("cabecalho").innerHTML = `<div class="cabecalho-linha"><a class="marca" href="index.html">${icone("local")}${esc(CONFIG.APP_NOME)}</a>
     ${usuario ? '<button class="botao-texto" id="botao-sair" type="button">Trocar perfil</button>' : ""}</div>
     <p class="quem">${esc(usuario?.perfil === "gestor" ? "Subprefeitura Sé · São Paulo" : usuario?.nome || "Liberdade · Sé · São Paulo")}</p>
-    <nav class="abas ${links.length === 2 ? "abas-gestor" : ""}" aria-label="Páginas">${links.map((link) => `<a href="${link.href}" ${link.atual ? 'aria-current="page"' : ""}${link.curto ? ` aria-label="${esc(link.texto)}"` : ""}>${link.curto ? `<span class="aba-completa">${esc(link.texto)}</span><span class="aba-curta" aria-hidden="true">${esc(link.curto)}</span>` : esc(link.texto)}</a>`).join("")}</nav>`;
+    ${links.length ? `<nav class="abas ${links.length === 2 ? "abas-gestor" : ""}" aria-label="Páginas">${links.map((link) => `<a href="${link.href}" ${link.atual ? 'aria-current="page"' : ""}${link.curto ? ` aria-label="${esc(link.texto)}"` : ""}>${link.curto ? `<span class="aba-completa">${esc(link.texto)}</span><span class="aba-curta" aria-hidden="true">${esc(link.curto)}</span>` : esc(link.texto)}</a>`).join("")}</nav>` : ""}`;
   $("botao-sair")?.addEventListener("click", () => sessao.sair());
   document.title = document.title.replace("{app}", CONFIG.APP_NOME);
 }

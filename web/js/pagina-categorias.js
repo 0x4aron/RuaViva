@@ -8,7 +8,7 @@ async function carregarTabela() {
   $("tabela-estado").textContent = "Carregando categorias…";
   try {
     const categorias = await api.get("/categorias");
-    $("tabela").innerHTML = categorias.sort((a, b) => b.pesoGravidade - a.pesoGravidade).map((c) => `<tr><td data-label="Categoria">${esc(nomeExibido(c.nome))}</td><td data-label="Peso">Peso ${c.pesoGravidade}</td><td data-label="Prazo">${c.prazoDias} dias</td><td data-label="Horas">${c.horasEstimadas} h</td></tr>`).join("");
+    $("tabela").innerHTML = categorias.sort((a, b) => b.pesoGravidade - a.pesoGravidade).map((c) => `<tr><td data-label="Categoria">${esc(nomeExibido(c.nome))}</td><td data-label="Peso">Peso ${c.pesoGravidade}</td><td data-label="Prazo">${textoPrazo(c.prazoDias)}</td><td data-label="Horas">${c.horasEstimadas} h</td></tr>`).join("");
     $("tabela-estado").textContent = categorias.length ? `${categorias.length} categorias cadastradas` : "Nenhuma categoria cadastrada. Use o formulário para criar a primeira.";
     return true;
   } catch (erro) {

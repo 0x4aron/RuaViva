@@ -1,5 +1,3 @@
-// Comunicacao com a API Java. Todas as paginas usam estas funcoes.
-
 class ErroApi extends Error {
   constructor(status, mensagem, campos) {
     super(mensagem);
@@ -24,7 +22,6 @@ async function chamarApi(metodo, caminho, corpo) {
     const dados = await resposta.json().catch(() => null);
     if (controle.signal.aborted) throw new Error();
     if (!resposta.ok) {
-      // A API informa a mensagem e os campos inválidos.
       throw new ErroApi(resposta.status, dados?.mensagem || "Erro " + resposta.status, dados?.campos);
     }
     return dados;

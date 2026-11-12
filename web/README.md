@@ -9,8 +9,8 @@ Site responsivo em **HTML, CSS e JavaScript puro** que usa a API Java (`java-api
 | `index.html` | Todos | Entrada: escolher "Sou morador" (um dos moradores fictícios) ou "Trabalho na subprefeitura" |
 | `mapa.html` | Morador | Mapa e lista dos problemas do bairro, com cor por status |
 | `registrar.html` | Morador | Registrar problema: categoria, ponto no mapa (ou GPS), endereço e descrição. **Avisa quando já existe um problema parecido a até 60 m**, para o morador apoiar em vez de repetir |
-| `ocorrencia.html` | Morador e gestor | Detalhe: botão **"Isso também me afeta"**, linha do tempo e prazo |
-| `minhas.html` | Morador | Problemas que registrei e que apoiei |
+| `ocorrencia.html` | Morador e gestor | Detalhe: número local, botão **"Isso também me afeta"**, linha do tempo, prazo e opções para copiar, compartilhar ou imprimir. Links abrem em modo de leitura sem perfil. |
+| `minhas.html` | Morador | Problemas que registrei e que apoiei; busca de registro pelo número local |
 | `gestor.html` | Gestor | **Fila por prioridade**: agendar equipe, concluir ou cancelar visita |
 | `categorias.html` | Gestor | Cadastrar categoria com a **régua de peso sugerida** (vinda de `GET /categorias/regua-peso`) |
 

@@ -1,4 +1,3 @@
-// Leaflet 1.9.4 e OpenStreetMap.
 const COR_STATUS = { ABERTA: "#C8102E", EM_ANDAMENTO: "#7A5C00", RESOLVIDA: "#1E7D4F", CANCELADA: "#4A5961" };
 function criarMapa(idElemento, centro = CONFIG.MAPA_CENTRO, zoom = CONFIG.MAPA_ZOOM) {
   if (!window.L) {
@@ -30,7 +29,7 @@ function iconeMarcador(status, numero) {
 function marcadorOcorrencia(o, numero = 1) {
   return L.marker([o.latitude, o.longitude], { icon: iconeMarcador(o.status, numero), title: `${numero}. ${endereco(o)} — ${STATUS_TEXTO[o.status]}`, alt: `${numero}. ${endereco(o)}` });
 }
-// Projeta sempre as coordenadas originais: o deslocamento não se acumula no zoom.
+// Recalcula os deslocamentos a partir das coordenadas originais a cada zoom.
 function separarMarcadores(mapa, entradas, ligacoes) {
   ligacoes.clearLayers();
   const pontos = entradas.map(({ origem }) => mapa.latLngToLayerPoint(origem));
@@ -43,8 +42,7 @@ function separarMarcadores(mapa, entradas, ligacoes) {
     const raio = Math.max(44, 44 / (2 * Math.sin(passo / 2)));
     return grupo.map((_, i) => centro.add(L.point(Math.cos(-Math.PI + i * passo) * raio, Math.sin(-Math.PI + i * passo) * raio)));
   };
-  // 40 px também protege a borda dos pinos de 36 px. Une grupos se o leque
-  // alcançar outro pino, inclusive quando três ou mais endereços coincidem.
+  // Junta grupos de pinos que ficariam a menos de 40 px um do outro.
   let mudou = true;
   while (mudou) {
     mudou = false;
@@ -77,7 +75,6 @@ function distancia(a, b) {
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLon / 2) ** 2;
   return 6371000 * 2 * Math.asin(Math.sqrt(h));
 }
-// A busca é limitada à região da Liberdade. Não há busca enquanto se digita.
 const REGIAO_LIBERDADE = { oeste: -46.65, norte: -23.548, leste: -46.619, sul: -23.58 };
 async function geocodificar(rota, parametros) {
   const regiao = REGIAO_LIBERDADE;

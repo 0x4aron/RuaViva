@@ -8,6 +8,12 @@ let localPendente = false, dadosProntos = false;
 const chaveRascunho = `ruaviva-rascunho-${usuario?.idCidadao}`;
 
 function categoriaEscolhida() { return document.querySelector('input[name="categoria"]:checked'); }
+function atualizarInformacaoCategoria() {
+  const area = $("informacao-categoria");
+  const categoria = apoio?.categoria[categoriaEscolhida()?.value];
+  area.hidden = !categoria;
+  if (categoria) area.textContent = `Prazo de referência: ${textoPrazo(categoria.prazoDias)}. Atendimento: Subprefeitura Sé.`;
+}
 function salvarRascunho() {
   if (!apoio) return;
   const dados = { categoria: categoriaEscolhida()?.value, local, passo,
@@ -35,6 +41,7 @@ function restaurarRascunho() {
     $("local-escolhido").textContent = dados.confirmacao || textoCoordenadas();
   }
   mostrarPasso(Math.min(3, Math.max(1, Number(dados.passo) || 1)), false);
+  atualizarInformacaoCategoria();
   atualizarContador();
 }
 function textoCoordenadas() {
@@ -182,7 +189,6 @@ function mostrarPasso(numero, focar = true) {
     if (n === passo) $("etapa-" + n).setAttribute("aria-current", "step");
     else $("etapa-" + n).removeAttribute("aria-current");
   });
-  $("passo-atual").textContent = `Passo ${passo} de 3`;
   $("voltar").hidden = passo === 1;
   $("continuar").hidden = passo === 3;
   $("enviar").hidden = passo !== 3;
@@ -216,6 +222,7 @@ async function carregar() {
     dadosProntos = Boolean(apoio.categorias.length && apoio.distritos.length);
     atualizarContinuar();
     restaurarRascunho();
+    atualizarInformacaoCategoria();
     verificarParecidas();
   } catch (erro) {
     $("categorias").innerHTML = '<p>Não foi possível carregar as categorias.</p>';
@@ -262,11 +269,11 @@ $("minha-localizacao").addEventListener("click", () => {
     avisar("Não conseguimos sua localização. Busque o endereço ou marque o ponto no mapa.", "erro");
   }, { timeout: 12000 });
 });
-$("categorias").addEventListener("change", () => { verificarParecidas(); salvarRascunho(); });
+$("categorias").addEventListener("change", () => { atualizarInformacaoCategoria(); verificarParecidas(); salvarRascunho(); });
 $("form").addEventListener("input", salvarRascunho);
 $("descricao").addEventListener("input", atualizarContador);
 ["logradouro", "numero"].forEach((id) => $(id).addEventListener("input", () => {
-  // Uma correção manual não deve ser sobrescrita pela busca em andamento.
+  // Se a pessoa corrigiu a rua à mão, a busca em andamento não sobrescreve.
   novaEscolha(false, false);
   if (local) $("local-escolhido").textContent = $("logradouro").value.trim() ? `Local escolhido: ${endereco({ logradouro: $("logradouro").value, numero: $("numero").value })} — ${nomeProprio(apoio?.distrito[$("distrito").value]?.nome)}` : textoCoordenadas();
   salvarRascunho();
@@ -291,18 +298,18 @@ $("form").addEventListener("submit", async (evento) => {
   await enviarComBotao($("enviar"), async () => {
     const criada = await api.post("/ocorrencias", {
       idCidadao: usuario.idCidadao, idCategoria: Number(categoria.value), idDistrito: Number($("distrito").value),
-      // A API exige descrição; o nome da categoria resume o registro sem texto adicional.
+      // A API exige descrição; se ficar vazia, mandamos o nome da categoria.
       descricao: $("descricao").value.trim() || nomeExibido(apoio.categoria[categoria.value].nome),
       logradouro: $("logradouro").value.trim(), numero: $("numero").value.trim() || null,
       latitude: local.lat, longitude: local.lng,
     });
     clearTimeout(esperaReversa);
     versaoLocal++;
-    try { sessionStorage.removeItem(chaveRascunho); } catch { /* O envio já foi concluído. */ }
+    try { sessionStorage.removeItem(chaveRascunho); } catch {}
     limparAviso();
     $("registro").hidden = true;
     $("titulo-pagina").textContent = "Problema registrado";
-    $("confirmacao").innerHTML = `${placaDeRua(criada, true)}<h2>O que acontece agora</h2><p>Seu registro entrou na fila da subprefeitura. Você acompanha o atendimento em Meus registros.</p><div class="acoes"><a class="botao botao-principal" href="ocorrencia.html?id=${criada.idOcorrencia}">Acompanhar este registro</a><a class="botao" href="minhas.html">Meus registros</a></div>`;
+    $("confirmacao").innerHTML = `${placaDeRua(criada, true)}<p class="protocolo">${esc(numeroRegistro(criada))}</p><h2>O que acontece agora</h2><p>Seu registro entrou na fila da subprefeitura. Acompanhe as atualizações em Meus registros.</p><p class="texto-suave">Este número identifica o registro no RuaViva; não é um protocolo oficial do SP156.</p><div class="acoes"><a class="botao botao-principal" href="ocorrencia.html?id=${criada.idOcorrencia}">Acompanhar este registro</a><a class="botao" href="minhas.html">Meus registros</a></div>`;
     $("confirmacao").hidden = false;
     $("titulo-pagina").setAttribute("tabindex", "-1");
     $("titulo-pagina").focus();

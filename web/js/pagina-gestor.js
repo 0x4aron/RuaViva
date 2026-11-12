@@ -25,8 +25,8 @@ function equipesDaOcorrencia(o) {
 function prazo(o) {
   const dias = diasDesde(o.dataAbertura);
   const referencia = apoio.categoria[o.idCategoria]?.prazoDias;
-  const complemento = referencia == null ? "prazo não informado" : dias > referencia ? `${dias - referencia} além do prazo` : `prazo ${referencia} dias`;
-  return `<span class="prazo"><strong>${dias} ${dias === 1 ? "dia" : "dias"}</strong><span class="${dias > referencia ? "atrasado" : "texto-suave"}">${complemento}</span></span>`;
+  const complemento = referencia == null ? "prazo não informado" : dias > referencia ? `${textoPrazo(dias - referencia)} além do prazo` : `prazo de ${textoPrazo(referencia)}`;
+  return `<span class="prazo"><strong>${textoPrazo(dias)}</strong><span class="${referencia != null && dias > referencia ? "atrasado" : "texto-suave"}">${complemento}</span></span>`;
 }
 function desenharFila() {
   $("fila").innerHTML = fila.length ? fila.map((o) => {

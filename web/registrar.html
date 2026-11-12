@@ -19,10 +19,14 @@
   <h1 id="titulo-pagina">Registrar problema</h1>
   <div id="registro">
     <ol class="passos" aria-label="Etapas do registro"><li id="etapa-1" aria-current="step">1. Problema</li><li id="etapa-2">2. Local</li><li id="etapa-3">3. Detalhes</li></ol>
-    <p id="passo-atual" aria-live="polite">Passo 1 de 3</p>
     <form id="form" novalidate>
       <section id="passo-1" aria-labelledby="titulo-passo-1"><h2 id="titulo-passo-1" tabindex="-1">O que é?</h2>
         <fieldset class="campo"><legend>Escolha uma categoria</legend><div class="opcoes" id="categorias" aria-live="polite"><p>Carregando categorias…</p></div></fieldset>
+        <p id="informacao-categoria" class="dica informacao-categoria" aria-live="polite" hidden></p>
+        <aside class="aviso aviso-emergencia" aria-label="Emergências">
+          <svg class="icone" aria-hidden="true"><use href="img/icones.svg#alerta"></use></svg>
+          <p>Risco imediato, como fio caído ou cratera? Ligue para <a href="tel:199">199 (Defesa Civil)</a> ou <a href="tel:156">156</a>. Use o RuaViva para problemas sem risco imediato.</p>
+        </aside>
       </section>
       <section id="passo-2" aria-labelledby="titulo-passo-2" hidden><h2 id="titulo-passo-2" tabindex="-1">Onde fica?</h2>
         <div class="campo"><label for="busca-endereco">Rua e número</label><p class="dica" id="busca-dica">Buscamos endereços na região da Liberdade, pelo OpenStreetMap.</p>

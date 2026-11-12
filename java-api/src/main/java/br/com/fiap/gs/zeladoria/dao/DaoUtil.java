@@ -35,12 +35,10 @@ final class DaoUtil {
         return chave.getKey().longValue();
     }
 
-    /** LocalDate (Java) -> DATE (banco). */
     static Date paraSql(LocalDate data) {
         return data == null ? null : Date.valueOf(data);
     }
 
-    /** DATE (banco) -> LocalDate (Java). */
     static LocalDate paraLocalDate(Date data) {
         return data == null ? null : data.toLocalDate();
     }
