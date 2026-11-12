@@ -15,8 +15,10 @@ function eventosDaOcorrencia(o, atendimentos, equipes) {
   });
   if (o.status === "RESOLVIDA" && !eventos.some((e) => e.data === o.dataResolucao && e.texto.startsWith("Visita concluída"))) eventos.push({ data: o.dataResolucao, texto: "Problema resolvido" });
   if (o.status === "CANCELADA") eventos.push({ data: null, texto: "Registro cancelado. Data do cancelamento não informada." });
-  return eventos.sort((a, b) => (a.data || "9999").localeCompare(b.data || "9999"));
+  const datados = eventos.filter(temData).sort((a, b) => Date.parse(a.data) - Date.parse(b.data));
+  return datados.concat(eventos.filter((evento) => !temData(evento)));
 }
+function temData(evento) { return Number.isFinite(Date.parse(evento.data)); }
 function situacao(o, visita, equipes) {
   if (o.status === "RESOLVIDA") return { frase: o.dataResolucao ? `Resolvido em ${formatarData(o.dataResolucao).slice(0, 5)}` : "Problema resolvido", proxima: "Atendimento encerrado. O histórico permanece disponível." };
   if (o.status === "CANCELADA") return { frase: "Registro cancelado", proxima: "Este registro está encerrado." };
@@ -44,7 +46,7 @@ async function carregar() {
     const visita = atendimentos.find((a) => a.status === "AGENDADO");
     const eventos = eventosDaOcorrencia(o, atendimentos, equipes);
     const atual = situacao(o, visita, equipes);
-    const ultima = eventos.at(-1);
+    const ultima = eventos.filter(temData).at(-1);
     const dias = diasDesde(o.dataAbertura, o.dataResolucao || hoje());
     const atrasado = pendente && dias > categoria.prazoDias;
     const nivel = nivelPrioridade(o.prioridade);
@@ -59,7 +61,7 @@ async function carregar() {
       <div class="item-topo"><strong>${icone(categoriaVisual(categoria).icone)} ${esc(nomeExibido(categoria.nome))}</strong>${seloStatus(o.status)}</div>
       <p>${esc(nomeExibido(o.descricao))}</p>
       <section class="bloco situacao" aria-labelledby="titulo-situacao"><h2 id="titulo-situacao">Situação do registro</h2>
-        <p class="situacao-frase">${esc(atual.frase)}</p><p><strong>Última movimentação:</strong> ${esc(ultima.texto)}${ultima.data ? ` · ${formatarData(ultima.data)}` : ""}</p>
+        <p class="situacao-frase">${esc(atual.frase)}</p><p><strong>Última movimentação:</strong> ${ultima ? `${esc(ultima.texto)} · ${formatarData(ultima.data)}` : "Nenhuma movimentação com data informada."}</p>
         <p><strong>Próxima etapa:</strong> ${esc(atual.proxima)}</p>
         <p class="${atrasado ? "atrasado" : "texto-suave"}">${atrasado ? icone("relogio") + " Passou do prazo de referência. " : ""}Prazo de referência da categoria: ${categoria.prazoDias} dias.${pendente ? ` Aberto há ${dias} dias.` : ""}</p>
       </section>

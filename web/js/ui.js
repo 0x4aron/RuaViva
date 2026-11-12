@@ -147,13 +147,23 @@ function avisar(mensagem, tipo = "sucesso", detalhes = []) {
 }
 function avisarErro(erro) { avisar(erro.message || "Não foi possível concluir. Tente de novo.", "erro", erro.campos || []); }
 function limparAviso() { $("aviso").hidden = true; }
+function focarTitulo(area) {
+  const titulo = area?.closest("section")?.querySelector("h2, h3") || document.querySelector("main h1");
+  if (!titulo) return;
+  titulo.setAttribute("tabindex", "-1");
+  titulo.focus();
+}
 function erroComTentativa(erro, tentar) {
   avisarErro(erro);
   const botao = document.createElement("button");
   botao.className = "botao";
   botao.type = "button";
   botao.textContent = "Tentar de novo";
-  botao.addEventListener("click", tentar);
+  botao.addEventListener("click", async () => {
+    botao.disabled = true;
+    await tentar();
+    if ($("aviso").hidden) focarTitulo();
+  });
   $("aviso").lastElementChild.append(botao);
 }
 async function enviarComBotao(botao, acao) {
@@ -208,8 +218,13 @@ async function mostrarComposicao(id, area) {
     const dados = await api.get(`/ocorrencias/${id}/prioridade`);
     if (!Array.isArray(dados?.itens) || !Number.isFinite(dados.total)) throw new Error("Composição inválida");
     area.innerHTML = `<dl class="composicao">${dados.itens.map((item) => `<div><dt>${esc(nomeExibido(item.motivo))}</dt><dd>${esc(item.pontos)}</dd></div>`).join("")}<div><dt><strong>Total</strong></dt><dd>${dados.total}</dd></div></dl>`;
+    return true;
   } catch {
     area.innerHTML = `<p>${icone("info")} Composição indisponível</p><button type="button" class="botao-texto">Tentar de novo</button>`;
-    area.querySelector("button").addEventListener("click", () => mostrarComposicao(id, area));
+    area.querySelector("button").addEventListener("click", async () => {
+      if (await mostrarComposicao(id, area)) focarTitulo(area);
+      else area.querySelector("button").focus();
+    });
+    return false;
   }
 }

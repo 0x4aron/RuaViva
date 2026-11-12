@@ -15,20 +15,26 @@ async function chamarApi(metodo, caminho, corpo) {
     opcoes.body = JSON.stringify(corpo);
   }
 
-  let resposta;
+  const controle = new AbortController();
+  opcoes.signal = controle.signal;
+  const limite = setTimeout(() => controle.abort(), 15000);
   try {
-    resposta = await fetch(CONFIG.API_URL + caminho, opcoes);
-  } catch (e) {
+    const resposta = await fetch(CONFIG.API_URL + caminho, opcoes);
+    if (resposta.status === 204) return null;
+    const dados = await resposta.json().catch(() => null);
+    if (controle.signal.aborted) throw new Error();
+    if (!resposta.ok) {
+      // A API informa a mensagem e os campos inválidos.
+      throw new ErroApi(resposta.status, dados?.mensagem || "Erro " + resposta.status, dados?.campos);
+    }
+    return dados;
+  } catch (erro) {
+    if (controle.signal.aborted) throw new ErroApi(0, "A conexão demorou demais. Tente de novo.");
+    if (erro instanceof ErroApi) throw erro;
     throw new ErroApi(0, "Não foi possível falar com o servidor. Confira a internet e tente de novo.");
+  } finally {
+    clearTimeout(limite);
   }
-
-  if (resposta.status === 204) return null;
-  const dados = await resposta.json().catch(() => null);
-  if (!resposta.ok) {
-    // A API devolve { mensagem, campos } em todo erro (GlobalExceptionHandler)
-    throw new ErroApi(resposta.status, dados?.mensagem || "Erro " + resposta.status, dados?.campos);
-  }
-  return dados;
 }
 
 const api = {

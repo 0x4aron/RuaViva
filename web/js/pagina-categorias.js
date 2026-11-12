@@ -22,9 +22,15 @@ async function carregarRegua() {
     const regua = await api.get("/categorias/regua-peso");
     $("regua").innerHTML = regua.map((r) => `<li><button type="button" data-peso="${r.peso}" aria-pressed="false"><span class="regua-peso">${r.peso}</span><span>${esc(nomeExibido(r.criterio))}<small>Ex.: ${esc(nomeExibido(r.exemplos))}</small></span></button></li>`).join("") || '<li>Sem sugestões disponíveis. Digite o peso abaixo.</li>';
     marcarRegua();
+    return true;
   } catch {
     $("regua").innerHTML = '<li>Sugestões indisponíveis. Você pode digitar o peso.<button class="botao-texto" type="button" id="tentar-regua">Tentar de novo</button></li>';
-    $("tentar-regua").addEventListener("click", carregarRegua);
+    $("tentar-regua").addEventListener("click", async () => {
+      $("tentar-regua").disabled = true;
+      if (await carregarRegua()) focarTitulo($("regua"));
+      else $("tentar-regua").focus();
+    });
+    return false;
   }
 }
 $("regua").addEventListener("click", (evento) => {

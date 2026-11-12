@@ -6,7 +6,7 @@
 
 | Campo | Resposta |
 |---|---|
-| **Nome da CitizenTech** | RuaViva *(nome provisório)* |
+| **Nome da CitizenTech** | RuaViva (Equipe RuaViva) |
 | **Cidade e bairro** | São Paulo (SP), Liberdade, Rua Barão de Iguape (Subprefeitura Sé) |
 | **Cidadão beneficiado** | Moradores do bairro, em especial idosos, pessoas com deficiência e quem anda com carrinho de bebê, que dependem de ruas e calçadas em bom estado |
 | **Problema, em uma frase** | O morador registra buracos, lixo acumulado e calçadas quebradas na prefeitura, mas não sabe quando o problema vai ser resolvido, nem se outras pessoas já reclamaram do mesmo problema, e os casos que afetam mais gente não recebem prioridade |
@@ -25,9 +25,20 @@
 | [`data-science/`](data-science/) | Data Science | Dados reais do SP156: regressão linear para a demanda diária por subprefeitura e regressão logística para estimar se a solicitação é atendida em até 7 dias |
 | [`database/`](database/) | Database Design | Modelo relacional Oracle e scripts DDL, DML e DQL |
 | [`java-api/`](java-api/) | DDD - Java | API REST em Spring Boot + Oracle, com deploy no Render |
-| [`web/`](web/) | (todas) | Site do MVP: morador registra e apoia problemas; gestor vê a fila e agenda equipes |
+| [`web/`](web/) | (todas) | Site do MVP: morador registra e apoia problemas; gestor vê a fila e agenda equipes. Sistema de design em [`web/DESIGN.md`](web/DESIGN.md), espelhado no Figma |
+| [`docs/`](docs/) | (todas) | Documentos das entregas em HTML, que viram PDF com `./docs/gerar_pdfs.sh` |
 | [`dynamic-programming/`](dynamic-programming/) | Dynamic Programming | Rota da equipe de campo (grafos) e escolha das ocorrências dentro do orçamento (tabulação/memoização) |
 | [`network/`](network/) | Network Architect | Rede da base de zeladoria da subprefeitura no Packet Tracer |
+
+## Como rodar o MVP
+
+1. Banco: rode `database/01_ddl.sql` e `database/02_dml.sql` no Oracle (arquivos em UTF-8).
+2. API: em `java-api/`, defina `DB_URL`, `DB_USER` e `DB_PASSWORD` e rode `mvn spring-boot:run` (Swagger em `/swagger-ui.html`). Teste de regressão: `java-api/testes/regressao.sh`.
+3. Site: `python3 -m http.server 5500 --directory web` e abra <http://localhost:5500>. O endereço da API fica em `web/js/config.js`.
+
+## Design
+
+O visual segue a sinalização de rua de São Paulo: a placa azul é o endereço, o amarelo da faixa de pedestre é a ação principal e o vermelho é só para urgência. Os tokens (cores, espaços, raios, tipografia) têm o mesmo nome no CSS e no Figma, onde estão os componentes e as telas da versão atual.
 
 ## Equipe
 

@@ -4,6 +4,7 @@ const mapa = criarMapa("mapa");
 let apoio, pendentes = [], apoios = [], contagem = {};
 let passo = 1, local = null, marcador = null, resultados = [];
 let esperaReversa, versaoLocal = 0, avisoRascunho = false;
+let localPendente = false, dadosProntos = false;
 const chaveRascunho = `ruaviva-rascunho-${usuario?.idCidadao}`;
 
 function categoriaEscolhida() { return document.querySelector('input[name="categoria"]:checked'); }
@@ -39,10 +40,28 @@ function restaurarRascunho() {
 function textoCoordenadas() {
   return `Local escolhido: ponto marcado no mapa, perto de ${local.lat.toFixed(4).replace(".", ",")}, ${local.lng.toFixed(4).replace(".", ",")}.`;
 }
-function marcar(lat, lng, buscar = true) {
-  local = { lat, lng };
+function atualizarContinuar() {
+  $("continuar").disabled = !dadosProntos || localPendente;
+  $("continuar").textContent = localPendente ? "Obtendo sua localização…" : "Continuar";
+}
+function novaEscolha(pendente, desmarcar = true) {
   versaoLocal++;
   clearTimeout(esperaReversa);
+  localPendente = pendente;
+  if (desmarcar) document.querySelectorAll('input[name="endereco-buscado"]').forEach((campo) => { campo.checked = false; });
+  $("minha-localizacao").disabled = false;
+  $("minha-localizacao").textContent = "Usar minha localização";
+  atualizarContinuar();
+  return versaoLocal;
+}
+function concluirLocal(versao) {
+  if (versao !== versaoLocal) return;
+  localPendente = false;
+  atualizarContinuar();
+}
+function marcar(lat, lng, buscar = true, versao = novaEscolha(buscar)) {
+  if (versao !== versaoLocal) return;
+  local = { lat, lng };
   if (mapa) {
     if (marcador) marcador.setLatLng(local);
     else marcador = L.marker(local, { draggable: true, icon: iconeMarcador("LOCAL", "1"), title: "Local escolhido. Arraste para ajustar." }).addTo(mapa)
@@ -56,7 +75,6 @@ function marcar(lat, lng, buscar = true) {
   verificarParecidas();
   salvarRascunho();
   if (buscar) {
-    const versao = versaoLocal;
     esperaReversa = setTimeout(() => buscarReverso(versao), 600);
   }
 }
@@ -68,6 +86,7 @@ function preencherEndereco(resultado) {
     ? `Local escolhido: ${nomeProprio(endereco.logradouro)}${endereco.numero ? ", " + endereco.numero : ""} — ${nomeProprio(endereco.bairro)}`
     : textoCoordenadas();
   salvarRascunho();
+  if (passo === 3) atualizarResumo();
 }
 async function buscarReverso(versao) {
   const ponto = { ...local };
@@ -78,6 +97,8 @@ async function buscarReverso(versao) {
     if (versao !== versaoLocal) return;
     $("local-escolhido").textContent = textoCoordenadas() + " Endereço indisponível; informe a rua abaixo.";
     salvarRascunho();
+  } finally {
+    concluirLocal(versao);
   }
 }
 async function buscarEndereco() {
@@ -87,20 +108,26 @@ async function buscarEndereco() {
     erroCampo($("busca-endereco"), "Informe a rua e o número para buscar.");
     return avisar("Informe o endereço que deseja buscar.", "erro");
   }
+  const versao = novaEscolha(true);
   const botao = $("buscar-endereco");
   botao.disabled = true;
   botao.textContent = "Buscando…";
   $("busca-estado").textContent = "Buscando endereço…";
   $("resultados-grupo").hidden = true;
   try {
-    resultados = await geocodificar("search", { q: consulta, limit: "5" });
+    const encontrados = await geocodificar("search", { q: consulta, limit: "5" });
+    if (versao !== versaoLocal) return;
+    resultados = encontrados;
     $("resultados").innerHTML = resultados.map((r, i) => `<label class="opcao"><input type="radio" name="endereco-buscado" value="${i}"><span>${esc(nomeProprio(r.display_name))}</span></label>`).join("");
     $("resultados-grupo").hidden = !resultados.length;
     $("busca-estado").textContent = resultados.length ? (resultados.length === 1 ? "1 endereço encontrado. Confira e escolha." : `${resultados.length} endereços encontrados. Escolha uma opção.`) : "Nenhum endereço encontrado. Confira a rua ou marque o ponto no mapa.";
   } catch {
+    if (versao !== versaoLocal) return;
     avisar("Não foi possível buscar o endereço. Tente de novo ou marque o ponto no mapa.", "erro");
     $("busca-estado").textContent = "Não foi possível buscar. Tente de novo em Buscar endereço ou marque o ponto no mapa.";
   } finally {
+    concluirLocal(versao);
+    if (versao !== versaoLocal) $("busca-estado").textContent = "";
     botao.disabled = false;
     botao.textContent = "Buscar endereço";
   }
@@ -123,6 +150,7 @@ function verificarParecidas() {
     }).join("")}`;
 }
 function validarPasso() {
+  if (localPendente || !dadosProntos) return false;
   limparErros($("form"));
   if (passo === 1 && !categoriaEscolhida()) {
     const primeiro = document.querySelector('input[name="categoria"]');
@@ -158,7 +186,10 @@ function mostrarPasso(numero, focar = true) {
   $("voltar").hidden = passo === 1;
   $("continuar").hidden = passo === 3;
   $("enviar").hidden = passo !== 3;
-  if (passo === 2) mapa?.invalidateSize({ animate: false });
+  if (passo === 2) {
+    mapa?.invalidateSize({ animate: false });
+    if (local) mapa?.setView(local, 18, { animate: false });
+  }
   if (passo === 3) atualizarResumo();
   if (focar) $("titulo-passo-" + passo).focus();
   salvarRascunho();
@@ -169,7 +200,8 @@ function atualizarContador() {
 }
 async function carregar() {
   limparAviso();
-  $("continuar").disabled = true;
+  dadosProntos = false;
+  atualizarContinuar();
   try {
     const [dados, ocorrencias, todosApoios] = await Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios")]);
     apoio = dados;
@@ -181,7 +213,8 @@ async function carregar() {
       return `<label class="opcao"><input id="categoria-${c.idCategoria}" type="radio" name="categoria" value="${c.idCategoria}" aria-describedby="exemplo-${c.idCategoria}"><span>${icone(visual.icone)}<span>${esc(nomeExibido(c.nome))}</span><small id="exemplo-${c.idCategoria}">${esc(visual.exemplo)}</small></span></label>`;
     }).join("") || '<p>Nenhuma categoria disponível para registro.</p>';
     $("distrito").innerHTML = '<option value="">Escolha o bairro</option>' + apoio.distritos.map((d) => `<option value="${d.idDistrito}" ${chave(d.nome) === "liberdade" ? "selected" : ""}>${esc(nomeProprio(d.nome))}</option>`).join("");
-    $("continuar").disabled = !apoio.categorias.length || !apoio.distritos.length;
+    dadosProntos = Boolean(apoio.categorias.length && apoio.distritos.length);
+    atualizarContinuar();
     restaurarRascunho();
     verificarParecidas();
   } catch (erro) {
@@ -205,20 +238,25 @@ $("resultados").addEventListener("change", (evento) => {
   const resultado = resultados[Number(evento.target.value)];
   if (!resultado) return;
   marcar(Number(resultado.lat), Number(resultado.lon), false);
+  evento.target.checked = true;
   preencherEndereco(resultado);
   mapa?.setView(local, 18, { animate: false });
 });
 $("minha-localizacao").addEventListener("click", () => {
   if (!navigator.geolocation) return avisar("Seu navegador não informa a localização. Busque o endereço ou marque no mapa.", "erro");
+  const versao = novaEscolha(true);
   const botao = $("minha-localizacao");
   botao.disabled = true;
   botao.textContent = "Localizando…";
   navigator.geolocation.getCurrentPosition((posicao) => {
-    marcar(posicao.coords.latitude, posicao.coords.longitude);
+    if (versao !== versaoLocal) return;
+    marcar(posicao.coords.latitude, posicao.coords.longitude, true, versao);
     mapa?.setView(local, 18, { animate: false });
     botao.disabled = false;
     botao.textContent = "Usar minha localização";
   }, () => {
+    if (versao !== versaoLocal) return;
+    concluirLocal(versao);
     botao.disabled = false;
     botao.textContent = "Usar minha localização";
     avisar("Não conseguimos sua localização. Busque o endereço ou marque o ponto no mapa.", "erro");
@@ -229,8 +267,7 @@ $("form").addEventListener("input", salvarRascunho);
 $("descricao").addEventListener("input", atualizarContador);
 ["logradouro", "numero"].forEach((id) => $(id).addEventListener("input", () => {
   // Uma correção manual não deve ser sobrescrita pela busca em andamento.
-  versaoLocal++;
-  clearTimeout(esperaReversa);
+  novaEscolha(false, false);
   if (local) $("local-escolhido").textContent = $("logradouro").value.trim() ? `Local escolhido: ${endereco({ logradouro: $("logradouro").value, numero: $("numero").value })} — ${nomeProprio(apoio?.distrito[$("distrito").value]?.nome)}` : textoCoordenadas();
   salvarRascunho();
 }));
@@ -247,7 +284,7 @@ $("parecidas").addEventListener("click", async (evento) => {
 });
 $("form").addEventListener("submit", async (evento) => {
   evento.preventDefault();
-  if (passo !== 3) return;
+  if (passo !== 3 || localPendente) return;
   const categoria = categoriaEscolhida();
   if (!categoria || !local || !$("logradouro").value.trim() || !$("distrito").value) return avisar("Confira a categoria e o endereço nos passos anteriores.", "erro");
   salvarRascunho();

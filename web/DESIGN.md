@@ -14,7 +14,7 @@ Fonte única para o site (`web/`) e para o Figma ("GS 2026 - Telas do site"). Os
 | Verde resolvido `#1E7D4F` | resolvido, sucesso | ação |
 | Âmbar andamento `#7A5C00` sobre `#FFF6CC` | em andamento, prioridade média | |
 
-O bairro aparece por nome e por mapa ("Liberdade · Sé · São Paulo"), não por enfeite. Nada de lanternas desenhadas, gradientes, vidro, sombras coloridas, emoji ou ícones de texto.
+O bairro aparece por nome e por mapa ("Liberdade · Sé · São Paulo"), não por enfeite. A única ilustração do site é o poste da entrada, com as placas cruzadas e uma lanterna da Liberdade: é o elemento-assinatura e não se repete em outras telas. Fora dele, nada de lanternas desenhadas, gradientes, vidro, sombras coloridas, emoji ou ícones de texto.
 
 Duas experiências, dois ritmos:
 - **Morador (celular, uma mão, pode ter baixa visão):** uma coisa por vez, texto grande, alvos de toque de 48 px no mínimo, lista antes do mapa.
