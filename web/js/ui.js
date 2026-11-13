@@ -190,10 +190,10 @@ function linhaDoAtendimento(o, atendimentos = [], equipes = [], mini = false) {
     const tempoAnimacao = !mini && (trecho === "percorrido" || trecho === "resolvido")
       ? ` style="--duracao-linha:${duracao}ms;--atraso-linha:${duracao * indice}ms"`
       : "";
-    return `<li class="estacao estacao-${estado}${resolvida}" data-trecho="${trecho}"${tempoAnimacao}${atualAtributo}><span class="estacao-ponto"><span class="visualmente-oculto">${esc(estacao.nome)}</span></span>${mini ? "" : `<span class="estacao-conteudo">${estacao.conteudo}</span>`}</li>`;
+    return `<li class="estacao estacao-${estado}${resolvida}" data-trecho="${trecho}"${tempoAnimacao}${atualAtributo}><span class="estacao-ponto">${mini ? `<span class="visualmente-oculto">${esc(estacao.nome)}</span>` : ""}</span>${mini ? "" : `<span class="estacao-conteudo">${estacao.conteudo}</span>`}</li>`;
   });
   if (cancelada && !mini) {
-    itens.push('<li class="estacao estacao-terminal" aria-current="step"><span class="estacao-ponto"><span class="visualmente-oculto">Cancelado</span></span><span class="estacao-conteudo"><span class="estacao-nome">Cancelado</span></span></li>');
+    itens.push('<li class="estacao estacao-terminal" aria-current="step"><span class="estacao-ponto"></span><span class="estacao-conteudo"><span class="estacao-nome">Cancelado</span></span></li>');
   } else if (cancelada && mini) {
     itens.push('<li class="visualmente-oculto" aria-current="step">Cancelado</li>');
   }
