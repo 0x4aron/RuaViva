@@ -20,7 +20,7 @@ function desenhar() {
   const visiveis = ocorrencias.filter((o) => filtro === "todos" || (filtro === "pendentes" ? ["ABERTA", "EM_ANDAMENTO"].includes(o.status) : o.status === filtro));
   const termo = filtro === "pendentes" ? "não resolvidos" : filtro === "RESOLVIDA" ? "resolvidos" : "registrados";
   $("resumo").textContent = `${visiveis.length} ${visiveis.length === 1 ? "problema" : "problemas"} ${visiveis.length === 1 ? termo.replace("resolvidos", "resolvido").replace("registrados", "registrado") : termo} na Liberdade`;
-  $("lista").innerHTML = visiveis.length ? visiveis.map((o, i) => linhaOcorrencia(o, apoio.categoria[o.idCategoria], contagem[o.idOcorrencia] || 0, i + 1)).join("") : '<li class="vazio">Nenhum problema nesta lista. <a href="registrar.html">Registrar um problema</a></li>';
+  $("lista").innerHTML = visiveis.length ? visiveis.map((o, i) => linhaOcorrencia(o, apoio.categoria[o.idCategoria], contagem[o.idOcorrencia] || 0, i + 1)).join("") : `<li class="vazio">${icone("info")} Nenhum problema nesta lista. <a href="registrar.html">Registrar um problema</a></li>`;
   camada?.clearLayers();
   ligacoes?.clearLayers();
   marcadores = [];
@@ -35,7 +35,7 @@ function desenhar() {
 }
 async function carregar() {
   limparAviso();
-  $("lista").innerHTML = '<li class="carregando">Carregando…</li>';
+  $("lista").innerHTML = `<li class="carregando">${icone("relogio")} Carregando…</li>`;
   try {
     const [dados, lista, apoios] = await Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios")]);
     apoio = dados;
@@ -43,7 +43,7 @@ async function carregar() {
     contagem = contarApoios(apoios);
     desenhar();
   } catch (erro) {
-    $("lista").innerHTML = '<li class="vazio">Não foi possível carregar os problemas.</li>';
+    $("lista").innerHTML = `<li class="vazio">${icone("alerta")} Não foi possível carregar os problemas.</li>`;
     $("resumo").textContent = "Problemas indisponíveis no momento.";
     erroComTentativa(erro, carregar);
   }

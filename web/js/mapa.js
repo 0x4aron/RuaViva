@@ -1,7 +1,7 @@
-const COR_STATUS = { ABERTA: "#C8102E", EM_ANDAMENTO: "#7A5C00", RESOLVIDA: "#1E7D4F", CANCELADA: "#4A5961" };
+const COR_STATUS = { ABERTA: "aberta", EM_ANDAMENTO: "em_andamento", RESOLVIDA: "resolvida", CANCELADA: "cancelada" };
 function criarMapa(idElemento, centro = CONFIG.MAPA_CENTRO, zoom = CONFIG.MAPA_ZOOM) {
   if (!window.L) {
-    $(idElemento).innerHTML = '<p class="vazio">Mapa indisponível. Confira sua conexão e recarregue a página.</p>';
+    $(idElemento).innerHTML = `<p class="vazio">${icone("info")} Mapa indisponível. Confira sua conexão e <a href="">recarregue a página</a>.</p>`;
     return null;
   }
   const mapa = L.map(idElemento, { scrollWheelZoom: false, zoomAnimation: false, fadeAnimation: false, markerZoomAnimation: false }).setView(centro, zoom);
@@ -23,8 +23,9 @@ function criarMapa(idElemento, centro = CONFIG.MAPA_CENTRO, zoom = CONFIG.MAPA_Z
   $(idElemento).querySelector(".leaflet-control-zoom-out").setAttribute("aria-label", "Afastar mapa");
   return mapa;
 }
+// O desenho tem 36 px, mas a área de toque tem 44 px (mínimo para o dedo).
 function iconeMarcador(status, numero) {
-  return L.divIcon({ className: "pino", html: `<span style="--cor:${COR_STATUS[status] || "#1A4D8F"}">${esc(numero)}</span>`, iconSize: [36, 36], iconAnchor: [18, 36] });
+  return L.divIcon({ className: "pino", html: `<span class="marcador-${COR_STATUS[status] || "placa"}">${esc(numero)}</span>`, iconSize: [44, 44], iconAnchor: [22, 22] });
 }
 function marcadorOcorrencia(o, numero = 1) {
   return L.marker([o.latitude, o.longitude], { icon: iconeMarcador(o.status, numero), title: `${numero}. ${endereco(o)} — ${STATUS_TEXTO[o.status]}`, alt: `${numero}. ${endereco(o)}` });
@@ -65,7 +66,7 @@ function separarMarcadores(mapa, entradas, ligacoes) {
     const destino = mapa.layerPointToLatLng(ponto);
     marcador.setLatLng(destino);
     if (grupo.length > 1) L.polyline([origem, destino], {
-      color: "#4A5961", weight: 1, opacity: .7, interactive: false,
+      color: getComputedStyle(document.documentElement).getPropertyValue("--asfalto-suave").trim(), weight: 1, opacity: .7, interactive: false,
     }).addTo(ligacoes);
   }));
 }

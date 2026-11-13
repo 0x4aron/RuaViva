@@ -23,12 +23,12 @@
       <div class="linha-campos"><div class="campo"><label for="prazo">Prazo de atendimento (dias)</label><input id="prazo" type="number" min="1" max="999" required></div>
         <div class="campo"><label for="horas">Horas de trabalho</label><input id="horas" type="number" min="1" max="999" required></div></div>
       <fieldset class="campo"><legend>Gravidade</legend><p class="dica" id="peso-dica">A régua é uma sugestão opcional. Escolha uma linha ou digite um peso de 1 a 5.</p>
-        <ul id="regua" class="regua" aria-live="polite"><li>Carregando sugestões…</li></ul>
+        <ul id="regua" class="regua" aria-live="polite"><li class="carregando"><svg class="icone" aria-hidden="true"><use href="img/icones.svg#relogio"></use></svg>Carregando sugestões…</li></ul>
         <label for="peso">Peso escolhido (1 a 5)</label><input id="peso" type="number" min="1" max="5" required aria-describedby="peso-dica"></fieldset>
       <button id="cadastrar" class="botao botao-principal botao-bloco" type="submit">Cadastrar categoria</button>
     </form></section>
     <section aria-labelledby="titulo-lista"><h2 id="titulo-lista">Categorias cadastradas</h2>
-      <p id="tabela-estado" aria-live="polite">Carregando categorias…</p>
+      <p id="tabela-estado" aria-live="polite"><span class="carregando"><svg class="icone" aria-hidden="true"><use href="img/icones.svg#relogio"></use></svg>Carregando categorias…</span></p>
       <div class="tabela-painel"><table><caption class="visualmente-oculto">Categorias, peso de gravidade, prazo e horas estimadas</caption><thead><tr><th scope="col">Categoria</th><th scope="col">Peso</th><th scope="col">Prazo</th><th scope="col">Horas</th></tr></thead><tbody id="tabela"></tbody></table></div>
     </section></div>
 </main>

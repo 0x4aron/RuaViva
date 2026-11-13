@@ -55,7 +55,7 @@ async function copiarLink() {
 async function carregar() {
   limparAviso();
   if (!Number.isInteger(id) || id <= 0) {
-    $("detalhe").innerHTML = '<h1>Registro não encontrado</h1><p>Escolha um registro na lista do bairro ou na fila de trabalho.</p>';
+    $("detalhe").innerHTML = `<h1>Registro não encontrado</h1><p class="vazio">${icone("info")} Escolha um registro na lista do bairro ou na fila de trabalho.</p>`;
     return;
   }
   try {
@@ -84,11 +84,12 @@ async function carregar() {
     const linkWhatsapp = `https://wa.me/?text=${encodeURIComponent(`${numeroRegistro(o)}: ${location.href}`)}`;
     $("detalhe").innerHTML = `<h1>${placaDeRua(o, true)}</h1>
       <p class="protocolo">${esc(numeroRegistro(o))}</p>
-      <div class="item-topo"><strong>${icone(categoriaVisual(categoria).icone)} ${esc(nomeExibido(categoria.nome))}</strong>${seloStatus(o.status)}</div>
+      <div class="item-topo"><strong>${iconeCategoria(categoriaVisual(categoria).icone, "detalhe")} ${esc(nomeExibido(categoria.nome))}</strong>${seloStatus(o.status)}</div>
       <p>${esc(nomeExibido(o.descricao))}</p>
       <div class="acoes acoes-comprovante" aria-label="Ações do registro"><button id="copiar-link" class="botao" type="button">Copiar link</button><a class="botao" href="${linkWhatsapp}" target="_blank" rel="noopener noreferrer">Enviar pelo WhatsApp</a><button id="imprimir" class="botao" type="button">Imprimir</button></div>
       <p id="compartilhamento-estado" class="texto-suave" aria-live="polite"></p>
       <section class="bloco situacao" aria-labelledby="titulo-situacao"><h2 id="titulo-situacao">Situação do registro</h2>
+        ${linhaDoAtendimento(o, atendimentos, equipes)}
         <p class="situacao-frase">${esc(atual.frase)}</p><p><strong>Última movimentação:</strong> ${ultima ? `${esc(ultima.texto)} · ${formatarData(ultima.data)}` : "Nenhuma movimentação com data informada."}</p>
         <p><strong>Próxima etapa:</strong> ${esc(atual.proxima)}</p>
         <p class="${atrasado ? "atrasado" : "texto-suave"}">${atrasado ? icone("relogio") + " Passou do prazo de referência. " : ""}Prazo de referência da categoria: ${textoPrazo(categoria.prazoDias)}.${pendente ? ` Aberto ${textoTempoDesde(o.dataAbertura)}.` : ""}</p>
@@ -121,7 +122,7 @@ async function carregar() {
     });
     return true;
   } catch (erro) {
-    $("detalhe").innerHTML = '<h1>Problema registrado</h1><p>Não foi possível carregar este registro.</p>';
+    $("detalhe").innerHTML = `<h1>Problema registrado</h1><p class="vazio">${icone("alerta")} Não foi possível carregar este registro.</p>`;
     erroComTentativa(erro, carregar);
     return false;
   }

@@ -1,0 +1,63 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="GS_APOIO" directorySegmentName="seg_0" id="6F2E0339-358B-0505-A052-ECCA43C68745">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="DT_APOIO" id="263D37EE-89D6-FF0B-50BC-5423154DC687">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="ID_OCORRENCIA" id="2B676CB1-5A03-777B-FC72-6D703113CB9B">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID_APOIO" id="5C2771E3-9666-AD52-312F-807E9EE502BE">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="ID_CIDADAO" id="F3DA789B-E397-8CD7-F83B-35D1692B5DDD">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_GS_APOIO_OCORRENCIA" id="5DEADB9E-6E1F-F4B4-F76D-0ECD5C5BEC0E">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_GS_APOIO_CIDADAO" id="D104F89C-A38B-39F0-28FC-BAC06C401924">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_GS_APOIO" id="8AB0F0AD-0C49-C516-6AD1-1F96A64F2288">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="UK_GS_APOIO_OCORR_CID" id="43606E1B-008A-7957-18D7-12E70B8AB506">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev20c>

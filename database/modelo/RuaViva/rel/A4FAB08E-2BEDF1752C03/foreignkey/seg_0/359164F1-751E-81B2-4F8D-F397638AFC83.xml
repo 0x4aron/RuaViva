@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="359164F1-751E-81B2-4F8D-F397638AFC83" containerWithKeyObject="8F8FDD96-CB5E-2D04-BD73-0BF5A4C390CE" localFKIndex="A9850BD4-6875-C808-964E-85E473D7DDF6" name="FK_GS_ATENDIMENTO_OCORRENCIA">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>FB30021B-1B82-73F0-6334-C6B019724C43</importedID>
+<referredTableLongName>GS_OCORRENCIA</referredTableLongName>
+<deleteRule>CASCADE</deleteRule>
+<referredTableID>CF629E33-0C17-0BDB-C606-CE6D925E686E</referredTableID>
+<keyObject>E705FEE9-2D9C-1B08-7249-2C73DA573A55</keyObject>
+<referredKeyID>E705FEE9-2D9C-1B08-7249-2C73DA573A55</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_OCORRENCIA</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

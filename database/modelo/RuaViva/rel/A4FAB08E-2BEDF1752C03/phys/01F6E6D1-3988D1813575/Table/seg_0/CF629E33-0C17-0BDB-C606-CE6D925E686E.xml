@@ -1,0 +1,139 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="GS_OCORRENCIA" directorySegmentName="seg_0" id="CF629E33-0C17-0BDB-C606-CE6D925E686E">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="ID_CATEGORIA" id="01F7742D-D58C-E842-81A4-C76C641EDA08">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID_OCORRENCIA" id="04CBE1A8-C305-DC1F-5D77-D72B03C58CD1">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="DS_OCORRENCIA" id="1A466E90-90D1-A1B6-589E-9FBA5D5C69C5">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ST_OCORRENCIA" id="1ED48A21-7222-9FFF-C649-75A77E185A7D">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<defaultValue>&apos;ABERTA&apos;</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="NR_LONGITUDE" id="26034DB9-5F8F-7EF7-C2D3-FE4FCC807AE3">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID_DISTRITO" id="28DDACBA-5C58-8BE7-5F71-1C1EE5FE52AA">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="DT_RESOLUCAO" id="2EEDAABC-DB11-1E83-C0D3-A18B17273E03">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="DT_ABERTURA" id="3D1F518C-0584-35BC-663C-07B8F1EA48E1">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="NR_LATITUDE" id="77135F1F-5412-EC52-A56A-5E9A202D58E5">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NR_ENDERECO" id="8B1FAE9A-D5C4-417B-3B11-5CBF8F820094">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NR_PRIORIDADE" id="8C137F8E-1007-C58D-5C1D-3E10DCAADEBD">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<defaultValue>0</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="DS_LOGRADOURO" id="A7C3F050-8BF8-83B4-A918-FAB1B24BFFD8">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID_CIDADAO" id="D5BE11BA-53A5-A32F-1A04-89473F2DA0D4">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_GS_OCORRENCIA_DISTRITO" id="0CD231DD-E93C-01CA-537F-2D6648CEDA25">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_GS_OCORRENCIA_CATEGORIA" id="E130D897-3BC4-DA86-E58F-2CD1725368F8">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="FK_GS_OCORRENCIA_CIDADAO" id="E3CE49CA-AF64-D242-8740-A185EF861A58">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_GS_OCORRENCIA" id="E705FEE9-2D9C-1B08-7249-2C73DA573A55">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.storage.oracle.TableCheckConstraintOracle">
+<TableCheckConstraint name="CK_GS_OCORRENCIA_ST" id="3854070D-37F4-EEE7-B397-6380E2C8C5E6">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+<TableCheckConstraint name="CK_GS_OCORRENCIA_LON" id="47DA30BD-F62C-E27E-B150-02983560167E">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+<TableCheckConstraint name="CK_GS_OCORRENCIA_DATAS" id="8DDABDE0-20F2-15AB-9E7D-D623B94738C2">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+<TableCheckConstraint name="CK_GS_OCORRENCIA_PRIOR" id="B40A2312-E3D6-297C-21B5-23D459F62228">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+<TableCheckConstraint name="CK_GS_OCORRENCIA_LAT" id="D7772208-6236-4942-2665-BB5F13CB9B45">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+</tableCheckConstraints>
+</TableProxyOraclev20c>

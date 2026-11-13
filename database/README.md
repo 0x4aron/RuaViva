@@ -33,10 +33,11 @@ Os scripts de dados e consultas estão em **UTF-8**. No SQL Developer, abra com 
 | `GS_APOIO` | "Também me afeta": cada cidadão apoia uma ocorrência uma única vez |
 | `GS_ATENDIMENTO` | Visita agendada ou concluída de uma equipe a uma ocorrência |
 
-## Diagrama (rascunho)
+## Diagrama
 
-O diagrama oficial da entrega deve ser gerado no **Oracle Data Modeler**:
-`File → Import → DDL File → 01_ddl.sql`. Ele monta as tabelas e os relacionamentos automaticamente.
+O diagrama oficial foi gerado no **Oracle SQL Developer Data Modeler** (`Arquivo → Importar → Arquivo DDL → 01_ddl.sql`, Oracle Database 21c) e está em [`../docs/img/modelo-logico-data-modeler.png`](../docs/img/modelo-logico-data-modeler.png). O projeto do Data Modeler fica em [`modelo/RuaViva.dmd`](modelo/RuaViva.dmd), que abre direto na ferramenta.
+
+Rascunho rápido do mesmo modelo, para leitura no GitHub:
 
 ```mermaid
 erDiagram

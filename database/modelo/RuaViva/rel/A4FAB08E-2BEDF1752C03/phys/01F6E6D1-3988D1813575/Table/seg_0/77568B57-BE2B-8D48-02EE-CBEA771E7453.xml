@@ -1,0 +1,80 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="GS_CATEGORIA" directorySegmentName="seg_0" id="77568B57-BE2B-8D48-02EE-CBEA771E7453">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="NR_HORAS_ESTIMADAS" id="0E7087C1-DEDF-A7C6-FBF7-7E740C417AFE">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NR_PESO_GRAVIDADE" id="104D80B0-9C39-5388-8344-8BCD830E6371">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="DS_CATEGORIA" id="26DE0BC2-B2FE-8136-D577-EFEFCAB02548">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NR_PRAZO_DIAS" id="799E8278-BF87-CD5F-7F7F-BBBA53C59AB8">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NM_CATEGORIA" id="A649644E-5C9F-0624-BDC1-35BC3AF4B867">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ID_CATEGORIA" id="DF6D7680-376C-528D-B78A-6413C4D417B6">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PK_GS_CATEGORIA" id="E90FDF60-51E6-786A-6BE4-EB707AB15A74">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.storage.oracle.TableCheckConstraintOracle">
+<TableCheckConstraint name="CK_GS_CATEGORIA_PRAZO" id="1CEF768D-094F-A626-CD0F-F9D876CFF447">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+<TableCheckConstraint name="CK_GS_CATEGORIA_HORAS" id="92925CBA-CAC2-7FC2-B4B2-E4EC0C0922F4">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+<TableCheckConstraint name="CK_GS_CATEGORIA_PESO" id="FDB3C2F7-40E7-C9C8-220B-6A2B1762B772">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<nameChanged>true</nameChanged>
+</TableCheckConstraint>
+</tableCheckConstraints>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="UK_GS_CATEGORIA_NOME" id="B5E4C8FF-11A6-2FFD-7DBC-4C28234D17C1">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev20c>

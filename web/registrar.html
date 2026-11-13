@@ -18,10 +18,10 @@
   <div id="aviso" class="aviso" hidden tabindex="-1" role="status" aria-live="polite"></div>
   <h1 id="titulo-pagina">Registrar problema</h1>
   <div id="registro">
-    <ol class="passos" aria-label="Etapas do registro"><li id="etapa-1" aria-current="step">1. Problema</li><li id="etapa-2">2. Local</li><li id="etapa-3">3. Detalhes</li></ol>
+    <ol class="passos" aria-label="Etapas do registro"><li id="etapa-1" aria-current="step"><span class="passo-numero">1. </span>Problema</li><li id="etapa-2"><span class="passo-numero">2. </span>Local</li><li id="etapa-3"><span class="passo-numero">3. </span>Detalhes</li></ol>
     <form id="form" novalidate>
       <section id="passo-1" aria-labelledby="titulo-passo-1"><h2 id="titulo-passo-1" tabindex="-1">O que é?</h2>
-        <fieldset class="campo"><legend>Escolha uma categoria</legend><div class="opcoes" id="categorias" aria-live="polite"><p>Carregando categorias…</p></div></fieldset>
+        <fieldset class="campo"><legend>Escolha uma categoria</legend><div class="opcoes" id="categorias" aria-live="polite"><p class="carregando"><svg class="icone" aria-hidden="true"><use href="img/icones.svg#relogio"></use></svg>Carregando categorias…</p></div></fieldset>
         <p id="informacao-categoria" class="dica informacao-categoria" aria-live="polite" hidden></p>
         <aside class="aviso aviso-emergencia" aria-label="Emergências">
           <svg class="icone" aria-hidden="true"><use href="img/icones.svg#alerta"></use></svg>

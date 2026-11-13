@@ -69,6 +69,9 @@ function nomeProprio(texto) {
 function icone(nome) {
   return `<svg class="icone" aria-hidden="true" focusable="false"><use href="img/icones.svg#${nome}"></use></svg>`;
 }
+function iconeCategoria(nome, tamanho = "lista") {
+  return `<span class="icone-categoria icone-categoria-${tamanho}">${icone(nome)}</span>`;
+}
 function categoriaVisual(categoria) {
   const nome = chave(categoria?.nome || "");
   const tipos = [
@@ -121,7 +124,7 @@ function abreviarRua(nome) {
 function placaDeRua(o, grande = false) {
   if (grande) return `<span class="placa placa-grande"><span class="placa-rua">${esc(nomeProprio(o.logradouro))}</span>${o.numero ? `<span class="placa-num">${esc(o.numero)}</span>` : ""}</span>`;
   const rua = abreviarRua(nomeProprio(o.logradouro).replace(/^Rua\s+/i, ""));
-  return `<span class="placa" title="${esc(endereco(o))}"><span class="placa-nome">${esc(rua)}</span>${o.numero ? `<span class="placa-numero"> · ${esc(o.numero)}</span>` : ""}</span>`;
+  return `<span class="placa placa-compacta" title="${esc(endereco(o))}"><span class="placa-nome">${esc(rua)}</span>${o.numero ? `<span class="placa-num">${esc(o.numero)}</span>` : ""}</span>`;
 }
 function seloStatus(status) {
   return `<span class="selo selo-${esc(status.toLowerCase())}">${STATUS_TEXTO[status] || esc(status)}</span>`;
@@ -132,16 +135,74 @@ function contarApoios(apoios) {
   apoios.forEach((a) => { contagem[a.idOcorrencia] = (contagem[a.idOcorrencia] || 0) + 1; });
   return contagem;
 }
-function linhaOcorrencia(o, categoria, apoios = 0, numero = null, mostrarRegistro = false) {
+function linhaOcorrencia(o, categoria, apoios = 0, numero = null, mostrarRegistro = false, linhaMini = "") {
   return `<li class="item"><a class="cobrir" href="ocorrencia.html?id=${o.idOcorrencia}">
-    <span class="item-icone">${icone(categoriaVisual(categoria).icone)}${numero ? `<span class="numero numero-mapa numero-${esc(String(o.status).toLowerCase())}">${numero}<span class="visualmente-oculto"> na lista do mapa</span></span>` : ""}</span>
+    <span class="item-icone">${iconeCategoria(categoriaVisual(categoria).icone)}${numero ? `<span class="numero numero-mapa numero-${esc(String(o.status).toLowerCase())}">${numero}<span class="visualmente-oculto"> na lista do mapa</span></span>` : ""}</span>
     <div class="item-corpo"><div class="item-topo"><strong>${esc(nomeExibido(categoria?.nome || "Problema registrado"))}</strong>${seloStatus(o.status)}</div>
     ${placaDeRua(o)}<p class="item-descricao">${esc(nomeExibido(o.descricao))}</p>
-    <p class="item-meta">${mostrarRegistro ? `${numeroRegistro(o)} · ` : ""}${textoTempoDesde(o.dataAbertura)} · ${textoApoios(apoios)}</p></div></a></li>`;
+    <p class="item-meta">${mostrarRegistro ? `${numeroRegistro(o)} · ` : ""}${textoTempoDesde(o.dataAbertura)} · ${textoApoios(apoios)}</p>${linhaMini}</div></a></li>`;
+}
+function linhaDoAtendimento(o, atendimentos = [], equipes = [], mini = false) {
+  const relacionados = atendimentos.filter((a) => a.idOcorrencia === o.idOcorrencia);
+  const visita = relacionados.find((a) => a.status === "AGENDADO");
+  const concluido = relacionados.find((a) => a.status === "CONCLUIDO");
+  const cancelada = o.status === "CANCELADA";
+  let atual = 1;
+  let nomeAtual = "Na fila";
+  if (cancelada) {
+    nomeAtual = "Cancelado";
+  } else if (o.status === "RESOLVIDA") {
+    atual = 3;
+    nomeAtual = "Resolvido";
+  } else if (visita) {
+    atual = 2;
+    nomeAtual = "Visita agendada";
+  } else if (o.status === "EM_ANDAMENTO") {
+    atual = 2;
+    nomeAtual = "Em atendimento";
+  }
+
+  const atendimentoVisivel = visita || concluido;
+  const equipe = atendimentoVisivel
+    ? equipes.find((e) => e.idEquipe === atendimentoVisivel.idEquipe)
+    : null;
+  const terceiraEstacao = atendimentoVisivel
+    ? `<span class="estacao-nome">Visita agendada</span><small>${esc(formatarData(atendimentoVisivel.dataAgendada))}</small><small>${esc(nomeExibido(equipe?.nome || "equipe não informada"))}</small>`
+    : `<span class="estacao-nome">${o.status === "EM_ANDAMENTO" ? "Em atendimento" : "Visita agendada"}</span>`;
+  const estacoes = [
+    { nome: "Registrado", conteudo: `<span class="estacao-nome">Registrado</span><small>${esc(formatarData(o.dataAbertura))}</small>` },
+    { nome: "Na fila", conteudo: '<span class="estacao-nome">Na fila</span>' },
+    { nome: "Visita agendada", conteudo: terceiraEstacao },
+    { nome: "Resolvido", conteudo: `<span class="estacao-nome">Resolvido</span>${o.dataResolucao ? `<small>${esc(formatarData(o.dataResolucao))}</small>` : ""}` },
+  ];
+  const caminho = cancelada && !mini ? estacoes.slice(0, 2) : estacoes;
+  const itens = caminho.map((estacao, indice) => {
+    const estado = cancelada
+      ? (indice < 2 ? "percorrida" : "futura")
+      : indice < atual ? "percorrida" : indice === atual ? "atual" : "futura";
+    let trecho = "futuro";
+    if (indice < atual) trecho = o.status === "RESOLVIDA" && indice === 2 ? "resolvido" : "percorrido";
+    if (cancelada && !mini && indice === caminho.length - 1) trecho = "cancelado";
+    const ehAtual = !cancelada && indice === atual;
+    const atualAtributo = ehAtual ? ' aria-current="step"' : "";
+    const resolvida = o.status === "RESOLVIDA" && indice === 3 ? " estacao-resolvida" : "";
+    const duracao = Math.round(600 / atual);
+    const tempoAnimacao = !mini && (trecho === "percorrido" || trecho === "resolvido")
+      ? ` style="--duracao-linha:${duracao}ms;--atraso-linha:${duracao * indice}ms"`
+      : "";
+    return `<li class="estacao estacao-${estado}${resolvida}" data-trecho="${trecho}"${tempoAnimacao}${atualAtributo}><span class="estacao-ponto"><span class="visualmente-oculto">${esc(estacao.nome)}</span></span>${mini ? "" : `<span class="estacao-conteudo">${estacao.conteudo}</span>`}</li>`;
+  });
+  if (cancelada && !mini) {
+    itens.push('<li class="estacao estacao-terminal" aria-current="step"><span class="estacao-ponto"><span class="visualmente-oculto">Cancelado</span></span><span class="estacao-conteudo"><span class="estacao-nome">Cancelado</span></span></li>');
+  } else if (cancelada && mini) {
+    itens.push('<li class="visualmente-oculto" aria-current="step">Cancelado</li>');
+  }
+  const classe = mini ? "linha-atendimento linha-atendimento-mini" : "linha-atendimento";
+  return `<div class="${mini ? "linha-atendimento-resumo" : "linha-atendimento-bloco"}"><ol class="${classe}" aria-label="Linha do atendimento">${itens.join("")}</ol>${mini ? `<span class="linha-atendimento-nome">${esc(nomeAtual)}</span>` : ""}</div>`;
 }
 function montarCabecalho(links) {
   const usuario = sessao.ler();
-  $("cabecalho").innerHTML = `<div class="cabecalho-linha"><a class="marca" href="index.html">${icone("local")}${esc(CONFIG.APP_NOME)}</a>
+  $("cabecalho").innerHTML = `<div class="cabecalho-linha"><a class="marca" href="index.html">${icone("local")}<span class="marca-placa">${esc(CONFIG.APP_NOME)}</span></a>
     ${usuario ? '<button class="botao-texto" id="botao-sair" type="button">Trocar perfil</button>' : ""}</div>
     <p class="quem">${esc(usuario?.perfil === "gestor" ? "Subprefeitura Sé · São Paulo" : usuario?.nome || "Liberdade · Sé · São Paulo")}</p>
     ${links.length ? `<nav class="abas ${links.length === 2 ? "abas-gestor" : ""}" aria-label="Páginas">${links.map((link) => `<a href="${link.href}" ${link.atual ? 'aria-current="page"' : ""}${link.curto ? ` aria-label="${esc(link.texto)}"` : ""}>${link.curto ? `<span class="aba-completa">${esc(link.texto)}</span><span class="aba-curta" aria-hidden="true">${esc(link.curto)}</span>` : esc(link.texto)}</a>`).join("")}</nav>` : ""}`;

@@ -1,0 +1,142 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="E8D284BF-B141-0613-E846-EB3BC87A6C45" name="GS_PONTO_SENSIVEL">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>6DBF8CEC-BF72-F158-0244-E119AEFED45B</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID_PONTO_SENSIVEL" id="B73565C6-8D6A-95D0-8AAA-C5866C6546F2">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>984276C5-1506-D3FE-F153-6058E71453DA</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="ID_DISTRITO" id="A5D46421-9529-C01A-FE94-E746D889BD29">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>882FD51A-6215-590B-BDA5-AFBC0E7EBAA3</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="87589D7D-ABE0-97BE-2F07-A445B90A4605" referredColumn="61BB1BEA-E08E-01FA-B083-4F3276A00588"/>
+</associations>
+</Column>
+<Column name="NM_PONTO" id="1F5B41E6-94D1-5D1A-4E1B-7394C8B7EE9C">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>4525ED73-2468-6A4A-A4A8-7ED75C0F90E6</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>06F475AA-BB39-8400-B8D0-5FEB827F0072</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TP_PONTO" id="008E9666-C7F4-6E78-F28B-16BA6DEFEEBF">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>F8CEC5A6-AC3C-191E-4F71-AC8D4C85F65F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>4A0B8F8F-3C2B-382C-80F0-9BD0D2E760DA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_LATITUDE" id="AE672A64-591C-F3EF-BEF2-066602615E71">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>5B5BB822-7050-86FC-C12C-7F2B56607B57</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>61C54ABF-8CAB-2686-DC29-FEC0AF8334A2</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_LONGITUDE" id="EDFA452E-D740-7D88-6DEC-C724DA04F90C">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>303B018E-40D3-9DD3-49A3-7C20FCFB4410</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>61C54ABF-8CAB-2686-DC29-FEC0AF8334A2</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="BCE91DF8-5569-DEF5-9E7F-EC147FBF846E" name="PK_GS_PONTO_SENSIVEL">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>23E200C6-0F96-8981-B630-7685CFC1A84D</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B73565C6-8D6A-95D0-8AAA-C5866C6546F2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7CB2F894-E9BB-D88A-BC5C-EFEE4E511E7A" name="FK_GS_PONTO_DISTRITO">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A5D46421-9529-C01A-FE94-E746D889BD29"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint">
+<tableCheckConstraint name="CK_GS_PONTO_TIPO" directorySegmentName="seg_0" id="E0EE3E34-4BD1-A214-C6EF-43085F50EAB3">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>D4822FCF-F640-D2D0-E49C-7A7EEACDB012</importedID>
+<rule><![CDATA[TP_PONTO IN ('ESCOLA', 'CRECHE', 'UBS', 'HOSPITAL', 'ILPI', 'TERMINAL')]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_GS_PONTO_LAT" directorySegmentName="seg_0" id="D9EC205C-D047-4BC8-B3B0-656995BAB789">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>C4BD3C1A-F133-1CBE-B2E3-F62EF986F49A</importedID>
+<rule><![CDATA[NR_LATITUDE BETWEEN -90 AND 90]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_GS_PONTO_LON" directorySegmentName="seg_0" id="F0DE81B9-714C-EB96-833C-44C2AA6C2081">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>6005E5D2-8E1A-3617-AE91-5A278DE76A69</importedID>
+<rule><![CDATA[NR_LONGITUDE BETWEEN -180 AND 180]]></rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>

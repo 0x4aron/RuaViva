@@ -106,13 +106,13 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <p>As dez FKs ligam cada registro filho a um pai obrigatório. A exclusão de ocorrência propaga-se a apoios e atendimentos por ON DELETE CASCADE. Outras exclusões dependem da ausência de filhos. A API acrescenta proteção ao histórico: ocorrência resolvida e atendimento concluído não podem ser excluídos.</p>
 <p>Coordenadas têm limites de latitude/longitude. Datas de resolução não antecedem abertura; execução não antecede agendamento. VARCHAR2 usa tamanho em caracteres (CHAR), preservando textos com acentos. A combinação (ID_OCORRENCIA, ID_CIDADAO) é única em GS_APOIO.</p>
 </section>
-<section class="secao" id="modelo">
+<section class="secao pagina-paisagem diagrama-dm" id="modelo">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
 </div>
 <h2>4. Diagrama do modelo lógico (Oracle Data Modeler)</h2>
 <figure><img src="img/modelo-logico-data-modeler.png" alt="Modelo lógico oficial do RuaViva, exportado do Oracle Data Modeler."><figcaption>Modelo lógico oficial do RuaViva, exportado do Oracle Data Modeler.</figcaption>
 </figure>
-<p>Importar database/01_ddl.sql em File → Import → DDL File no Oracle Data Modeler para obter o modelo relacional; conferir chaves e cardinalidades e derivar o modelo lógico pela ferramenta. Exportar o diagrama lógico legível para a imagem indicada.</p>
+<p>Gerado no Oracle SQL Developer Data Modeler 24.3 a partir de database/01_ddl.sql (Arquivo → Importar → Arquivo DDL, Oracle Database 21c): 19 instruções importadas, nenhuma com falha, resultando nas 9 tabelas e 10 chaves estrangeiras do script. O projeto do Data Modeler está em database/modelo/RuaViva.dmd.</p>
 </section>
 <section class="secao" id="scripts">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>

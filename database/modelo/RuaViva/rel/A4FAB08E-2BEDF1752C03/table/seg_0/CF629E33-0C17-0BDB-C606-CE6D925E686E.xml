@@ -1,0 +1,273 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="CF629E33-0C17-0BDB-C606-CE6D925E686E" name="GS_OCORRENCIA">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>5DAFE714-8D11-1194-05CF-E239AE6CFA9B</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID_OCORRENCIA" id="04CBE1A8-C305-DC1F-5D77-D72B03C58CD1">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>E91190CE-40E6-D985-5CFA-079247AACCAA</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="ID_CIDADAO" id="D5BE11BA-53A5-A32F-1A04-89473F2DA0D4">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>2592289C-9A44-DDB9-CE9A-33F8CB5F3BB7</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="1E23F43A-663A-1E67-E8DD-147C07FA4D61" referredColumn="BE4A3E74-D945-705E-7050-EB1C65D1C611"/>
+</associations>
+</Column>
+<Column name="ID_CATEGORIA" id="01F7742D-D58C-E842-81A4-C76C641EDA08">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>E0C06205-C6C2-6597-84D9-A695D8554F9A</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="3DC6CBD9-E4F0-9467-51A4-1F0C79F0CD2C" referredColumn="DF6D7680-376C-528D-B78A-6413C4D417B6"/>
+</associations>
+</Column>
+<Column name="ID_DISTRITO" id="28DDACBA-5C58-8BE7-5F71-1C1EE5FE52AA">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>47491381-8BCD-ADBC-2E86-B26051C80454</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E0083991-DE7A-4961-3A18-88F47DAFEF71" referredColumn="61BB1BEA-E08E-01FA-B083-4F3276A00588"/>
+</associations>
+</Column>
+<Column name="DS_OCORRENCIA" id="1A466E90-90D1-A1B6-589E-9FBA5D5C69C5">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>3A763629-705D-E334-9EC4-40CF277EACE4</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>365FDD44-F5D9-7F59-96C5-C0E4C30C8AEC</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DS_LOGRADOURO" id="A7C3F050-8BF8-83B4-A918-FAB1B24BFFD8">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>483BB790-66D6-8518-1E06-078C34ED5016</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C84F9C9B-D01B-4DC0-DD64-658DB5C9EEE7</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_ENDERECO" id="8B1FAE9A-D5C4-417B-3B11-5CBF8F820094">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>092A5F9A-E16C-555F-32B5-90FF3C682B8C</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>86E64161-110E-98CE-3F00-EB9C63089C3A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_LATITUDE" id="77135F1F-5412-EC52-A56A-5E9A202D58E5">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>5B7AA341-CBB4-6EB2-1126-682E0A0D0DEA</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>61C54ABF-8CAB-2686-DC29-FEC0AF8334A2</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_LONGITUDE" id="26034DB9-5F8F-7EF7-C2D3-FE4FCC807AE3">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>E155248A-C607-9AA7-B22D-49D38BCF693F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>61C54ABF-8CAB-2686-DC29-FEC0AF8334A2</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ST_OCORRENCIA" id="1ED48A21-7222-9FFF-C649-75A77E185A7D">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>38256A93-5D85-D1B8-FF9D-0F2231168436</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>6AAF9697-92FF-3CFC-E153-D8F1BEC301DB</domain>
+<defaultValue>&apos;ABERTA&apos;</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_PRIORIDADE" id="8C137F8E-1007-C58D-5C1D-3E10DCAADEBD">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>163AB2EA-FED6-6ACA-61C2-00A4F95534C4</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>F765DC53-CFD8-DA12-5B43-829F3760238A</domain>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DT_ABERTURA" id="3D1F518C-0584-35BC-663C-07B8F1EA48E1">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>F10312AF-6C25-8736-7146-D0B1B6914BD0</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>C962552E-514C-D420-1D50-7D363F9BA576</domain>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DT_RESOLUCAO" id="2EEDAABC-DB11-1E83-C0D3-A18B17273E03">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>E9852FD5-5920-A622-832F-B9C1249C715B</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>C962552E-514C-D420-1D50-7D363F9BA576</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="E705FEE9-2D9C-1B08-7249-2C73DA573A55" name="PK_GS_OCORRENCIA">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>E2ACE6B0-AD3F-BE7E-E846-3F7E15DF5BD2</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="04CBE1A8-C305-DC1F-5D77-D72B03C58CD1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E130D897-3BC4-DA86-E58F-2CD1725368F8" name="FK_GS_OCORRENCIA_CATEGORIA">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="01F7742D-D58C-E842-81A4-C76C641EDA08"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E3CE49CA-AF64-D242-8740-A185EF861A58" name="FK_GS_OCORRENCIA_CIDADAO">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D5BE11BA-53A5-A32F-1A04-89473F2DA0D4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0CD231DD-E93C-01CA-537F-2D6648CEDA25" name="FK_GS_OCORRENCIA_DISTRITO">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="28DDACBA-5C58-8BE7-5F71-1C1EE5FE52AA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint">
+<tableCheckConstraint name="CK_GS_OCORRENCIA_ST" directorySegmentName="seg_0" id="3854070D-37F4-EEE7-B397-6380E2C8C5E6">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>07BC6EDC-0A6D-6253-B05F-6282841CFF55</importedID>
+<rule><![CDATA[ST_OCORRENCIA IN ('ABERTA', 'EM_ANDAMENTO', 'RESOLVIDA', 'CANCELADA')]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_GS_OCORRENCIA_PRIOR" directorySegmentName="seg_0" id="B40A2312-E3D6-297C-21B5-23D459F62228">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>AC24A492-82F8-4D52-17F5-0346A8038449</importedID>
+<rule><![CDATA[NR_PRIORIDADE >= 0]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_GS_OCORRENCIA_LAT" directorySegmentName="seg_0" id="D7772208-6236-4942-2665-BB5F13CB9B45">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>52009CA8-A7D4-2FF1-A09F-62A69EC188E5</importedID>
+<rule><![CDATA[NR_LATITUDE BETWEEN -90 AND 90]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_GS_OCORRENCIA_LON" directorySegmentName="seg_0" id="47DA30BD-F62C-E27E-B150-02983560167E">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>BEC1EE19-F2C7-D8EE-EA36-81FF5C581BA2</importedID>
+<rule><![CDATA[NR_LONGITUDE BETWEEN -180 AND 180]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_GS_OCORRENCIA_DATAS" directorySegmentName="seg_0" id="8DDABDE0-20F2-15AB-9E7D-D623B94738C2">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>7C650CF4-4CED-08DE-067E-28504B9CDCFD</importedID>
+<rule><![CDATA[DT_RESOLUCAO IS NULL OR DT_RESOLUCAO >= DT_ABERTURA]]></rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>

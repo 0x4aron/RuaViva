@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="3DC6CBD9-E4F0-9467-51A4-1F0C79F0CD2C" containerWithKeyObject="CF629E33-0C17-0BDB-C606-CE6D925E686E" localFKIndex="E130D897-3BC4-DA86-E58F-2CD1725368F8" name="FK_GS_OCORRENCIA_CATEGORIA">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>7381BB64-84C5-7920-1571-F8481FC979F5</importedID>
+<referredTableLongName>GS_CATEGORIA</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>77568B57-BE2B-8D48-02EE-CBEA771E7453</referredTableID>
+<keyObject>E90FDF60-51E6-786A-6BE4-EB707AB15A74</keyObject>
+<referredKeyID>E90FDF60-51E6-786A-6BE4-EB707AB15A74</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_CATEGORIA</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

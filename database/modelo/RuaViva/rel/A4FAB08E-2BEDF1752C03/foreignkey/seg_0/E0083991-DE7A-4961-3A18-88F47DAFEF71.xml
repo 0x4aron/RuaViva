@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="E0083991-DE7A-4961-3A18-88F47DAFEF71" containerWithKeyObject="CF629E33-0C17-0BDB-C606-CE6D925E686E" localFKIndex="0CD231DD-E93C-01CA-537F-2D6648CEDA25" name="FK_GS_OCORRENCIA_DISTRITO">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>62C1C6FD-8035-6DD7-BCF4-A1DEBF75AB8A</importedID>
+<referredTableLongName>GS_DISTRITO</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>7E32572D-D656-F569-8EA5-1D4EDBDF6B2A</referredTableID>
+<keyObject>D50609B9-5483-C008-7CD1-0D6489E2B746</keyObject>
+<referredKeyID>D50609B9-5483-C008-7CD1-0D6489E2B746</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ID_DISTRITO</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

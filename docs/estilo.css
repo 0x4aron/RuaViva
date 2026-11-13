@@ -113,3 +113,6 @@ code { font-family:'DejaVu Sans Mono',monospace; font-size:.87em; overflow-wrap:
 .pagina-paisagem .mermaid svg { max-height: 150mm; }
 .pagina-paisagem figure img { max-height: 160mm; }
 .diagrama-der .mermaid svg { max-height: 125mm; }
+
+.diagrama-dm figure img { max-height: 128mm; width: auto; max-width: 100%; display: block; margin: 0 auto; }
+.diagrama-dm h2 { margin-top: 0; }

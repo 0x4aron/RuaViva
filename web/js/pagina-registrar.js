@@ -216,8 +216,8 @@ async function carregar() {
     contagem = contarApoios(apoios);
     $("categorias").innerHTML = apoio.categorias.map((c) => {
       const visual = categoriaVisual(c);
-      return `<label class="opcao"><input id="categoria-${c.idCategoria}" type="radio" name="categoria" value="${c.idCategoria}" aria-describedby="exemplo-${c.idCategoria}"><span>${icone(visual.icone)}<span>${esc(nomeExibido(c.nome))}</span><small id="exemplo-${c.idCategoria}">${esc(visual.exemplo)}</small></span></label>`;
-    }).join("") || '<p>Nenhuma categoria disponível para registro.</p>';
+      return `<label class="opcao opcao-categoria"><input id="categoria-${c.idCategoria}" type="radio" name="categoria" value="${c.idCategoria}" aria-describedby="exemplo-${c.idCategoria}">${iconeCategoria(visual.icone, "grande")}<span class="opcao-texto"><span class="opcao-nome">${esc(nomeExibido(c.nome))}</span><small id="exemplo-${c.idCategoria}">${esc(visual.exemplo)}</small></span><span class="opcao-marca" aria-hidden="true"></span></label>`;
+    }).join("") || `<p class="vazio">${icone("info")} Nenhuma categoria disponível para registro.</p>`;
     $("distrito").innerHTML = '<option value="">Escolha o bairro</option>' + apoio.distritos.map((d) => `<option value="${d.idDistrito}" ${chave(d.nome) === "liberdade" ? "selected" : ""}>${esc(nomeProprio(d.nome))}</option>`).join("");
     dadosProntos = Boolean(apoio.categorias.length && apoio.distritos.length);
     atualizarContinuar();
@@ -225,7 +225,7 @@ async function carregar() {
     atualizarInformacaoCategoria();
     verificarParecidas();
   } catch (erro) {
-    $("categorias").innerHTML = '<p>Não foi possível carregar as categorias.</p>';
+    $("categorias").innerHTML = `<p class="vazio">${icone("alerta")} Não foi possível carregar as categorias.</p>`;
     erroComTentativa(erro, carregar);
   }
 }
@@ -240,7 +240,12 @@ if (mapa) {
 $("marcar-centro").disabled = !mapa;
 $("marcar-centro").addEventListener("click", () => { const centro = mapa.getCenter(); marcar(centro.lat, centro.lng); });
 $("buscar-endereco").addEventListener("click", buscarEndereco);
-$("busca-endereco").addEventListener("keydown", (evento) => { if (evento.key === "Enter") evento.preventDefault(); });
+// Enter no campo busca o endereço (em vez de enviar o formulário inteiro).
+$("busca-endereco").addEventListener("keydown", (evento) => {
+  if (evento.key !== "Enter") return;
+  evento.preventDefault();
+  buscarEndereco();
+});
 $("resultados").addEventListener("change", (evento) => {
   const resultado = resultados[Number(evento.target.value)];
   if (!resultado) return;
@@ -309,7 +314,7 @@ $("form").addEventListener("submit", async (evento) => {
     limparAviso();
     $("registro").hidden = true;
     $("titulo-pagina").textContent = "Problema registrado";
-    $("confirmacao").innerHTML = `${placaDeRua(criada, true)}<p class="protocolo">${esc(numeroRegistro(criada))}</p><h2>O que acontece agora</h2><p>Seu registro entrou na fila da subprefeitura. Acompanhe as atualizações em Meus registros.</p><p class="texto-suave">Este número identifica o registro no RuaViva; não é um protocolo oficial do SP156.</p><div class="acoes"><a class="botao botao-principal" href="ocorrencia.html?id=${criada.idOcorrencia}">Acompanhar este registro</a><a class="botao" href="minhas.html">Meus registros</a></div>`;
+    $("confirmacao").innerHTML = `${placaDeRua(criada, true)}<p class="protocolo">${esc(numeroRegistro(criada))}</p><h2>O que acontece agora</h2>${linhaDoAtendimento(criada, [], [])}<p>Seu registro entrou na fila da subprefeitura. Acompanhe as atualizações em Meus registros.</p><p class="texto-suave">Este número identifica o registro no RuaViva; não é um protocolo oficial do SP156.</p><div class="acoes"><a class="botao botao-principal" href="ocorrencia.html?id=${criada.idOcorrencia}">Acompanhar este registro</a><a class="botao" href="minhas.html">Meus registros</a></div>`;
     $("confirmacao").hidden = false;
     $("titulo-pagina").setAttribute("tabindex", "-1");
     $("titulo-pagina").focus();

@@ -45,12 +45,12 @@ function desenharFila() {
         <select id="equipe-${o.idOcorrencia}" name="equipe" required aria-describedby="equipe-dica-${o.idOcorrencia}" ${!disponiveis.length ? "disabled" : ""}><option value="">Escolha a equipe</option>${disponiveis.map((e) => `<option value="${e.idEquipe}">${esc(nomeExibido(e.nome))}</option>`).join("")}</select></div>
       <div class="campo"><label for="data-${o.idOcorrencia}">Dia da visita</label><p class="dica" id="data-dica-${o.idOcorrencia}">Escolha hoje ou uma data futura.</p><input id="data-${o.idOcorrencia}" name="data" type="date" min="${hoje()}" required aria-describedby="data-dica-${o.idOcorrencia}"></div></div>
       <button class="botao botao-principal" type="submit" ${!disponiveis.length ? "disabled" : ""}>Agendar visita</button></form></div></article>`;
-  }).join("") : '<p class="vazio">Nenhum problema aguardando equipe.</p>';
+  }).join("") : `<p class="vazio">${icone("info")} Nenhum problema aguardando equipe. <a href="#titulo-visitas">Ver visitas agendadas</a></p>`;
 }
 function desenharVisitas(ocorrencias) {
   $("andamento").innerHTML = agendados.length ? agendados.map((visita) => {
     const o = ocorrencias.find((item) => item.idOcorrencia === visita.idOcorrencia);
-    if (!o) return '<li class="visita">Registro da visita indisponível.</li>';
+    if (!o) return `<li class="visita">${icone("info")} Registro da visita indisponível.</li>`;
     const equipe = equipes.find((e) => e.idEquipe === visita.idEquipe);
     return `<li class="item visita"><div class="item-topo"><a href="ocorrencia.html?id=${o.idOcorrencia}"><strong>${esc(nomeExibido(apoio.categoria[o.idCategoria]?.nome))}</strong></a>${seloStatus(o.status)}</div>
       ${placaDeRua(o)}<p class="item-meta">${esc(nomeExibido(o.descricao))}</p>
@@ -64,13 +64,13 @@ function desenharVisitas(ocorrencias) {
         <button class="botao-texto" type="button" data-fechar>Voltar</button></form>
       <div id="cancelar-${visita.idAtendimento}" class="form-inline" hidden><h3>Cancelar esta visita?</h3><p>O problema volta para a fila de trabalho.</p>
         <button class="botao botao-perigo" type="button" data-cancelar="${visita.idAtendimento}">Confirmar cancelamento</button><button class="botao-texto" type="button" data-fechar>Manter visita</button></div></li>`;
-  }).join("") : '<li class="vazio">Nenhuma visita agendada no momento.</li>';
+  }).join("") : `<li class="vazio">${icone("info")} Nenhuma visita agendada no momento. <a href="#titulo-fila">Ver fila de trabalho</a></li>`;
 }
 async function carregar(limpar = true) {
   if (limpar) limparAviso();
   fecharPainel();
-  $("fila").innerHTML = '<p class="carregando">Carregando fila…</p>';
-  $("andamento").innerHTML = '<li class="carregando">Carregando visitas…</li>';
+  $("fila").innerHTML = `<p class="carregando">${icone("relogio")} Carregando fila…</p>`;
+  $("andamento").innerHTML = `<li class="carregando">${icone("relogio")} Carregando visitas…</li>`;
   try {
     const [dados, todasEquipes, aguardando, ocorrencias, atendimentos, apoios] = await Promise.all([
       carregarApoio(), api.get("/equipes"), api.get("/ocorrencias/fila"), api.get("/ocorrencias"), api.get("/atendimentos"), api.get("/apoios"),
@@ -86,8 +86,8 @@ async function carregar(limpar = true) {
     desenharVisitas(ocorrencias);
     return true;
   } catch (erro) {
-    $("fila").innerHTML = '<p class="vazio">Fila indisponível.</p>';
-    $("andamento").innerHTML = '<li class="vazio">Visitas indisponíveis.</li>';
+    $("fila").innerHTML = `<p class="vazio">${icone("alerta")} Fila indisponível.</p>`;
+    $("andamento").innerHTML = `<li class="vazio">${icone("alerta")} Visitas indisponíveis.</li>`;
     $("resumo").textContent = "Não foi possível atualizar a fila e as visitas.";
     erroComTentativa(erro, carregar);
     return false;

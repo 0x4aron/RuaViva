@@ -1,0 +1,142 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="77568B57-BE2B-8D48-02EE-CBEA771E7453" name="GS_CATEGORIA">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>90EC71C7-746B-012D-AE09-E18454AE35B4</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID_CATEGORIA" id="DF6D7680-376C-528D-B78A-6413C4D417B6">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>F1669CAA-F6C7-C4A6-22A8-00A203C20071</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="NM_CATEGORIA" id="A649644E-5C9F-0624-BDC1-35BC3AF4B867">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>26CBC507-0433-2B21-7FAD-CD22D2561D44</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>971630B2-7C75-0193-453D-3DA0CFD202DA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="DS_CATEGORIA" id="26DE0BC2-B2FE-8136-D577-EFEFCAB02548">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>FAD6EADB-A301-926E-A0DC-66EA2290802A</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>302F706C-3D28-A024-E18A-66063A5EA093</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_PRAZO_DIAS" id="799E8278-BF87-CD5F-7F7F-BBBA53C59AB8">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>DE053745-CB38-DB9A-5C9F-C8B4275618A2</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>83718F81-EB8F-B898-B481-BA11EFF2C624</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_PESO_GRAVIDADE" id="104D80B0-9C39-5388-8344-8BCD830E6371">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>0D7EDD33-92F0-CEDF-FBB5-290659B333EE</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>4D01E460-0F27-0BB3-EF0F-286BFBAAE1CA</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NR_HORAS_ESTIMADAS" id="0E7087C1-DEDF-A7C6-FBF7-7E740C417AFE">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>311BDED3-7EF4-1FEB-7BDA-90A1D756F844</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>83718F81-EB8F-B898-B481-BA11EFF2C624</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="E90FDF60-51E6-786A-6BE4-EB707AB15A74" name="PK_GS_CATEGORIA">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>0AF0F217-D1EB-B078-CFA6-F3BC99AE65C2</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="DF6D7680-376C-528D-B78A-6413C4D417B6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B5E4C8FF-11A6-2FFD-7DBC-4C28234D17C1" name="UK_GS_CATEGORIA_NOME">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>4D457BB8-FA9F-C87D-2F41-81F312209F74</importedID>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A649644E-5C9F-0624-BDC1-35BC3AF4B867"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint">
+<tableCheckConstraint name="CK_GS_CATEGORIA_PRAZO" directorySegmentName="seg_0" id="1CEF768D-094F-A626-CD0F-F9D876CFF447">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>9A3FF403-94EE-F4F9-ABD4-66B8C8F694E1</importedID>
+<rule><![CDATA[NR_PRAZO_DIAS > 0]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_GS_CATEGORIA_PESO" directorySegmentName="seg_0" id="FDB3C2F7-40E7-C9C8-220B-6A2B1762B772">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>A9C88F14-C79A-D1D6-9D73-24788A3B8A05</importedID>
+<rule><![CDATA[NR_PESO_GRAVIDADE BETWEEN 1 AND 5]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="CK_GS_CATEGORIA_HORAS" directorySegmentName="seg_0" id="92925CBA-CAC2-7FC2-B4B2-E4EC0C0922F4">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>BE304FBE-47BC-F0E1-9D82-A0C70806370D</importedID>
+<rule><![CDATA[NR_HORAS_ESTIMADAS > 0]]></rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>

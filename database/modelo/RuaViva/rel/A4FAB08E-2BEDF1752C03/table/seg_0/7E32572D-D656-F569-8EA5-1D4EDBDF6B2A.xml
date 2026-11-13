@@ -1,0 +1,92 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="7E32572D-D656-F569-8EA5-1D4EDBDF6B2A" name="GS_DISTRITO">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>10D5C3B5-5C1F-DC8F-7721-5B27AAAC92AA</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ID_DISTRITO" id="61BB1BEA-E08E-01FA-B083-4F3276A00588">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>1CBE90E5-0F60-54B7-3D6B-340C4183445A</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementOrder>false</autoIncrementOrder>
+</Column>
+<Column name="ID_SUBPREFEITURA" id="9A6E61D4-0C72-8612-446C-EEE0D5BA972E">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>88E05C45-DA49-AF61-70DA-89B384E8D5AA</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>266EC04E-DE51-434A-9AF4-639B17CA652C</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="A0380769-CF52-00CC-752B-D31CF402E624" referredColumn="C6A9FF5D-2D93-6257-F801-BDDC7BEAC5A6"/>
+</associations>
+</Column>
+<Column name="NM_DISTRITO" id="44FDADC8-F60E-23C4-238C-E05397472824">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>0F28E701-0CD8-C7C3-03E8-DBAB1B2B7C17</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>239520FE-0198-0A15-1B5A-9BCD46F5FD80</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="D50609B9-5483-C008-7CD1-0D6489E2B746" name="PK_GS_DISTRITO">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>C8CCCA83-67FB-47F1-5875-5021DC4692FB</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="61BB1BEA-E08E-01FA-B083-4F3276A00588"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="F16A917B-9BA4-5E43-06CA-9C3C2397F952" name="UK_GS_DISTRITO_NOME">
+<sourceDDLFile>01_ddl.sql</sourceDDLFile>
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<importedID>FC5150CF-0116-9F8F-FDBA-49B97AD3EC74</importedID>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="44FDADC8-F60E-23C4-238C-E05397472824"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="9638310E-9639-217B-6E8D-6949D0125310" name="FK_GS_DISTRITO_SUBPREF">
+<createdBy>aaron</createdBy>
+<createdTime>2026-11-13 01:12:49 UTC</createdTime>
+<ownerDesignName>RuaViva</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9A6E61D4-0C72-8612-446C-EEE0D5BA972E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

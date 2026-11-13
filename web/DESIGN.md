@@ -1,4 +1,4 @@
-# RuaViva — sistema de design (v2)
+# RuaViva — sistema de design (v3)
 
 Fonte única para o site (`web/`) e para o Figma ("GS 2026 - Telas do site"). Os nomes dos tokens são os mesmos nos dois lugares: a variável `--placa` no CSS é a variável `placa` da coleção "Cores" no Figma.
 
@@ -32,7 +32,7 @@ Duas experiências, dois ritmos:
 --resolvido: #1E7D4F    --resolvido-clara: #E6F3EC
 --fundo: #F4F6F5        --papel: #FFFFFF
 ```
-Texto secundário sempre `--asfalto-suave` (contraste 6,9:1 no branco). Sobre azul, texto branco ou `#D6E2F2`, nunca cinza.
+Texto secundário sempre `--asfalto-suave` (contraste 6,9:1 no branco). Sobre azul, texto `--papel`, nunca cinza.
 
 ### Tipografia
 - **Barlow Semi Condensed 600/700**: títulos, placas, números (prioridade, contagens). Números com `font-variant-numeric: tabular-nums`.
@@ -58,22 +58,28 @@ Mais espaço acima de um título do que abaixo. Linhas de texto com no máximo ~
 
 ## Componentes
 
-**Placa de rua.** Duas versões:
-- *Grande* (entrada, cabeçalho do detalhe): fundo `--placa`, filete branco de 2 px por dentro, nome da rua em Barlow 700, número numa caixa `--placa-escura` à direita.
-- *Compacta* (listas, fila): uma linha, 0.95rem, sem filete externo, raio 4 px, altura 28 px. Mostra "Barão de Iguape · 288" (sem a palavra "Rua", que se repete em tudo).
+**Placa de rua.** Duas versões, com proporção de placa esmaltada, cantos de 4 px e filete branco interno:
+- *Grande* (entrada e detalhe): fundo `--placa`, nome da rua em Barlow 700 e número numa caixa `--placa-escura` à direita.
+- *Compacta* (listas e fila): uma linha, 0.95rem e número numa caixa `--placa-escura`. Mostra a rua sem a palavra "Rua", que se repete em tudo. A marca no cabeçalho usa o mesmo filete em escala menor.
 
 **Selo de status.** Retângulo de raio 4 px (como placa, não pílula), texto 0.85rem 700, fundo claro da cor + texto escuro da cor: Aberto (lanterna-clara/lanterna), Em andamento (andamento-fundo/andamento), Resolvido (resolvido-clara/resolvido), Cancelado (fundo/asfalto-suave). Sempre na mesma posição: canto superior direito da linha.
 
 **Número do registro.** `Registro nº 0003` usa algarismos tabulares em azul de placa, com contorno fino e sem imitar protocolo oficial. É o ID local da API, visível na confirmação, no detalhe e em Meus registros; não substitui um protocolo SP156.
 
-**Linha de ocorrência** (morador). Não é cartão solto: as linhas ficam dentro de um painel branco, separadas por linhas de 1 px. Estrutura: [ícone da categoria 28 px num quadrado `--placa-clara`, com o número do mapa no canto, na cor do status] [categoria em Corpo forte + selo à direita] / [placa compacta] / [descrição em uma linha, truncada] / [meta: "há 88 dias · 3 apoios"]. A linha inteira é um link (alvo grande), com foco visível.
+**Pictogramas de categoria.** Os símbolos de categoria mantêm os ids de `img/icones.svg`, com traço de 2,25 px, branco sobre quadrado `--placa` com raio de 4 px. Tamanhos: 48 px na escolha da categoria, 40 px nas listas e 32 px no detalhe. Ícones de interface (alerta, informação, relógio, apoios e controles do mapa) mantêm o estilo atual.
+
+**Linha de ocorrência** (morador). Não é cartão solto: as linhas ficam dentro de um painel branco, separadas por linhas de 1 px. Estrutura: [pictograma da categoria 40 px, com o número do mapa no canto na cor do status] [categoria em Corpo forte + selo à direita] / [placa compacta] / [descrição em uma linha, truncada] / [meta: "há 88 dias · 3 apoios"]. A linha inteira é um link (alvo grande), com foco visível. Em Meus registros, uma versão mini mostra os quatro pontos da linha e o nome da estação atual.
+
+**Linha do atendimento.** Um `<ol>` com as estações Registrado, Na fila, Visita agendada e Resolvido. A estação atual recebe `aria-current="step"`, nome em negrito e círculo maior com anel. Estações já alcançadas são círculos cheios com contorno branco; as futuras são vazadas. O trecho percorrido tem 6 px em `--placa`, o futuro é tracejado em `--linha`, e o último trecho de um registro resolvido e sua estação final usam `--resolvido`. A linha aparece no bloco Situação do registro, na confirmação após registrar (Na fila atual) e em Meus registros, onde fica reduzida aos pontos e ao nome da estação atual.
+
+Na abertura, a linha avança em uma animação de até 600 ms, ease-out, com os trechos percorridos crescendo em sequência. Em celular estreito ela fica vertical; em desktop fica horizontal. Para uma ocorrência cancelada, a linha termina depois de Na fila em um terminal cinza com o nome Cancelado. Cancelar uma visita deixa a linha em Na fila quando a API devolve a ocorrência para ABERTA; o cancelamento da visita continua no histórico. EM_ANDAMENTO sem visita AGENDADA mostra Em atendimento, sem data. Uma visita AGENDADA mostra Visita agendada, data e equipe.
 
 **Linha da fila** (gestor). Grade: Prioridade (número grande + nível) | Problema (categoria + descrição) | Endereço (placa compacta) | Apoios | Aberto há / prazo (vermelho só quando passou do prazo) | botão secundário "Agendar". Ao clicar em Agendar, a linha se expande (sem modal) mostrando: "Por que 71 pontos?" (composição vinda da API), equipe (só equipes ativas da mesma subprefeitura, começa em "Escolha a equipe"), data (mínimo hoje) e o botão principal "Agendar visita". Só uma linha aberta por vez.
 
 **Prioridade.** Número em Título/Número + nível (Alta ≥ 60 vermelho, Média ≥ 40 âmbar, Baixa cinza) + botão de texto "Por que?" que abre a composição:
 `Gravidade da categoria (peso 4) ... 40` / `3 apoios de vizinhos ... 6` / `A 120 m de Escola ... 15` / `Registrado por pessoa idosa ou com deficiência ... 10` / total.
 
-**Botões.** Principal: fundo `--faixa`, texto `--asfalto`, borda 2 px `--asfalto`, altura mínima 52 px. Secundário: branco com borda `--asfalto`. Perigo: branco, borda e texto `--lanterna`. De texto: sublinhado com `text-underline-offset: .2em`. Estados: hover (principal escurece para `--faixa-escura`), foco (anel `--faixa` 3 px + contorno `--asfalto`), desabilitado (opacidade .55), carregando (texto troca para "Enviando…" e o botão fica desabilitado).
+**Botões.** Principal: fundo `--faixa`, texto `--asfalto`, borda 2 px `--asfalto`, altura mínima 52 px. Secundário: branco com borda `--asfalto`. Perigo: branco, borda e texto `--lanterna`. De texto: sublinhado com `text-underline-offset: .2em`. Estados: hover (principal escurece para `--faixa-escura`), foco (anel `--faixa` 3 px e contorno `--asfalto` 1 px), pressionado (desce 1 px), desabilitado (opacidade .55), carregando (texto troca para "Enviando…" e o botão fica desabilitado). Transições de cor e sombra duram 150 ms e são desligadas com `prefers-reduced-motion`.
 
 **Campo.** Rótulo em Corpo forte acima; dica em Pequeno ligada por `aria-describedby`; erro abaixo do campo, em `--lanterna`, com ícone, também ligado por `aria-describedby` e `aria-invalid="true"`.
 
@@ -85,34 +91,40 @@ Mais espaço acima de um título do que abaixo. Linhas de texto com no máximo ~
 
 **Abas.** No celular, as 3 abas dividem a largura em partes iguais (grade), sem rolagem horizontal; a ativa tem fundo `--fundo` e texto `--placa`.
 
-**Marcador do mapa.** Alfinete de 36 px com o número da linha da lista (1, 2, 3...), na cor do status, borda branca de 2 px. O número no mapa é o mesmo da lista.
+**Marcador do mapa.** Círculo de 36 px com o número da linha da lista (1, 2, 3...), na cor do status, borda branca de 2 px e sombra suave. O número no mapa é o mesmo da lista e do selo sobre o pictograma.
+
+**Situação do bairro.** Na entrada, uma faixa sem cartões mostra as contagens de pendentes (ABERTA e EM_ANDAMENTO) e resolvidos (RESOLVIDA) na Liberdade. Os números vêm de `GET /ocorrencias` e do distrito devolvido pela API. Se a API falhar, a faixa fica oculta.
+
+**Passos do registro.** "1. Problema / 2. Local / 3. Detalhes" continua na mesma ordem, redesenhado como estações pequenas ligadas por um traço azul. O passo atual usa círculo cheio.
+
+**Prioridade na fila.** O número fica numa placa compacta com algarismos tabulares: Alta em `--lanterna`, Média em `--andamento` sobre `--andamento-fundo`, Baixa em `--asfalto-suave`. A tabela mantém a densidade e o cabeçalho permanece visível ao rolar; o formulário aberto se liga visualmente à linha de origem.
 
 **Linha do tempo.** Lista vertical com pontos; a linha de ligação de 2 px é o desenho da linha do tempo (permitido). Cada evento: o que aconteceu + data.
 
 **Ícones.** SVG próprios em `web/img/icones.svg` (sprite com `<symbol>`), traço de 2 px, 24 px, cantos arredondados, mesmo estilo em todos: buraco, bueiro, calçada, entulho, guia, varrição, lixeira, local, alvo (centro do mapa), check, alerta, info, relógio, pessoas (apoios), seta.
 
-**Superfícies do navegador.** `::selection` com fundo `--placa-clara`; `caret-color: var(--placa)`; barra de rolagem fina na cor `--linha`; favicon SVG (mini placa "RV").
+**Superfícies do navegador.** `::selection` com fundo `--placa-clara`; `caret-color: var(--placa)`; foco visível em todos os controles; links com `text-underline-offset: .2em`; barra de rolagem fina na cor `--linha`; favicon SVG (mini placa "RV"). Estados vazios mantêm uma frase e uma ação já disponível, com pictograma; estados de carregamento e erro também mostram pictograma, e os erros preservam a ação de tentar novamente.
 
 ## Telas
 
 ### 1. Entrada
-`h1` = placa grande "RuaViva". Linha "Liberdade · Sé · São Paulo". Frase do que o app faz. Dois caminhos claros, um abaixo do outro no celular e lado a lado no desktop: "Sou morador" (escolher morador da demonstração + botão principal) e "Sou da subprefeitura" (botão secundário). Uma nota discreta: "Versão de demonstração: os moradores e atendimentos são simulados."
+`h1` = placa grande "RuaViva". Linha "Liberdade · Sé · São Paulo". Frase do que o app faz. Faixa de situação do bairro com contagens reais de pendentes e resolvidos na Liberdade; se a API falhar, fica oculta. Dois caminhos claros, um abaixo do outro no celular e lado a lado no desktop: "Sou morador" (escolher morador da demonstração + botão principal) e "Sou da subprefeitura" (botão secundário). Uma nota discreta: "Versão de demonstração: os moradores e atendimentos são simulados."
 
 ### 2. Mapa do bairro (morador)
 Título "Problemas no bairro" + resumo vivo: "5 problemas não resolvidos na Liberdade". Filtro em 3 botões segmentados: Pendentes / Resolvidos / Todos. No celular, alternância "Lista | Mapa" (lista primeiro). No desktop: lista à esquerda (40%) e mapa fixo à direita, cada um em painel. O número da lista aparece sobre o ícone da categoria e corresponde ao marcador do mapa. Legenda das cores com texto.
 
 ### 3. Registrar problema (3 passos numa página)
-1. **O que é?** Grade de categorias: ícone + nome + um exemplo curto ("Tapa-buraco — buraco no asfalto da rua"). Escolha única, alvos grandes. Ao selecionar, mostrar prazo de referência e Subprefeitura Sé. Aviso de emergência fica visível nesta etapa.
+1. **O que é?** Grade de categorias: pictograma 48 px + nome + um exemplo curto ("Tapa-buraco — buraco no asfalto da rua"). Escolha única, alvos grandes. A opção selecionada tem borda de 2 px em azul, fundo azul claro e marca de seleção. O indicador de passos usa pequenas estações ligadas. Ao selecionar, mostrar prazo de referência e Subprefeitura Sé. Aviso de emergência fica visível nesta etapa.
 2. **Onde fica?** Campo "Rua e número" + botão "Buscar endereço" (OpenStreetMap Nominatim, restrito à região) → resultados como opções de rádio em texto. Ou "Usar minha localização". O mapa mostra o ponto e permite ajustar (toque, arrastar, ou setas + "Marcar o centro do mapa" com a mira). Confirmação sempre em texto: "Local escolhido: Rua Barão de Iguape, 288 — Liberdade" (geocodificação reversa; se falhar, "ponto marcado no mapa, perto de -23,5584, -46,6341").
 3. **Detalhes.** Descrição (opcional, com contador) + resumo do que vai ser enviado. Botão principal "Enviar registro".
 Aviso de possível repetição aparece no passo 2 quando há registro da mesma categoria a até 60 m: mostra a linha da ocorrência e o botão "Apoiar este em vez de registrar". O rascunho fica salvo (sessionStorage) se a pessoa sair para ver o outro registro.
-Depois de enviar: tela de confirmação com a placa do endereço, número local `Registro nº 0003` e "O que acontece agora": entra na fila da subprefeitura; você acompanha em Meus registros. Meus registros também permite buscar pelo número local.
+Depois de enviar: tela de confirmação com a placa do endereço, número local `Registro nº 0003` e "O que acontece agora": entra na fila da subprefeitura; a Linha do atendimento mostra Na fila como estação atual e a pessoa acompanha em Meus registros. Meus registros também permite buscar pelo número local.
 
 ### 4. Detalhe do problema
-Ordem: placa grande do endereço → número local do registro → categoria + selo → copiar link, compartilhar e imprimir → **bloco de situação** (frase grande: "Aguardando equipe" / "Visita agendada para 12/11" / "Resolvido em 05/11"; abaixo: última movimentação e próxima etapa, só com fatos do sistema; prazo de referência da categoria e se passou dele) → orientação para a Ouvidoria Geral do Município no SP156 se o prazo venceu → linha do tempo → apoio ("Isso também me afeta": explica que apoios entram no cálculo de prioridade, sem prometer rapidez; mostra quantos vizinhos apoiaram) → mapa pequeno no fim. O detalhe abre em modo somente leitura sem perfil, para que um link compartilhado possa ser consultado.
+Ordem: placa grande do endereço → número local do registro → categoria + selo → copiar link, compartilhar e imprimir → **bloco de situação** (frase grande: "Aguardando equipe" / "Visita agendada para 12/11" / "Resolvido em 05/11"; Linha do atendimento; abaixo: última movimentação e próxima etapa, só com fatos do sistema; prazo de referência da categoria e se passou dele) → orientação para a Ouvidoria Geral do Município no SP156 se o prazo venceu → linha do tempo → apoio ("Isso também me afeta": explica que apoios entram no cálculo de prioridade, sem prometer rapidez; mostra quantos vizinhos apoiaram) → mapa pequeno no fim. O detalhe abre em modo somente leitura sem perfil, para que um link compartilhado possa ser consultado.
 
 ### 5. Meus registros
-Duas seções: "Problemas que eu registrei" e "Problemas que eu apoiei", com a Linha de ocorrência. Estados vazios que convidam a agir ("Você ainda não registrou nenhum problema. Registrar agora").
+Duas seções: "Problemas que eu registrei" e "Problemas que eu apoiei", com a Linha de ocorrência e sua versão mini da Linha do atendimento (quatro pontos e nome da estação atual). Estados vazios que convidam a agir ("Você ainda não registrou nenhum problema. Registrar agora").
 
 ### 6. Fila de trabalho (gestor, desktop)
 Linha de resumo em texto, sem cartões de métrica: "5 aguardando equipe · 3 passaram do prazo · 1 visita agendada". Duas áreas: Fila (2/3 da largura, tabela de Linhas da fila, ordenada por prioridade) e Visitas agendadas (1/3, lista com "Marcar como resolvido", que abre confirmação na própria linha com campo "O que foi feito", e "Cancelar visita").
@@ -131,4 +143,4 @@ Formulário à esquerda com a régua de peso como sugestão (opcional); tabela �
 Link "Pular para o conteúdo"; um `h1` por página; ordem de títulos sem saltos; todos os campos com rótulo; dicas e erros com `aria-describedby`; mudanças de estado anunciadas (`aria-live="polite"`); foco vai para o aviso de erro; alvos ≥ 48 px; nada depende só de cor (selos têm texto); `prefers-reduced-motion` desliga animações; sem rolagem horizontal em 320 px; zoom de 200% sem quebrar.
 
 ## Movimento
-Um momento só: na confirmação de envio, a placa do endereço entra com um leve deslize de baixo (200 ms, ease-out). O resto da interface não anima.
+Um momento só: ao carregar a Linha do atendimento, os trechos percorridos avançam até a estação atual em até 600 ms (ease-out). `prefers-reduced-motion` desliga a animação. O resto da interface não anima.
