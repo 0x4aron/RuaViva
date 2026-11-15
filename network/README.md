@@ -1,6 +1,6 @@
 # Network Architect Solutions — RuaViva
 
-Entrega de configurações e roteiro de montagem para **Cisco Packet Tracer 8.2**, com a sintaxe IOS 15 dos dispositivos simulados. A rede atende à **base de zeladoria da Subprefeitura Sé**, responsável pela Liberdade, São Paulo. O RuaViva recebe ocorrências urbanas, prioriza demandas pelo impacto e apoia o planejamento das equipes de campo. A página HTTP contém a Ficha completa do [README da raiz](../README.md).
+Entrega de configurações e roteiro de montagem para **Cisco Packet Tracer 9.0.1**, com a sintaxe IOS 15 dos dispositivos simulados. A rede atende à **base de zeladoria da Subprefeitura Sé**, responsável pela Liberdade, São Paulo. O RuaViva recebe ocorrências urbanas, prioriza demandas pelo impacto e apoia o planejamento das equipes de campo. A página HTTP contém a Ficha completa do [README da raiz](../README.md).
 
 **Equipe:** Anthony Gonçalves Sforzin — RM 562096; Cesar Aaron Herrera — RM 565398.
 
@@ -25,7 +25,7 @@ O enunciado pede `192.168.X.0/24`. O professor confirmou que **cada setor pode t
 
 Os arquivos IOS são para dispositivos novos. Começam com `enable` e `configure terminal`, e terminam com `end` e `write memory`. Os comentários `!` podem acompanhar a colagem. **Troque todas as senhas de exemplo antes da entrega:** `Gs2026!Troque` (admin, enable e console) e `RuaViva2026!Troque` (Wi-Fi). Use senhas distintas por finalidade e atualize a senha no laptop. Não exponha senhas nos prints.
 
-Este material não contém um `.pkt` executado nem um PDF com evidências. A montagem, os testes e os prints reais devem ser feitos no PT conforme o roteiro. Salve o projeto como `network/RuaViva.pkt` e mantenha as evidências em `network/`.
+O projeto montado e testado está em [`RuaViva.pkt`](RuaViva.pkt) (Packet Tracer 9.0.1). Os prints dos testes ficam em [`../docs/img/`](../docs/img/) (`topologia-pt.png` e `teste-*.png`) e entram no PDF da entrega.
 
 ## Topologia
 

@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Network Architect Solutions · 19/11/2026</span>
 </div>
 <h2>2. Topologia e endereçamento</h2>
-<figure><img src="img/topologia-pt.png" alt="Topologia completa no Cisco Packet Tracer 8.2, com nomes, portas, VLANs e redes."><figcaption>Topologia completa no Cisco Packet Tracer 8.2, com nomes, portas, VLANs e redes.</figcaption>
+<figure><img src="img/topologia-pt.png" alt="Topologia completa no Cisco Packet Tracer 9.0.1, com nomes, portas, VLANs e redes."><figcaption>Topologia completa no Cisco Packet Tracer 9.0.1, com nomes, portas, VLANs e redes.</figcaption>
 </figure>
 <p>Dois Cisco 2911 (R1-BASE e ISP), um 2960-24TT (SW1), um AccessPoint-PT, dois Server-PT, dois PC-PT e um Laptop-PT com WPC300N. R1 usa router-on-a-stick; o trunk 802.1Q transporta VLANs 10, 20 e 30.</p>
 <table class="">
@@ -337,7 +337,7 @@ exit
 </div>
 <h2>4. Testes e evidências</h2>
 <p>Pré-condições: interfaces up/up, VLANs/portas corretas, trunk encaminhando 10,20,30, DNS/HTTP ligados e rotas conectadas no ISP. Conferir show vlan brief, show interfaces trunk, show ip interface brief e show ip route.</p>
-<p class="destaque">As cinco verificações abaixo são critérios de aceitação. As imagens e os resultados observados estão pendentes de execução no Packet Tracer; nenhum resultado esperado é apresentado como teste aprovado.</p>
+<p class="destaque">Os cinco testes abaixo foram executados no Cisco Packet Tracer 9.0.1 em 15/11/2026, no projeto network/RuaViva.pkt. Cada imagem é a captura real da execução.</p>
 <article class="teste">
 <h3>1. Ping entre VLANs</h3>
 <p><strong>Origem e destino:</strong> PC-EQUIPE → gateway local e SRV-RUAVIVA; PC-SENSOR → gateway da VLAN 10.</p><pre>PC-EQUIPE:
@@ -347,7 +347,7 @@ PC-SENSOR:
 ping 192.168.10.1</pre><p><strong>Resultado esperado:</strong> Respostas estáveis entre VLANs 10 e 30. Repetir após resolução ARP inicial. Não usar laptop como destino da Equipe: a ACL bloqueia o retorno ICMP.</p>
 <figure><img src="img/teste-ping-vlans.png" alt="1. Ping entre VLANs · evidência real com origem, destino e resultado observado."><figcaption>1. Ping entre VLANs · evidência real com origem, destino e resultado observado.</figcaption>
 </figure>
-<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+<p class="nota">Resultado observado: o PC-EQUIPE (192.168.10.10, via DHCP) respondeu 4/4 ao gateway 192.168.10.1 e 4/4 ao SRV-RUAVIVA 192.168.30.10, atravessando da VLAN 10 para a VLAN 30 pelo R1 (TTL 127). Na primeira execução, um pacote se perdeu pela resolução ARP; a captura mostra a repetição estável.</p>
 </article>
 <article class="teste">
 <h3>2. DHCP nos três setores</h3>
@@ -360,14 +360,14 @@ show ip dhcp binding
 show ip dhcp pool</pre><p><strong>Resultado esperado:</strong> Equipe .10.10–254; cidadão .20.10–254; sensor .30.11–254. Máscara /24, gateway .1 da própria VLAN e DNS 192.168.30.10. Capturar concessões e renovação com a ACL ativa.</p>
 <figure><img src="img/teste-dhcp.png" alt="2. DHCP nos três setores · evidência real com origem, destino e resultado observado."><figcaption>2. DHCP nos três setores · evidência real com origem, destino e resultado observado.</figcaption>
 </figure>
-<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+<p class="nota">Resultado observado: show ip dhcp binding no R1 lista 192.168.10.10 (PC-EQUIPE), 192.168.20.10 (LAPTOP-CIDADAO, pelo Wi-Fi WPA2) e 192.168.30.11 (PC-SENSOR), um endereço por pool, todos automáticos.</p>
 </article>
 <article class="teste">
 <h3>3. Página acessada pelo nome</h3>
 <p><strong>Origem e destino:</strong> Navegador do PC-EQUIPE e do LAPTOP-CIDADAO.</p><pre>http://ruaviva.gs</pre><p><strong>Resultado esperado:</strong> Ficha da CitizenTech com localização, nomes e RMs; URL visível. Demonstra resolução DNS e HTTP. No cidadão, confirma as permissões UDP 53/TCP 80 anteriores ao bloqueio da VLAN 30.</p>
 <figure><img src="img/teste-pagina-nome.png" alt="3. Página acessada pelo nome · evidência real com origem, destino e resultado observado."><figcaption>3. Página acessada pelo nome · evidência real com origem, destino e resultado observado.</figcaption>
 </figure>
-<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+<p class="nota">Resultado observado: o LAPTOP-CIDADAO, conectado ao SSID RuaViva-Cidadao com WPA2-PSK, abriu http://ruaviva.gs e recebeu a Ficha da CitizenTech servida pelo SRV-RUAVIVA (DNS UDP 53 e HTTP TCP 80 liberados pela ACL).</p>
 </article>
 <article class="teste">
 <h3>4. NAT/PAT e internet simulada</h3>
@@ -378,7 +378,7 @@ show ip nat translations
 show ip nat statistics</pre><p><strong>Resultado esperado:</strong> Página “Internet simulada”. Tradução TCP: Inside local = IP/porta reais do cliente; Inside global = 200.10.0.2:porta; destino = 8.8.8.8:80. Registrar a tabela antes de expirar; DNS interno não precisa gerar NAT.</p>
 <figure><img src="img/teste-nat.png" alt="4. NAT/PAT e internet simulada · evidência real com origem, destino e resultado observado."><figcaption>4. NAT/PAT e internet simulada · evidência real com origem, destino e resultado observado.</figcaption>
 </figure>
-<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+<p class="nota">Resultado observado: o PC-EQUIPE abriu http://internet.gs (8.8.8.8). Em seguida, show ip nat translations no R1 mostrou 192.168.10.10:1025 e 192.168.20.10:1026 traduzidos para o mesmo IP público 200.10.0.2, com destino 8.8.8.8:80, comprovando o PAT.</p>
 </article>
 <article class="teste">
 <h3>5. Bloqueio por ACL</h3>
@@ -391,7 +391,7 @@ show access-lists
 show access-lists WIFI_CIDADAO_IN</pre><p><strong>Resultado esperado:</strong> Sem respostas de eco aos dois destinos; os contadores deny das redes 10 e 30 aumentam. HTTP da solução continua funcionando. Se o PT não exibir contadores, capturar também a PDU ICMP descartada em Simulation.</p>
 <figure><img src="img/teste-acl.png" alt="5. Bloqueio por ACL · evidência real com origem, destino e resultado observado."><figcaption>5. Bloqueio por ACL · evidência real com origem, destino e resultado observado.</figcaption>
 </figure>
-<p class="nota">Resultado observado: pendente. Registrar data, versão do PT e identificação da execução junto à captura.</p>
+<p class="nota">Resultado observado: no LAPTOP-CIDADAO, ping 192.168.10.10 e ping 192.168.30.10 tiveram 0/4 respostas (Destination host unreachable, enviado por 192.168.20.1). No R1, show access-lists WIFI_CIDADAO_IN mostrou 4 correspondências em deny ip any 192.168.10.0 e 4 em deny ip any 192.168.30.0, enquanto DNS e HTTP para 192.168.30.10 continuaram permitidos.</p>
 </article>
 <p>Salvar como network/RuaViva.pkt, reabrir e repetir os testes para verificar persistência. A ACL não isola cidadãos dentro do mesmo segmento Wi-Fi. A página HTTP do laboratório apresenta a ficha; não executa a API.</p>
 </section>
