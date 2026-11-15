@@ -33,7 +33,7 @@ function desenharFila() {
     const nivel = nivelPrioridade(o.prioridade);
     const disponiveis = equipesDaOcorrencia(o);
     return `<article role="listitem"><div class="fila-linha">
-      <div class="prioridade ${nivel.classe}"><span class="prioridade-valor">${o.prioridade}</span><span>${nivel.texto}</span></div>
+      <div class="prioridade ${nivel.classe}"><span class="prioridade-valor">${o.prioridade}</span><span class="prioridade-nivel">${nivel.texto}</span></div>
       <div><a href="ocorrencia.html?id=${o.idOcorrencia}"><strong>${esc(nomeExibido(apoio.categoria[o.idCategoria]?.nome))}</strong></a><p class="item-meta">${esc(nomeExibido(o.descricao))}</p></div>
       <div>${placaDeRua(o)}</div><span class="item-meta">${textoApoios(contagem[o.idOcorrencia] || 0)}</span><div class="item-meta">${prazo(o)}</div>
       <button class="botao" type="button" data-abrir="${o.idOcorrencia}" aria-expanded="false" aria-controls="agendar-${o.idOcorrencia}">Agendar<span class="visualmente-oculto">: ${esc(endereco(o))}</span></button>
@@ -62,7 +62,7 @@ function desenharVisitas(ocorrencias) {
         <h3>Confirmar resolução</h3><div class="campo"><label for="obs-${visita.idAtendimento}">O que foi feito (opcional)</label><textarea id="obs-${visita.idAtendimento}" name="observacao" maxlength="500"></textarea></div>
         <p>A conclusão será registrada em ${formatarData(hoje())}.</p><button class="botao botao-principal" type="submit">Confirmar resolução</button>
         <button class="botao-texto" type="button" data-fechar>Voltar</button></form>
-      <div id="cancelar-${visita.idAtendimento}" class="form-inline" hidden><h3>Cancelar esta visita?</h3><p>O problema volta para a fila de trabalho.</p>
+      <div id="cancelar-${visita.idAtendimento}" class="form-inline" hidden><h3>Cancelar esta visita?</h3><p>O problema volta para a fila de trabalho se não houver outras visitas agendadas.</p>
         <button class="botao botao-perigo" type="button" data-cancelar="${visita.idAtendimento}">Confirmar cancelamento</button><button class="botao-texto" type="button" data-fechar>Manter visita</button></div></li>`;
   }).join("") : `<li class="vazio">${icone("info")} Nenhuma visita agendada no momento. <a href="#titulo-fila">Ver fila de trabalho</a></li>`;
 }
@@ -148,7 +148,11 @@ $("andamento").addEventListener("click", async (evento) => {
     const visita = agendados.find((a) => a.idAtendimento === Number(botao.dataset.cancelar));
     await enviarComBotao(botao, async () => {
       await api.put(`/atendimentos/${visita.idAtendimento}`, { ...visita, status: "CANCELADO" });
-      if (await carregar(false)) avisar("Visita cancelada. O problema voltou para a fila.");
+      const ocorrencia = await api.get(`/ocorrencias/${visita.idOcorrencia}`);
+      if (await carregar(false)) {
+        const estado = { ABERTA: "na fila de trabalho", EM_ANDAMENTO: "em atendimento", RESOLVIDA: "resolvido", CANCELADA: "cancelado" }[ocorrencia.status] || "atualizado";
+        avisar(`Visita cancelada. O problema está ${estado}.`);
+      }
     });
   }
 });

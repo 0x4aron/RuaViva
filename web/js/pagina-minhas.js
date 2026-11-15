@@ -26,14 +26,22 @@ async function carregar() {
   limparAviso();
   $("lista").innerHTML = $("apoiados").innerHTML = `<li class="carregando">${icone("relogio")} Carregando…</li>`;
   try {
-    const [apoio, ocorrencias, apoios, atendimentos, equipes] = await Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios"), api.get("/atendimentos"), api.get("/equipes")]);
+    const [apoio, ocorrencias, apoios] = await Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios")]);
     const contagem = contarApoios(apoios);
     const minhas = ocorrencias.filter((o) => o.idCidadao === usuario.idCidadao).sort((a, b) => b.dataAbertura.localeCompare(a.dataAbertura));
     const ids = new Set(apoios.filter((a) => a.idCidadao === usuario.idCidadao).map((a) => a.idOcorrencia));
     const apoiadas = ocorrencias.filter((o) => ids.has(o.idOcorrencia));
-    const linha = (o) => linhaOcorrencia(o, apoio.categoria[o.idCategoria], contagem[o.idOcorrencia] || 0, null, true, linhaDoAtendimento(o, atendimentos, equipes, true));
-    $("lista").innerHTML = minhas.length ? minhas.map(linha).join("") : `<li class="vazio">${icone("info")} Você ainda não registrou nenhum problema. <a href="registrar.html">Registrar agora</a></li>`;
-    $("apoiados").innerHTML = apoiadas.length ? apoiadas.map(linha).join("") : `<li class="vazio">${icone("info")} Você ainda não apoiou nenhum registro. <a href="mapa.html">Ver problemas no bairro</a></li>`;
+    let atendimentos = [];
+    const desenharListas = () => {
+      const linha = (o) => linhaOcorrencia(o, apoio.categoria[o.idCategoria], contagem[o.idOcorrencia] || 0, null, true, linhaDoAtendimento(o, atendimentos, [], true));
+      $("lista").innerHTML = minhas.length ? minhas.map(linha).join("") : `<li class="vazio">${icone("info")} Você ainda não registrou nenhum problema. <a href="registrar.html">Registrar agora</a></li>`;
+      $("apoiados").innerHTML = apoiadas.length ? apoiadas.map(linha).join("") : `<li class="vazio">${icone("info")} Você ainda não apoiou nenhum registro. <a href="mapa.html">Ver problemas no bairro</a></li>`;
+    };
+    desenharListas();
+    api.get("/atendimentos").then((dados) => {
+      atendimentos = dados;
+      desenharListas();
+    }).catch(() => {});
   } catch (erro) {
     $("lista").innerHTML = $("apoiados").innerHTML = `<li class="vazio">${icone("alerta")} Não foi possível carregar os registros.</li>`;
     erroComTentativa(erro, carregar);

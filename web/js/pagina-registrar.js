@@ -54,6 +54,12 @@ function atualizarContinuar() {
 function novaEscolha(pendente, desmarcar = true) {
   versaoLocal++;
   clearTimeout(esperaReversa);
+  const botaoBusca = $("buscar-endereco");
+  if (botaoBusca.disabled) {
+    botaoBusca.disabled = false;
+    botaoBusca.textContent = "Buscar endereço";
+    $("busca-estado").textContent = "";
+  }
   localPendente = pendente;
   if (desmarcar) document.querySelectorAll('input[name="endereco-buscado"]').forEach((campo) => { campo.checked = false; });
   $("minha-localizacao").disabled = false;
@@ -109,6 +115,8 @@ async function buscarReverso(versao) {
   }
 }
 async function buscarEndereco() {
+  const botao = $("buscar-endereco");
+  if (botao.disabled) return;
   limparErros($("form"));
   const consulta = $("busca-endereco").value.trim();
   if (!consulta) {
@@ -116,7 +124,6 @@ async function buscarEndereco() {
     return avisar("Informe o endereço que deseja buscar.", "erro");
   }
   const versao = novaEscolha(true);
-  const botao = $("buscar-endereco");
   botao.disabled = true;
   botao.textContent = "Buscando…";
   $("busca-estado").textContent = "Buscando endereço…";
@@ -133,10 +140,11 @@ async function buscarEndereco() {
     avisar("Não foi possível buscar o endereço. Tente de novo ou marque o ponto no mapa.", "erro");
     $("busca-estado").textContent = "Não foi possível buscar. Tente de novo em Buscar endereço ou marque o ponto no mapa.";
   } finally {
-    concluirLocal(versao);
-    if (versao !== versaoLocal) $("busca-estado").textContent = "";
-    botao.disabled = false;
-    botao.textContent = "Buscar endereço";
+    if (versao === versaoLocal) {
+      concluirLocal(versao);
+      botao.disabled = false;
+      botao.textContent = "Buscar endereço";
+    }
   }
 }
 function verificarParecidas() {

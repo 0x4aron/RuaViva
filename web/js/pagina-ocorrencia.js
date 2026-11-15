@@ -69,7 +69,7 @@ async function carregar() {
     const visita = atendimentos.find((a) => a.status === "AGENDADO");
     const eventos = eventosDaOcorrencia(o, atendimentos, equipes);
     const atual = situacao(o, visita, equipes);
-    const ultima = eventos.filter(temData).at(-1);
+    const ultima = eventos.filter((evento) => temData(evento) && !evento.agendado).at(-1);
     const dias = diasDesde(o.dataAbertura, o.dataResolucao || hoje());
     const atrasado = pendente && dias > categoria.prazoDias;
     const nivel = nivelPrioridade(o.prioridade);
@@ -100,7 +100,7 @@ async function carregar() {
         <p>${icone("pessoas")} ${resumoApoios(apoios.length)}</p>
         ${minha ? "" : '<p>Apoios ajudam a subprefeitura a ver quantas pessoas são afetadas. Cada apoio entra no cálculo da prioridade.</p>'}${acao}
       </section>
-      ${ehGestor ? `<section class="bloco"><h2>Prioridade</h2><p class="prioridade ${nivel.classe}"><span class="prioridade-valor">${o.prioridade}</span>${nivel.texto}</p><button id="por-que" class="botao-texto" aria-expanded="false" aria-controls="composicao" type="button">Por que ${o.prioridade} pontos?</button><div id="composicao" hidden aria-live="polite"></div></section>` : ""}
+      ${ehGestor ? `<section class="bloco"><h2>Prioridade</h2><p class="prioridade ${nivel.classe}"><span class="prioridade-valor">${o.prioridade}</span><span class="prioridade-nivel">${nivel.texto}</span></p><button id="por-que" class="botao-texto" aria-expanded="false" aria-controls="composicao" type="button">Por que ${o.prioridade} pontos?</button><div id="composicao" hidden aria-live="polite"></div></section>` : ""}
       <section aria-labelledby="titulo-local"><h2 id="titulo-local">Local do problema</h2><p>${esc(endereco(o))} — ${esc(nomeProprio(apoio.distrito[o.idDistrito]?.nome))}</p><div id="mapa" class="mapa mapa-pequeno" role="region" aria-label="Local do problema no mapa"></div></section>`;
     mapa = criarMapa("mapa", [o.latitude, o.longitude], 18);
     if (mapa) marcadorOcorrencia(o).addTo(mapa);
@@ -127,4 +127,4 @@ async function carregar() {
     return false;
   }
 }
-if (usuario) carregar();
+carregar();

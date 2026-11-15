@@ -147,33 +147,29 @@ function linhaDoAtendimento(o, atendimentos = [], equipes = [], mini = false) {
   const visita = relacionados.find((a) => a.status === "AGENDADO");
   const concluido = relacionados.find((a) => a.status === "CONCLUIDO");
   const cancelada = o.status === "CANCELADA";
-  let atual = 1;
-  let nomeAtual = "Na fila";
-  if (cancelada) {
-    nomeAtual = "Cancelado";
-  } else if (o.status === "RESOLVIDA") {
-    atual = 3;
-    nomeAtual = "Resolvido";
-  } else if (visita) {
-    atual = 2;
-    nomeAtual = "Visita agendada";
-  } else if (o.status === "EM_ANDAMENTO") {
-    atual = 2;
-    nomeAtual = "Em atendimento";
-  }
-
   const atendimentoVisivel = visita || concluido;
+  const estadoAtual = cancelada
+    ? { indice: 1, nome: "Cancelado" }
+    : o.status === "RESOLVIDA"
+      ? { indice: 3, nome: "Resolvido" }
+      : visita
+        ? { indice: 2, nome: "Visita agendada" }
+        : o.status === "EM_ANDAMENTO"
+          ? { indice: 2, nome: "Em atendimento" }
+          : { indice: 1, nome: "Na fila" };
+  const { indice: atual, nome: nomeAtual } = estadoAtual;
   const equipe = atendimentoVisivel
     ? equipes.find((e) => e.idEquipe === atendimentoVisivel.idEquipe)
     : null;
+  const nomeTerceiraEstacao = atual === 2 ? nomeAtual : "Visita agendada";
   const terceiraEstacao = atendimentoVisivel
-    ? `<span class="estacao-nome">Visita agendada</span><small>${esc(formatarData(atendimentoVisivel.dataAgendada))}</small><small>${esc(nomeExibido(equipe?.nome || "equipe não informada"))}</small>`
-    : `<span class="estacao-nome">${o.status === "EM_ANDAMENTO" ? "Em atendimento" : "Visita agendada"}</span>`;
+    ? `<span class="estacao-nome">${nomeTerceiraEstacao}</span><small>${esc(formatarData(atendimentoVisivel.dataAgendada))}</small><small>${esc(nomeExibido(equipe?.nome || "equipe não informada"))}</small>`
+    : `<span class="estacao-nome">${nomeTerceiraEstacao}</span>`;
   const estacoes = [
-    { nome: "Registrado", conteudo: `<span class="estacao-nome">Registrado</span><small>${esc(formatarData(o.dataAbertura))}</small>` },
-    { nome: "Na fila", conteudo: '<span class="estacao-nome">Na fila</span>' },
-    { nome: "Visita agendada", conteudo: terceiraEstacao },
-    { nome: "Resolvido", conteudo: `<span class="estacao-nome">Resolvido</span>${o.dataResolucao ? `<small>${esc(formatarData(o.dataResolucao))}</small>` : ""}` },
+    { conteudo: `<span class="estacao-nome">Registrado</span><small>${esc(formatarData(o.dataAbertura))}</small>` },
+    { conteudo: '<span class="estacao-nome">Na fila</span>' },
+    { conteudo: terceiraEstacao },
+    { conteudo: `<span class="estacao-nome">Resolvido</span>${o.dataResolucao ? `<small>${esc(formatarData(o.dataResolucao))}</small>` : ""}` },
   ];
   const caminho = cancelada && !mini ? estacoes.slice(0, 2) : estacoes;
   const itens = caminho.map((estacao, indice) => {
@@ -184,21 +180,20 @@ function linhaDoAtendimento(o, atendimentos = [], equipes = [], mini = false) {
     if (indice < atual) trecho = o.status === "RESOLVIDA" && indice === 2 ? "resolvido" : "percorrido";
     if (cancelada && !mini && indice === caminho.length - 1) trecho = "cancelado";
     const ehAtual = !cancelada && indice === atual;
-    const atualAtributo = ehAtual ? ' aria-current="step"' : "";
+    const atualAtributo = !mini && ehAtual ? ' aria-current="step"' : "";
     const resolvida = o.status === "RESOLVIDA" && indice === 3 ? " estacao-resolvida" : "";
     const duracao = Math.round(600 / atual);
     const tempoAnimacao = !mini && (trecho === "percorrido" || trecho === "resolvido")
       ? ` style="--duracao-linha:${duracao}ms;--atraso-linha:${duracao * indice}ms"`
       : "";
-    return `<li class="estacao estacao-${estado}${resolvida}" data-trecho="${trecho}"${tempoAnimacao}${atualAtributo}><span class="estacao-ponto">${mini ? `<span class="visualmente-oculto">${esc(estacao.nome)}</span>` : ""}</span>${mini ? "" : `<span class="estacao-conteudo">${estacao.conteudo}</span>`}</li>`;
+    return `<li class="estacao estacao-${estado}${resolvida}" data-trecho="${trecho}"${tempoAnimacao}${atualAtributo}><span class="estacao-ponto"></span>${mini ? "" : `<span class="estacao-conteudo">${estacao.conteudo}</span>`}</li>`;
   });
   if (cancelada && !mini) {
     itens.push('<li class="estacao estacao-terminal" aria-current="step"><span class="estacao-ponto"></span><span class="estacao-conteudo"><span class="estacao-nome">Cancelado</span></span></li>');
-  } else if (cancelada && mini) {
-    itens.push('<li class="visualmente-oculto" aria-current="step">Cancelado</li>');
   }
   const classe = mini ? "linha-atendimento linha-atendimento-mini" : "linha-atendimento";
-  return `<div class="${mini ? "linha-atendimento-resumo" : "linha-atendimento-bloco"}"><ol class="${classe}" aria-label="Linha do atendimento">${itens.join("")}</ol>${mini ? `<span class="linha-atendimento-nome">${esc(nomeAtual)}</span>` : ""}</div>`;
+  const acessibilidadeMini = mini ? ' aria-hidden="true"' : ' aria-label="Linha do atendimento"';
+  return `<div class="${mini ? "linha-atendimento-resumo" : "linha-atendimento-bloco"}"><ol class="${classe}"${acessibilidadeMini}>${itens.join("")}</ol>${mini ? `<span class="linha-atendimento-nome">${esc(nomeAtual)}</span>` : ""}</div>`;
 }
 function montarCabecalho(links) {
   const usuario = sessao.ler();

@@ -11,7 +11,7 @@ Fonte única para o site (`web/`) e para o Figma ("GS 2026 - Telas do site"). Os
 | Azul placa `#1A4D8F` | endereço, marca, navegação | alerta |
 | Amarelo faixa `#F2C200` | a ação principal da tela (uma por tela) | texto, status |
 | Vermelho lanterna `#C8102E` | urgência: atrasado, prioridade alta, erro | decoração |
-| Verde resolvido `#1E7D4F` | resolvido, sucesso | ação |
+| Verde resolvido `#176B43` | resolvido, sucesso | ação |
 | Âmbar andamento `#7A5C00` sobre `#FFF6CC` | em andamento, prioridade média | |
 
 O bairro aparece por nome e por mapa ("Liberdade · Sé · São Paulo"), não por enfeite. A única ilustração do site é o poste da entrada, com as placas cruzadas e uma lanterna da Liberdade: é o elemento-assinatura e não se repete em outras telas. Fora dele, nada de lanternas desenhadas, gradientes, vidro, sombras coloridas, emoji ou ícones de texto.
@@ -29,7 +29,7 @@ Duas experiências, dois ritmos:
 --faixa: #F2C200        --faixa-escura: #D9AD00
 --lanterna: #C8102E     --lanterna-clara: #FCEBEE
 --andamento: #7A5C00    --andamento-fundo: #FFF6CC
---resolvido: #1E7D4F    --resolvido-clara: #E6F3EC
+--resolvido: #176B43    --resolvido-clara: #E6F3EC
 --fundo: #F4F6F5        --papel: #FFFFFF
 ```
 Texto secundário sempre `--asfalto-suave` (contraste 6,9:1 no branco). Sobre azul, texto `--papel`, nunca cinza.
