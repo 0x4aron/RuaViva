@@ -861,7 +861,7 @@ export DB_PASSWORD="sua_senha_oracle"
 mvn spring-boot:run</pre><h3>Deploy com Docker</h3>
 <p>Conectar o repositório a um Web Service no Render. Selecionar a branch main, diretório raiz java-api e runtime Docker, utilizando o Dockerfile existente. Cadastrar DB_URL, DB_USER e DB_PASSWORD no ambiente e executar o deploy. Conferir a raiz e /swagger-ui.html no endereço publicado.</p><pre># Na pasta java-api, alternativa para conferir a imagem localmente:
 docker build -t ruaviva-api .
-docker run --rm -p 8080:8080   -e DB_URL -e DB_USER -e DB_PASSWORD ruaviva-api</pre><p class="pendente">Link do deploy: LINK_DEPLOY</p>
+docker run --rm -p 8080:8080   -e DB_URL -e DB_USER -e DB_PASSWORD ruaviva-api</pre><p><strong>API publicada no Render:</strong> <a href="https://ruaviva-api.onrender.com/swagger-ui.html">https://ruaviva-api.onrender.com/swagger-ui.html</a> (plano gratuito: a primeira visita depois de um tempo parado pode levar até um minuto). Banco: Oracle da FIAP, usuário RM565398.</p>
 <p>GitHub: <a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a>
 </p>
 <h3>Teste de regressão</h3>

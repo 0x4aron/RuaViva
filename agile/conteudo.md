@@ -16,6 +16,25 @@ Um bueiro entupido, uma calçada quebrada ou um buraco no asfalto muda o caminho
 
 O RuaViva concentra esses registros em um mapa e uma lista do bairro, permite apoiar a ocorrência de um vizinho e organiza a fila da subprefeitura por critérios explícitos. O foco inicial é a Liberdade, com atenção à Rua Barão de Iguape, sob responsabilidade territorial da Subprefeitura Sé. Escolher esse recorte permite relacionar os registros a endereços concretos e comparar a jornada do morador com o trabalho do gestor. Não significa que o sistema já atenda toda a cidade ou que exista parceria operacional com a prefeitura.
 
+### Escutar: relato de quem convive com o problema
+
+Cesar Aaron Herrera, integrante da equipe, mora na região e respondeu, em 16/11/2026, às perguntas que guiam a etapa "Escutar" do enunciado. Resumo do que ele contou:
+
+- **Problemas que mais vê perto de casa:** buraco no asfalto, lixo acumulado na calçada e iluminação pública apagada.
+- **Se já pediu conserto:** nunca pediu. Não conhecia o 156.
+- **Se soube do resultado:** não sabe se algo foi resolvido.
+- **Problema que continua:** os buracos na rua seguem sem conserto.
+- **Quem sofre mais:** quem empurra carrinho de bebê, que precisa desviar do lixo deixado na calçada.
+
+| O que ouvimos | Decisão no RuaViva |
+|---|---|
+| Não conhecia o canal oficial e nunca registrou. | Registro em três passos, linguagem simples e entrada sem burocracia; o detalhe mostra o caminho da Ouvidoria do SP156 quando o prazo vence. |
+| Não sabe se o problema foi resolvido. | Linha do atendimento com a situação e as datas que o sistema tem, e o número do registro para acompanhar. |
+| Os buracos continuam, mesmo sendo conhecidos. | O mapa mostra o que os vizinhos já registraram e o apoio ("Isso também me afeta") soma na prioridade, em vez de virar um pedido repetido. |
+| Carrinho de bebê desvia do lixo na calçada. | Categorias de calçada, entulho e lixeira; ponto sensível perto do local aumenta a prioridade. |
+
+Iluminação pública apagada não está entre as categorias do MVP e fica registrada como evolução.
+
 ### O que sustenta as escolhas
 
 | Evidência do projeto | Consequência para o RuaViva |

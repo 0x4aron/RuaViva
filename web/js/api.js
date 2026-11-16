@@ -6,6 +6,10 @@ class ErroApi extends Error {
   }
 }
 
+// No plano gratuito do Render a API "dorme" sem uso e leva até um minuto para acordar.
+// Enquanto nenhuma resposta chegou, as chamadas esperam mais; depois disso o limite volta a 15 s.
+let servidorAcordado = false;
+
 async function chamarApi(metodo, caminho, corpo) {
   const opcoes = { method: metodo, headers: {} };
   if (corpo !== undefined) {
@@ -15,9 +19,16 @@ async function chamarApi(metodo, caminho, corpo) {
 
   const controle = new AbortController();
   opcoes.signal = controle.signal;
-  const limite = setTimeout(() => controle.abort(), 15000);
+  const limite = setTimeout(() => controle.abort(), servidorAcordado ? 15000 : 75000);
+  let avisouLentidao = false;
+  const avisoLento = servidorAcordado ? null : setTimeout(() => {
+    avisouLentidao = true;
+    avisar("O servidor está ligando depois de um tempo parado. Isso pode levar até um minuto.");
+  }, 5000);
   try {
     const resposta = await fetch(CONFIG.API_URL + caminho, opcoes);
+    servidorAcordado = true;
+    if (avisouLentidao) limparAviso();
     if (resposta.status === 204) return null;
     const dados = await resposta.json().catch(() => null);
     if (controle.signal.aborted) throw new Error();
@@ -31,6 +42,7 @@ async function chamarApi(metodo, caminho, corpo) {
     throw new ErroApi(0, "Não foi possível falar com o servidor. Confira a internet e tente de novo.");
   } finally {
     clearTimeout(limite);
+    clearTimeout(avisoLento);
   }
 }
 

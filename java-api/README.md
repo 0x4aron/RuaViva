@@ -154,4 +154,4 @@ Abra <http://localhost:8080/swagger-ui.html>.
 ### Links
 
 - Repositório: <https://github.com/0x4aron/RuaViva>
-- Deploy: _a preencher após o deploy no Render_
+- Deploy: [https://ruaviva-api.onrender.com/swagger-ui.html](https://ruaviva-api.onrender.com/swagger-ui.html)
