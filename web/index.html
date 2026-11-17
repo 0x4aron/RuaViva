@@ -20,19 +20,18 @@
   <section id="situacao-bairro" class="situacao-bairro" aria-label="Situação do bairro agora" hidden>
     <h2>Situação do bairro agora</h2>
     <dl><div><dt>Pendentes</dt><dd id="bairro-pendentes">0</dd></div><div><dt>Resolvidos</dt><dd id="bairro-resolvidos">0</dd></div></dl>
+    <p id="bairro-mais-antigo" class="situacao-mais-antigo" hidden></p>
   </section>
   <div id="aviso" class="aviso" hidden tabindex="-1" role="status" aria-live="polite"></div>
   <div class="entrada-caminhos">
-    <section class="bloco" aria-labelledby="titulo-morador"><h2 id="titulo-morador">Sou morador</h2>
+    <section class="bloco entrada-morador" aria-labelledby="titulo-morador"><h2 id="titulo-morador">Sou morador</h2>
       <form id="form-morador" novalidate><div class="campo"><label for="cidadao">Escolha um morador da demonstração</label>
       <p id="cidadao-dica" class="dica">Use este perfil para registrar e apoiar problemas.</p>
       <select id="cidadao" aria-describedby="cidadao-dica" required disabled><option value="">Carregando moradores…</option></select></div>
       <button id="entrar-morador" class="botao botao-principal botao-bloco" type="submit" disabled>Entrar como morador</button></form>
     </section>
-    <section class="bloco" aria-labelledby="titulo-gestor"><h2 id="titulo-gestor">Sou da subprefeitura</h2>
-      <p>Compare os problemas por prioridade, agende equipes e acompanhe as visitas.</p>
-      <button id="entrar-gestor" class="botao botao-bloco" type="button">Entrar como gestor</button>
-    </section>
+    <div class="entrada-gestor"><p>Trabalha na Subprefeitura Sé?</p>
+      <button id="entrar-gestor" class="botao" type="button">Entrar como gestor</button></div>
   </div>
   <p class="dica entrada-nota">Versão de demonstração: os moradores e atendimentos são simulados.</p>
   </div>

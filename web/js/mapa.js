@@ -28,7 +28,7 @@ function iconeMarcador(status, numero) {
   return L.divIcon({ className: "pino", html: `<span class="marcador-${COR_STATUS[status] || "placa"}">${esc(numero)}</span>`, iconSize: [44, 44], iconAnchor: [22, 22] });
 }
 function marcadorOcorrencia(o, numero = 1) {
-  return L.marker([o.latitude, o.longitude], { icon: iconeMarcador(o.status, numero), title: `${numero}. ${endereco(o)} — ${STATUS_TEXTO[o.status]}`, alt: `${numero}. ${endereco(o)}` });
+  return L.marker([o.latitude, o.longitude], { icon: iconeMarcador(o.status, numero), title: `${numero}. ${endereco(o)} — ${STATUS_TEXTO[o.status]}`, alt: `${numero}. ${endereco(o)}`, keyboard: true });
 }
 // Recalcula os deslocamentos a partir das coordenadas originais a cada zoom.
 function separarMarcadores(mapa, entradas, ligacoes) {

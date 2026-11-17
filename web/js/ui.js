@@ -136,11 +136,29 @@ function contarApoios(apoios) {
   return contagem;
 }
 function linhaOcorrencia(o, categoria, apoios = 0, numero = null, mostrarRegistro = false, linhaMini = "") {
-  return `<li class="item"><a class="cobrir" href="ocorrencia.html?id=${o.idOcorrencia}">
+  return `<li class="item" data-ocorrencia="${esc(o.idOcorrencia)}"><a class="cobrir" href="ocorrencia.html?id=${o.idOcorrencia}">
     <span class="item-icone">${iconeCategoria(categoriaVisual(categoria).icone)}${numero ? `<span class="numero numero-mapa numero-${esc(String(o.status).toLowerCase())}">${numero}<span class="visualmente-oculto"> na lista do mapa</span></span>` : ""}</span>
     <div class="item-corpo"><div class="item-topo"><strong>${esc(nomeExibido(categoria?.nome || "Problema registrado"))}</strong>${seloStatus(o.status)}</div>
     ${placaDeRua(o)}<p class="item-descricao">${esc(nomeExibido(o.descricao))}</p>
     <p class="item-meta">${mostrarRegistro ? `${numeroRegistro(o)} · ` : ""}${textoTempoDesde(o.dataAbertura)} · ${textoApoios(apoios)}</p>${linhaMini}</div></a></li>`;
+}
+function itemEsqueletoHTML(mini = false) {
+  return `<div class="item-esqueleto"><span class="esqueleto-icone"></span><span class="esqueleto-conteudo">
+    <span class="esqueleto-topo"><span class="esqueleto-bloco esqueleto-titulo"></span><span class="esqueleto-bloco esqueleto-selo"></span></span>
+    <span class="esqueleto-bloco esqueleto-placa"></span><span class="esqueleto-bloco esqueleto-descricao"></span><span class="esqueleto-bloco esqueleto-meta"></span>
+    ${mini ? '<span class="esqueleto-mini"><i></i><i></i><i></i><i></i><span></span></span>' : ""}
+  </span></div>`;
+}
+function esqueletoListaHTML(mini = false) {
+  return `<li class="estado-carregando" role="status" aria-label="Carregando registros"><div class="linhas-esqueleto" aria-hidden="true">${Array.from({ length: 3 }, () => itemEsqueletoHTML(mini)).join("")}</div></li>`;
+}
+function esqueletoFilaHTML() {
+  const linha = `<div class="fila-linha fila-esqueleto" aria-hidden="true"><span class="esqueleto-prioridade"></span><span class="esqueleto-problema"><i></i><i></i></span><span class="esqueleto-endereco"></span><span class="esqueleto-apoio"></span><span class="esqueleto-prazo"><i></i><i></i></span><span class="esqueleto-botao"></span></div>`;
+  return `<div class="filas-esqueleto" role="status" aria-label="Carregando registros">${linha.repeat(3)}</div>`;
+}
+function esqueletoVisitasHTML() {
+  const conteudo = `<div class="visita-esqueleto-conteudo" aria-hidden="true"><span class="esqueleto-topo"><i></i><i></i></span><i class="esqueleto-visita-placa"></i><i class="esqueleto-visita-descricao"></i><i class="esqueleto-visita-data"></i><span class="esqueleto-topo"><i></i><i></i></span></div>`;
+  return Array.from({ length: 3 }, (_, indice) => `<li class="item visita-esqueleto"${indice === 0 ? ' role="status" aria-label="Carregando registros"' : ' aria-hidden="true"'}>${conteudo}</li>`).join("");
 }
 function linhaDoAtendimento(o, atendimentos = [], equipes = [], mini = false) {
   const relacionados = atendimentos.filter((a) => a.idOcorrencia === o.idOcorrencia);
@@ -282,8 +300,22 @@ async function mostrarComposicao(id, area) {
   area.innerHTML = '<p class="texto-suave">Carregando composição…</p>';
   try {
     const dados = await api.get(`/ocorrencias/${id}/prioridade`);
-    if (!Array.isArray(dados?.itens) || !Number.isFinite(dados.total)) throw new Error("Composição inválida");
-    area.innerHTML = `<dl class="composicao">${dados.itens.map((item) => `<div><dt>${esc(nomeExibido(item.motivo))}</dt><dd>${esc(item.pontos)}</dd></div>`).join("")}<div><dt><strong>Total</strong></dt><dd>${dados.total}</dd></div></dl>`;
+    const total = Number(dados?.total);
+    const itens = Array.isArray(dados?.itens) ? dados.itens.map((item) => ({
+      motivo: nomeExibido(item.motivo), pontos: Number(item.pontos),
+    })).filter((item) => item.motivo && Number.isFinite(item.pontos) && item.pontos >= 0) : [];
+    if (!Number.isFinite(total) || total <= 0 || !itens.length) throw new Error("Composição inválida");
+    const tons = ["placa", "escura", "clara"];
+    const resumoBarra = itens.map((item) => `${item.motivo}: ${item.pontos} ${item.pontos === 1 ? "ponto" : "pontos"}`).join("; ");
+    // O mesmo tom aparece na barra e no quadradinho da linha da tabela, para ligar uma à outra.
+    const tomDe = (indice) => (indice === itens.length - 1 ? "faixa" : tons[indice % tons.length]);
+    const barra = itens.map((item, indice) => {
+      const tom = tomDe(indice);
+      const percentual = Math.max(0, Math.min(100, item.pontos / total * 100));
+      const titulo = `${item.motivo}: ${item.pontos} de ${total} pontos`;
+      return `<span class="composicao-segmento composicao-segmento-${tom}" style="width:${percentual}%" title="${esc(titulo)}" aria-hidden="true"></span>`;
+    }).join("");
+    area.innerHTML = `<div class="composicao-barra" role="img" aria-label="Distribuição visual da prioridade: ${esc(resumoBarra)}">${barra}</div><dl class="composicao" aria-label="Composição da prioridade">${itens.map((item, indice) => `<div><dt><span class="composicao-cor composicao-segmento-${tomDe(indice)}" aria-hidden="true"></span>${esc(item.motivo)}</dt><dd>${esc(item.pontos)}</dd></div>`).join("")}<div><dt><strong>Total</strong></dt><dd>${total}</dd></div></dl>`;
     return true;
   } catch {
     area.innerHTML = `<p>${icone("info")} Composição indisponível</p><button type="button" class="botao-texto">Tentar de novo</button>`;

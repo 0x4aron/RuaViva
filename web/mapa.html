@@ -27,7 +27,11 @@
     <button type="button" data-vista="mapa" aria-pressed="false" aria-controls="mapa-painel">Mapa</button>
   </div>
   <div class="bairro-grade"><section id="lista-painel" class="lista-painel" aria-labelledby="titulo-lista"><h2 id="titulo-lista">Registros do bairro</h2>
-    <ul class="lista" id="lista" aria-live="polite"><li class="carregando"><svg class="icone" aria-hidden="true"><use href="img/icones.svg#relogio"></use></svg>Carregando…</li></ul></section>
+    <ul class="lista" id="lista" aria-live="polite"><li class="estado-carregando" role="status" aria-label="Carregando registros"><div class="linhas-esqueleto" aria-hidden="true">
+      <div class="item-esqueleto"><span class="esqueleto-icone"></span><span class="esqueleto-conteudo"><span class="esqueleto-topo"><span class="esqueleto-bloco esqueleto-titulo"></span><span class="esqueleto-bloco esqueleto-selo"></span></span><span class="esqueleto-bloco esqueleto-placa"></span><span class="esqueleto-bloco esqueleto-descricao"></span><span class="esqueleto-bloco esqueleto-meta"></span></span></div>
+      <div class="item-esqueleto"><span class="esqueleto-icone"></span><span class="esqueleto-conteudo"><span class="esqueleto-topo"><span class="esqueleto-bloco esqueleto-titulo"></span><span class="esqueleto-bloco esqueleto-selo"></span></span><span class="esqueleto-bloco esqueleto-placa"></span><span class="esqueleto-bloco esqueleto-descricao"></span><span class="esqueleto-bloco esqueleto-meta"></span></span></div>
+      <div class="item-esqueleto"><span class="esqueleto-icone"></span><span class="esqueleto-conteudo"><span class="esqueleto-topo"><span class="esqueleto-bloco esqueleto-titulo"></span><span class="esqueleto-bloco esqueleto-selo"></span></span><span class="esqueleto-bloco esqueleto-placa"></span><span class="esqueleto-bloco esqueleto-descricao"></span><span class="esqueleto-bloco esqueleto-meta"></span></span></div>
+    </div></li></ul></section>
     <section id="mapa-painel" class="mapa-painel" aria-labelledby="titulo-mapa" hidden><h2 id="titulo-mapa">Liberdade no mapa</h2>
       <div id="mapa" class="mapa" role="region" aria-label="Mapa dos problemas; os números correspondem à lista"></div>
       <p class="legenda"><span style="--cor:var(--lanterna)">Aberto</span><span style="--cor:var(--andamento)">Em andamento</span><span style="--cor:var(--resolvido)">Resolvido</span><span style="--cor:var(--asfalto-suave)">Cancelado</span></p>

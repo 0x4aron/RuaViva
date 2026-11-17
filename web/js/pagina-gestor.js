@@ -69,8 +69,8 @@ function desenharVisitas(ocorrencias) {
 async function carregar(limpar = true) {
   if (limpar) limparAviso();
   fecharPainel();
-  $("fila").innerHTML = `<p class="carregando">${icone("relogio")} Carregando fila…</p>`;
-  $("andamento").innerHTML = `<li class="carregando">${icone("relogio")} Carregando visitas…</li>`;
+  $("fila").innerHTML = esqueletoFilaHTML();
+  $("andamento").innerHTML = esqueletoVisitasHTML();
   try {
     const [dados, todasEquipes, aguardando, ocorrencias, atendimentos, apoios] = await Promise.all([
       carregarApoio(), api.get("/equipes"), api.get("/ocorrencias/fila"), api.get("/ocorrencias"), api.get("/atendimentos"), api.get("/apoios"),

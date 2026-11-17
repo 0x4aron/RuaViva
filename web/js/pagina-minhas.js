@@ -24,7 +24,7 @@ $("buscar-registro").addEventListener("submit", async (evento) => {
 });
 async function carregar() {
   limparAviso();
-  $("lista").innerHTML = $("apoiados").innerHTML = `<li class="carregando">${icone("relogio")} Carregando…</li>`;
+  $("lista").innerHTML = $("apoiados").innerHTML = esqueletoListaHTML(true);
   try {
     const [apoio, ocorrencias, apoios] = await Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios")]);
     const contagem = contarApoios(apoios);

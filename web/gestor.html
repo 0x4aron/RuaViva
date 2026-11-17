@@ -18,9 +18,15 @@
   <h1>Fila de trabalho</h1><p id="resumo" class="resumo-fila" aria-live="polite"><svg class="icone" aria-hidden="true"><use href="img/icones.svg#relogio"></use></svg> Carregando fila e visitas…</p>
   <div class="colunas gestor-grade"><section aria-labelledby="titulo-fila"><h2 id="titulo-fila">Fila</h2>
     <div class="lista"><div class="fila-cabecalho" aria-hidden="true"><span>Prioridade</span><span>Problema</span><span>Endereço</span><span>Apoios</span><span>Aberto há / prazo</span><span>Ação</span></div>
-    <div id="fila" role="list" aria-live="polite"><p class="carregando"><svg class="icone" aria-hidden="true"><use href="img/icones.svg#relogio"></use></svg>Carregando…</p></div></div>
+    <div id="fila" role="list" aria-live="polite"><div class="filas-esqueleto" role="status" aria-label="Carregando registros">
+      <div class="fila-linha fila-esqueleto" aria-hidden="true"><span class="esqueleto-prioridade"></span><span class="esqueleto-problema"><i></i><i></i></span><span class="esqueleto-endereco"></span><span class="esqueleto-apoio"></span><span class="esqueleto-prazo"><i></i><i></i></span><span class="esqueleto-botao"></span></div>
+      <div class="fila-linha fila-esqueleto" aria-hidden="true"><span class="esqueleto-prioridade"></span><span class="esqueleto-problema"><i></i><i></i></span><span class="esqueleto-endereco"></span><span class="esqueleto-apoio"></span><span class="esqueleto-prazo"><i></i><i></i></span><span class="esqueleto-botao"></span></div>
+      <div class="fila-linha fila-esqueleto" aria-hidden="true"><span class="esqueleto-prioridade"></span><span class="esqueleto-problema"><i></i><i></i></span><span class="esqueleto-endereco"></span><span class="esqueleto-apoio"></span><span class="esqueleto-prazo"><i></i><i></i></span><span class="esqueleto-botao"></span></div>
+    </div></div></div>
     </section><section aria-labelledby="titulo-visitas"><h2 id="titulo-visitas">Visitas agendadas</h2>
-    <ul id="andamento" class="lista" aria-live="polite"><li class="carregando"><svg class="icone" aria-hidden="true"><use href="img/icones.svg#relogio"></use></svg>Carregando…</li></ul></section></div>
+    <ul id="andamento" class="lista" aria-live="polite"><li class="item visita-esqueleto" role="status" aria-label="Carregando registros"><div class="visita-esqueleto-conteudo" aria-hidden="true"><span class="esqueleto-topo"><i></i><i></i></span><i class="esqueleto-visita-placa"></i><i class="esqueleto-visita-descricao"></i><i class="esqueleto-visita-data"></i><span class="esqueleto-topo"><i></i><i></i></span></div></li>
+      <li class="item visita-esqueleto" aria-hidden="true"><div class="visita-esqueleto-conteudo"><span class="esqueleto-topo"><i></i><i></i></span><i class="esqueleto-visita-placa"></i><i class="esqueleto-visita-descricao"></i><i class="esqueleto-visita-data"></i><span class="esqueleto-topo"><i></i><i></i></span></div></li>
+      <li class="item visita-esqueleto" aria-hidden="true"><div class="visita-esqueleto-conteudo"><span class="esqueleto-topo"><i></i><i></i></span><i class="esqueleto-visita-placa"></i><i class="esqueleto-visita-descricao"></i><i class="esqueleto-visita-data"></i><span class="esqueleto-topo"><i></i><i></i></span></div></li></ul></section></div>
 </main>
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>

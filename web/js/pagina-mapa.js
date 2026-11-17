@@ -5,6 +5,78 @@ const camada = mapa ? L.layerGroup().addTo(mapa) : null;
 const ligacoes = mapa ? L.layerGroup().addTo(mapa) : null;
 let marcadores = [];
 let ocorrencias = [], apoio, contagem = {}, filtro = "pendentes", pontosVisiveis = [];
+let listaComMouse = null, listaComFoco = null, pinoComMouse = null, pinoComFoco = null;
+function atualizarDestaques() {
+  const idsAtivos = new Set([listaComMouse, listaComFoco, pinoComMouse, pinoComFoco].filter(Boolean).map(String));
+  $("lista").querySelectorAll(".item[data-ocorrencia]").forEach((linha) => {
+    linha.querySelector(".cobrir")?.classList.toggle("item-ativo", idsAtivos.has(linha.dataset.ocorrencia));
+  });
+  marcadores.forEach(({ id, marcador }) => {
+    const ativo = idsAtivos.has(String(id));
+    marcador.setZIndexOffset(ativo ? 1000 : 0);
+    marcador.getElement()?.classList.toggle("pino-ativo", ativo);
+  });
+}
+function linhaAlvo(alvo) {
+  return alvo instanceof Element ? alvo.closest("#lista .item[data-ocorrencia]") : null;
+}
+function pinoAlvo(alvo) {
+  return alvo instanceof Element ? alvo.closest(".leaflet-marker-icon[data-ocorrencia]") : null;
+}
+function contem(linha, alvo) {
+  return alvo instanceof Node && linha.contains(alvo);
+}
+$("lista").addEventListener("pointerover", (evento) => {
+  const linha = linhaAlvo(evento.target);
+  if (!linha || contem(linha, evento.relatedTarget)) return;
+  listaComMouse = linha.dataset.ocorrencia;
+  atualizarDestaques();
+});
+$("lista").addEventListener("pointerout", (evento) => {
+  const linha = linhaAlvo(evento.target);
+  if (!linha || contem(linha, evento.relatedTarget)) return;
+  listaComMouse = null;
+  atualizarDestaques();
+});
+$("lista").addEventListener("focusin", (evento) => {
+  const linha = linhaAlvo(evento.target);
+  if (!linha) return;
+  listaComFoco = linha.dataset.ocorrencia;
+  atualizarDestaques();
+});
+$("lista").addEventListener("focusout", (evento) => {
+  const linha = linhaAlvo(evento.target);
+  if (!linha || contem(linha, evento.relatedTarget)) return;
+  listaComFoco = null;
+  atualizarDestaques();
+});
+if (mapa) {
+  const areaMapa = $("mapa");
+  areaMapa.addEventListener("pointerover", (evento) => {
+    const pino = pinoAlvo(evento.target);
+    if (!pino || contem(pino, evento.relatedTarget)) return;
+    pinoComMouse = pino.dataset.ocorrencia;
+    atualizarDestaques();
+  });
+  areaMapa.addEventListener("pointerout", (evento) => {
+    const pino = pinoAlvo(evento.target);
+    if (!pino || contem(pino, evento.relatedTarget)) return;
+    pinoComMouse = null;
+    atualizarDestaques();
+  });
+  areaMapa.addEventListener("focusin", (evento) => {
+    const pino = pinoAlvo(evento.target);
+    if (!pino) return;
+    pinoComFoco = pino.dataset.ocorrencia;
+    atualizarDestaques();
+  });
+  areaMapa.addEventListener("focusout", (evento) => {
+    const pino = pinoAlvo(evento.target);
+    if (!pino || contem(pino, evento.relatedTarget)) return;
+    pinoComFoco = null;
+    atualizarDestaques();
+  });
+}
 function reposicionarMarcadores() {
   if (mapa && $("mapa").clientWidth) separarMarcadores(mapa, marcadores, ligacoes);
 }
@@ -17,6 +89,7 @@ function ajustarMapa() {
 }
 function desenhar() {
   if (!apoio) return;
+  listaComMouse = listaComFoco = pinoComMouse = pinoComFoco = null;
   const visiveis = ocorrencias.filter((o) => filtro === "todos" || (filtro === "pendentes" ? ["ABERTA", "EM_ANDAMENTO"].includes(o.status) : o.status === filtro));
   const termo = filtro === "pendentes" ? "não resolvidos" : filtro === "RESOLVIDA" ? "resolvidos" : "registrados";
   $("resumo").textContent = `${visiveis.length} ${visiveis.length === 1 ? "problema" : "problemas"} ${visiveis.length === 1 ? termo.replace("resolvidos", "resolvido").replace("registrados", "registrado") : termo} na Liberdade`;
@@ -25,17 +98,22 @@ function desenhar() {
   ligacoes?.clearLayers();
   marcadores = [];
   if (mapa) {
-    marcadores = visiveis.map((o, i) => ({
-      origem: L.latLng(o.latitude, o.longitude),
-      marcador: marcadorOcorrencia(o, i + 1).bindPopup(`<strong>${esc(nomeExibido(apoio.categoria[o.idCategoria]?.nome))}</strong><br>${esc(endereco(o))}<br>${STATUS_TEXTO[o.status]}<br><a href="ocorrencia.html?id=${o.idOcorrencia}">Ver registro ${i + 1}</a>`).addTo(camada),
-    }));
+    marcadores = visiveis.map((o, i) => {
+      const marcador = marcadorOcorrencia(o, i + 1)
+        .bindPopup(`<strong>${esc(nomeExibido(apoio.categoria[o.idCategoria]?.nome))}</strong><br>${esc(endereco(o))}<br><a href="ocorrencia.html?id=${o.idOcorrencia}">Ver registro</a>`)
+        .addTo(camada);
+      const elemento = marcador.getElement();
+      if (elemento) elemento.dataset.ocorrencia = String(o.idOcorrencia);
+      return { id: o.idOcorrencia, origem: L.latLng(o.latitude, o.longitude), marcador };
+    });
     pontosVisiveis = visiveis.map((o) => [o.latitude, o.longitude]);
     ajustarMapa();
   }
+  atualizarDestaques();
 }
 async function carregar() {
   limparAviso();
-  $("lista").innerHTML = `<li class="carregando">${icone("relogio")} Carregando…</li>`;
+  $("lista").innerHTML = esqueletoListaHTML();
   try {
     const [dados, lista, apoios] = await Promise.all([carregarApoio(), api.get("/ocorrencias"), api.get("/apoios")]);
     apoio = dados;

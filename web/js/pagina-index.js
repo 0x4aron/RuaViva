@@ -6,10 +6,20 @@ async function carregarSituacaoBairro() {
     const liberdade = new Set(distritos.filter((d) => chave(d.nome) === "liberdade").map((d) => d.idDistrito));
     if (!liberdade.size) return;
     const doBairro = ocorrencias.filter((o) => liberdade.has(o.idDistrito));
-    const pendentes = doBairro.filter((o) => ["ABERTA", "EM_ANDAMENTO"].includes(o.status)).length;
+    const registrosPendentes = doBairro.filter((o) => ["ABERTA", "EM_ANDAMENTO"].includes(o.status));
+    const pendentes = registrosPendentes.length;
     const resolvidos = doBairro.filter((o) => o.status === "RESOLVIDA").length;
     $("bairro-pendentes").textContent = pendentes;
     $("bairro-resolvidos").textContent = resolvidos;
+    const maisAntigo = registrosPendentes.sort((a, b) => a.dataAbertura.localeCompare(b.dataAbertura))[0];
+    const textoMaisAntigo = $("bairro-mais-antigo");
+    textoMaisAntigo.hidden = !maisAntigo;
+    if (maisAntigo) {
+      const dias = diasDesde(maisAntigo.dataAbertura);
+      textoMaisAntigo.textContent = dias === 0
+        ? "O mais antigo foi aberto hoje."
+        : `O mais antigo está aberto há ${dias} ${dias === 1 ? "dia" : "dias"}.`;
+    }
     faixa.hidden = false;
   } catch {
     faixa.hidden = true;

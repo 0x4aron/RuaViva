@@ -1,6 +1,15 @@
-# RuaViva — sistema de design (v3)
+# RuaViva — sistema de design (v4)
 
 Fonte única para o site (`web/`) e para o Figma ("GS 2026 - Telas do site"). Os nomes dos tokens são os mesmos nos dois lugares: a variável `--placa` no CSS é a variável `placa` da coleção "Cores" no Figma.
+
+## Acabamento v4
+
+- **Mapa calmo:** os tiles do OpenStreetMap ficam em tons de cinza com contraste e brilho reduzidos. A atribuição continua legível e os pinos mantêm a cor do status. Na impressão, o filtro é desligado.
+- **Lista e mapa conectados:** passar o mouse ou focar uma ocorrência destaca seu pino numerado; passar o mouse ou focar um pino destaca a linha correspondente. O pino ativo cresce, recebe um anel azul de placa e fica acima dos demais. Clicar abre um popup com categoria, endereço e o link "Ver registro".
+- **Ação no celular:** em telas menores que 640 px, Voltar, Continuar e Enviar registro ficam numa barra sticky no rodapé, com fundo papel, borda superior, área segura do aparelho e espaço depois do formulário.
+- **Carregamento:** bairro, Meus registros e fila do gestor mostram três linhas-esqueleto com blocos nas dimensões do conteúdo. A pulsação é desligada com `prefers-reduced-motion`; o leitor de tela ouve "Carregando registros".
+- **Composição da fila:** acima da lista de motivos em "Por que N pontos?", uma barra empilhada representa a parcela de cada motivo. O azul de placa, azul escuro, azul claro contornado e faixa amarela diferenciam os segmentos; a lista de motivos e pontos continua sendo o conteúdo principal.
+- **Entrada:** o caminho do morador recebe o destaque visual com borda de placa. A entrada do gestor aparece numa linha secundária abaixo, sem painel.
 
 ## Ponto de vista
 
@@ -68,13 +77,13 @@ Mais espaço acima de um título do que abaixo. Linhas de texto com no máximo ~
 
 **Pictogramas de categoria.** Os símbolos de categoria mantêm os ids de `img/icones.svg`, com traço de 2,25 px, branco sobre quadrado `--placa` com raio de 4 px. Tamanhos: 48 px na escolha da categoria, 40 px nas listas e 32 px no detalhe. Ícones de interface (alerta, informação, relógio, apoios e controles do mapa) mantêm o estilo atual.
 
-**Linha de ocorrência** (morador). Não é cartão solto: as linhas ficam dentro de um painel branco, separadas por linhas de 1 px. Estrutura: [pictograma da categoria 40 px, com o número do mapa no canto na cor do status] [categoria em Corpo forte + selo à direita] / [placa compacta] / [descrição em uma linha, truncada] / [meta: "há 88 dias · 3 apoios"]. A linha inteira é um link (alvo grande), com foco visível. Em Meus registros, uma versão mini mostra os quatro pontos da linha e o nome da estação atual.
+**Linha de ocorrência** (morador). Não é cartão solto: as linhas ficam dentro de um painel branco, separadas por linhas de 1 px. Estrutura: [pictograma da categoria 40 px, com o número do mapa no canto na cor do status] [categoria em Corpo forte + selo à direita] / [placa compacta] / [descrição em até duas linhas, truncada] / [meta: "há 88 dias · 3 apoios"]. A linha inteira é um link (alvo grande), com foco visível. Em Meus registros, uma versão mini mostra os quatro pontos da linha e o nome da estação atual.
 
 **Linha do atendimento.** Um `<ol>` com as estações Registrado, Na fila, Visita agendada e Resolvido. A estação atual recebe `aria-current="step"`, nome em negrito e círculo maior com anel. Estações já alcançadas são círculos cheios com contorno branco; as futuras são vazadas. O trecho percorrido tem 6 px em `--placa`, o futuro é tracejado em `--linha`, e o último trecho de um registro resolvido e sua estação final usam `--resolvido`. A linha aparece no bloco Situação do registro, na confirmação após registrar (Na fila atual) e em Meus registros, onde fica reduzida aos pontos e ao nome da estação atual.
 
 Na abertura, a linha avança em uma animação de até 600 ms, ease-out, com os trechos percorridos crescendo em sequência. Em celular estreito ela fica vertical; em desktop fica horizontal. Para uma ocorrência cancelada, a linha termina depois de Na fila em um terminal cinza com o nome Cancelado. Cancelar uma visita deixa a linha em Na fila quando a API devolve a ocorrência para ABERTA; o cancelamento da visita continua no histórico. EM_ANDAMENTO sem visita AGENDADA mostra Em atendimento, sem data. Uma visita AGENDADA mostra Visita agendada, data e equipe.
 
-**Linha da fila** (gestor). Grade: Prioridade (número grande + nível) | Problema (categoria + descrição) | Endereço (placa compacta) | Apoios | Aberto há / prazo (vermelho só quando passou do prazo) | botão secundário "Agendar". Ao clicar em Agendar, a linha se expande (sem modal) mostrando: "Por que 71 pontos?" (composição vinda da API), equipe (só equipes ativas da mesma subprefeitura, começa em "Escolha a equipe"), data (mínimo hoje) e o botão principal "Agendar visita". Só uma linha aberta por vez.
+**Linha da fila** (gestor). Grade: Prioridade (número grande + nível) | Problema (categoria + descrição) | Endereço (placa compacta) | Apoios | Aberto há / prazo (vermelho só quando passou do prazo) | botão secundário "Agendar". A linha tem hover discreto. Ao clicar em Agendar, a linha se expande (sem modal) mostrando: "Por que 71 pontos?" (composição vinda da API), barra empilhada acima dos motivos, equipe (só equipes ativas da mesma subprefeitura, começa em "Escolha a equipe"), data (mínimo hoje) e o botão principal "Agendar visita". A lista acessível de motivos e pontos continua como informação principal. Só uma linha aberta por vez.
 
 **Prioridade.** Número em Título/Número + nível (Alta ≥ 60 vermelho, Média ≥ 40 âmbar, Baixa cinza) + botão de texto "Por que?" que abre a composição:
 `Gravidade da categoria (peso 4) ... 40` / `3 apoios de vizinhos ... 6` / `A 120 m de Escola ... 15` / `Registrado por pessoa idosa ou com deficiência ... 10` / total.
@@ -91,11 +100,11 @@ Na abertura, a linha avança em uma animação de até 600 ms, ease-out, com os 
 
 **Abas.** No celular, as 3 abas dividem a largura em partes iguais (grade), sem rolagem horizontal; a ativa tem fundo `--fundo` e texto `--placa`.
 
-**Marcador do mapa.** Círculo de 36 px com o número da linha da lista (1, 2, 3...), na cor do status, borda branca de 2 px e sombra suave. O número no mapa é o mesmo da lista e do selo sobre o pictograma.
+**Marcador do mapa.** Círculo de 36 px com o número da linha da lista (1, 2, 3...), na cor do status, borda branca de 2 px e sombra suave. O número no mapa é o mesmo da lista e do selo sobre o pictograma. Os tiles ficam acromáticos para os pinos serem percebidos primeiro; a atribuição do OpenStreetMap mantém contraste. O destaque cruzado mantém lista e pino sincronizados no mouse e no teclado. O popup abre ao selecionar o pino e deixa a navegação para o link "Ver registro".
 
-**Situação do bairro.** Na entrada, uma faixa sem cartões mostra as contagens de pendentes (ABERTA e EM_ANDAMENTO) e resolvidos (RESOLVIDA) na Liberdade. Os números vêm de `GET /ocorrencias` e do distrito devolvido pela API. Se a API falhar, a faixa fica oculta.
+**Situação do bairro.** Na entrada, uma faixa sem cartões mostra as contagens de pendentes (ABERTA e EM_ANDAMENTO) e resolvidos (RESOLVIDA) na Liberdade. Os números e a idade do registro pendente mais antigo vêm de `GET /ocorrencias` e do distrito devolvido pela API. O texto da ocorrência mais antiga só aparece quando houver pendentes; se a API falhar, a faixa fica oculta.
 
-**Passos do registro.** "1. Problema / 2. Local / 3. Detalhes" continua na mesma ordem, redesenhado como estações pequenas ligadas por um traço azul. O passo atual usa círculo cheio.
+**Passos do registro.** "1. Problema / 2. Local / 3. Detalhes" continua na mesma ordem, redesenhado como estações pequenas ligadas por um traço azul. A linha percorre apenas o espaço entre os pontos e os rótulos ficam abaixo dela. O passo atual usa círculo cheio.
 
 **Prioridade na fila.** O número fica numa placa compacta com algarismos tabulares: Alta em `--lanterna`, Média em `--andamento` sobre `--andamento-fundo`, Baixa em `--asfalto-suave`. A tabela mantém a densidade e o cabeçalho permanece visível ao rolar; o formulário aberto se liga visualmente à linha de origem.
 
@@ -103,20 +112,20 @@ Na abertura, a linha avança em uma animação de até 600 ms, ease-out, com os 
 
 **Ícones.** SVG próprios em `web/img/icones.svg` (sprite com `<symbol>`), traço de 2 px, 24 px, cantos arredondados, mesmo estilo em todos: buraco, bueiro, calçada, entulho, guia, varrição, lixeira, local, alvo (centro do mapa), check, alerta, info, relógio, pessoas (apoios), seta.
 
-**Superfícies do navegador.** `::selection` com fundo `--placa-clara`; `caret-color: var(--placa)`; foco visível em todos os controles; links com `text-underline-offset: .2em`; barra de rolagem fina na cor `--linha`; favicon SVG (mini placa "RV"). Estados vazios mantêm uma frase e uma ação já disponível, com pictograma; estados de carregamento e erro também mostram pictograma, e os erros preservam a ação de tentar novamente.
+**Superfícies do navegador.** `::selection` com fundo `--placa-clara`; `caret-color: var(--placa)`; foco visível em todos os controles; links com `text-underline-offset: .2em`; barra de rolagem fina na cor `--linha`; favicon SVG (mini placa "RV"). Estados vazios mantêm uma frase e uma ação já disponível, com pictograma; as listas de ocorrência usam linhas-esqueleto no carregamento e os erros preservam a ação de tentar novamente.
 
 ## Telas
 
 ### 1. Entrada
-`h1` = placa grande "RuaViva". Linha "Liberdade · Sé · São Paulo". Frase do que o app faz. Faixa de situação do bairro com contagens reais de pendentes e resolvidos na Liberdade; se a API falhar, fica oculta. Dois caminhos claros, um abaixo do outro no celular e lado a lado no desktop: "Sou morador" (escolher morador da demonstração + botão principal) e "Sou da subprefeitura" (botão secundário). Uma nota discreta: "Versão de demonstração: os moradores e atendimentos são simulados."
+`h1` = placa grande "RuaViva". Linha "Liberdade · Sé · São Paulo". Frase do que o app faz. Faixa de situação do bairro com contagens reais de pendentes e resolvidos e a idade do registro pendente mais antigo; se não houver pendentes, o texto da idade não aparece. Se a API falhar, a faixa fica oculta. O caminho principal é "Sou morador" (escolher morador da demonstração + botão principal) num bloco com borda azul de placa. Abaixo, sem card: "Trabalha na Subprefeitura Sé?" e o botão secundário "Entrar como gestor". Uma nota discreta: "Versão de demonstração: os moradores e atendimentos são simulados."
 
 ### 2. Mapa do bairro (morador)
 Título "Problemas no bairro" + resumo vivo: "5 problemas não resolvidos na Liberdade". Filtro em 3 botões segmentados: Pendentes / Resolvidos / Todos. No celular, alternância "Lista | Mapa" (lista primeiro). No desktop: lista à esquerda (40%) e mapa fixo à direita, cada um em painel. O número da lista aparece sobre o ícone da categoria e corresponde ao marcador do mapa. Legenda das cores com texto.
 
 ### 3. Registrar problema (3 passos numa página)
-1. **O que é?** Grade de categorias: pictograma 48 px + nome + um exemplo curto ("Tapa-buraco — buraco no asfalto da rua"). Escolha única, alvos grandes. A opção selecionada tem borda de 2 px em azul, fundo azul claro e marca de seleção. O indicador de passos usa pequenas estações ligadas. Ao selecionar, mostrar prazo de referência e Subprefeitura Sé. Aviso de emergência fica visível nesta etapa.
+1. **O que é?** Grade de categorias: pictograma 48 px + nome em negrito + exemplo curto em peso normal ("Tapa-buraco — buraco no asfalto da rua"). A placa de escolha recebe fundo azul claro no hover. Escolha única, alvos grandes. A opção selecionada tem borda de 2 px em azul, fundo azul claro e marca de seleção. O indicador de passos usa pequenas estações ligadas apenas entre os pontos, com rótulos abaixo da linha. Ao selecionar, mostrar prazo de referência e Subprefeitura Sé. Aviso de emergência fica visível nesta etapa.
 2. **Onde fica?** Campo "Rua e número" + botão "Buscar endereço" (OpenStreetMap Nominatim, restrito à região) → resultados como opções de rádio em texto. Ou "Usar minha localização". O mapa mostra o ponto e permite ajustar (toque, arrastar, ou setas + "Marcar o centro do mapa" com a mira). Confirmação sempre em texto: "Local escolhido: Rua Barão de Iguape, 288 — Liberdade" (geocodificação reversa; se falhar, "ponto marcado no mapa, perto de -23,5584, -46,6341").
-3. **Detalhes.** Descrição (opcional, com contador) + resumo do que vai ser enviado. Botão principal "Enviar registro".
+3. **Detalhes.** Descrição (opcional, com contador) + resumo do que vai ser enviado. Botão principal "Enviar registro". Em telas menores que 640 px, a barra com Voltar, Continuar ou Enviar registro fica sticky no rodapé e inclui a área segura do aparelho.
 Aviso de possível repetição aparece no passo 2 quando há registro da mesma categoria a até 60 m: mostra a linha da ocorrência e o botão "Apoiar este em vez de registrar". O rascunho fica salvo (sessionStorage) se a pessoa sair para ver o outro registro.
 Depois de enviar: tela de confirmação com a placa do endereço, número local `Registro nº 0003` e "O que acontece agora": entra na fila da subprefeitura; a Linha do atendimento mostra Na fila como estação atual e a pessoa acompanha em Meus registros. Meus registros também permite buscar pelo número local.
 
@@ -130,7 +139,7 @@ Duas seções: "Problemas que eu registrei" e "Problemas que eu apoiei", com a L
 Linha de resumo em texto, sem cartões de métrica: "5 aguardando equipe · 3 passaram do prazo · 1 visita agendada". Duas áreas: Fila (2/3 da largura, tabela de Linhas da fila, ordenada por prioridade) e Visitas agendadas (1/3, lista com "Marcar como resolvido", que abre confirmação na própria linha com campo "O que foi feito", e "Cancelar visita").
 
 ### 7. Categorias (gestor)
-Formulário à esquerda com a régua de peso como sugestão (opcional); tabela à direita com espaçamento confortável (padding 12/16), números tabulares, peso também como texto.
+Formulário à esquerda com a régua de peso como sugestão (opcional); tabela à direita com espaçamento confortável (padding 12/16 e respiro interno do painel), números tabulares, peso também como texto.
 
 ## Textos que mudam
 - "a equipe está a caminho" → "Visita agendada para {data} com {equipe}."
