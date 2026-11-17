@@ -24,6 +24,7 @@
 | [`ar-vr/`](ar-vr/) | AR-VR Modelling | Vídeo 3D: uma rua do bairro com as ocorrências e a solução em ação |
 | [`data-science/`](data-science/) | Data Science | Dados reais do SP156: regressão linear para a demanda diária por subprefeitura e regressão logística para estimar se a solicitação é atendida em até 7 dias |
 | [`database/`](database/) | Database Design | Modelo relacional Oracle e scripts DDL, DML e DQL |
+| [`web/`](web/) | Site do MVP | Publicado em [ruaviva.onrender.com](https://ruaviva.onrender.com) |
 | [`java-api/`](java-api/) | DDD - Java | API REST em Spring Boot + Oracle, publicada em [ruaviva-api.onrender.com](https://ruaviva-api.onrender.com/swagger-ui.html) |
 | [`web/`](web/) | (todas) | Site do MVP: morador registra e apoia problemas; gestor vê a fila e agenda equipes. Sistema de design em [`web/DESIGN.md`](web/DESIGN.md), espelhado no Figma |
 | [`docs/`](docs/) | (todas) | Documentos das entregas em HTML, que viram PDF com `./docs/gerar_pdfs.sh` |
