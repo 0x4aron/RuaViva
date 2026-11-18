@@ -1,5 +1,7 @@
 # RuaViva — cena 3D de zeladoria urbana
 
+Vídeo no YouTube: https://youtu.be/p-pLWZHkRQU
+
 Na maquete de 48 segundos (1920 × 1080), acompanhamos três reparos na Liberdade. Usamos os endereços, as pontuações e os apoios de `database/02_dml.sql`. Reunimos na mesma maquete a Rua Barão de Iguape e o trecho da Rua Doutor Siqueira Campos onde fica o buraco perto da creche. A posição dos prédios e o trajeto da van são ilustrativos.
 
 No site, o status resolvido usa `#176B43`. Na maquete, as placas azuis identificam os endereços. A rota aparece em amarelo e os marcadores ficam verdes ao fim de cada reparo. Usamos Barlow Semi Condensed nos títulos e Atkinson Hyperlegible nas legendas. Agrupamos as geometrias estáticas por material para reduzir as chamadas de desenho.
