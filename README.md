@@ -29,6 +29,7 @@
 | [`docs/`](docs/) | (todas) | Documentos das entregas em HTML, que viram PDF com `./docs/gerar_pdfs.sh` |
 | [`dynamic-programming/`](dynamic-programming/) | Dynamic Programming | Rota da equipe de campo (grafos) e escolha das ocorrências dentro do orçamento (tabulação/memoização) |
 | [`network/`](network/) | Network Architect | Rede da base de zeladoria da subprefeitura no Packet Tracer 9.0.1 |
+| [`prompts.md`](prompts.md) | (todas) | Registro do uso de IA: os pedidos feitos, as decisões da equipe e o que foi conferido |
 
 ## Como rodar o MVP
 

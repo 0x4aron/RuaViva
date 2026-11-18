@@ -51,9 +51,10 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </table>
 <h3>Escutar: relato de quem convive com o problema</h3>
 <p>Cesar Aaron Herrera, integrante da equipe, mora na região e respondeu às perguntas da etapa "Escutar" em 16/11/2026. Os problemas que mais vê perto de casa são buraco no asfalto, lixo acumulado na calçada e iluminação pública apagada. Nunca pediu conserto porque não conhecia o 156, não sabe se algo foi resolvido, e os buracos na rua continuam. Quem mais sofre, na percepção dele, é quem empurra carrinho de bebê e precisa desviar do lixo deixado na calçada.</p>
+<p>O relato veio depois das primeiras telas e serviu para conferir as escolhas da equipe:</p>
 <table class="">
 <thead>
-<tr><th scope="col">O que ouvimos</th><th scope="col">Decisão no RuaViva</th>
+<tr><th scope="col">O que ouvimos</th><th scope="col">Como o RuaViva responde</th>
 </tr>
 </thead>
 <tbody>
@@ -262,8 +263,8 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <h2>4. Backlog do produto <span class="pontos">20 pontos</span>
 </h2>
 <p><strong>MoSCoW:</strong> Must = essencial; Should = complemento importante; Could = evolução possível; Won’t = fora desta entrega. Story points são estimativas relativas de esforço e complexidade.</p>
-<p>No <strong>Planning Poker</strong>, cada integrante escolhe uma carta da escala Fibonacci (1, 2, 3, 5, 8 ou 13). Os dois mostram as cartas juntos, discutem as diferenças e votam de novo até concordar. No backlog, escolher um perfil vale 2 pontos, dar ou retirar apoio vale 3, localizar um problema vale 5 e registrá-lo em etapas vale 8. Data da sessão: DATA_PLANNING.</p>
-<p><strong>14 Must no MVP: 64 pontos.</strong> Seis Should existentes; quatro Could e um Won’t futuros.</p>
+<p>No <strong>Planning Poker</strong>, cada história recebe uma carta da escala Fibonacci (1, 2, 3, 5, 8 ou 13). Os pontos comparam esforço, regras e incerteza; não são horas. Na sessão de 18/11/2026, dois modelos de IA (gpt-6.2-astra e gpt-6.2-sol, pelo Codex CLI) votaram como estimadores independentes: cada um leu o backlog e o código sem ver o voto do outro. Os votos iguais, em 20 histórias, foram aceitos. Nas cinco divergências, Cesar decidiu: US09 ficou com 8, porque a prioridade soma quatro regras e explica cada parcela; US19 ficou com 13, por ter dois modelos e o cuidado com vazamento temporal; US01, US08 e US15 ficaram com o voto maior. A sessão mudou dez estimativas anteriores. Localizar o problema subiu de 5 para 8, por juntar GPS, busca de endereço e ajuste manual; o registro em três passos caiu de 8 para 5, porque a busca de endereço e o GPS já estão contados na US04. Os prompts da sessão estão no <code>prompts.md</code>.</p>
+<p><strong>14 Must no MVP: 69 pontos.</strong> Seis Should existentes; quatro Could e um Won’t futuros.</p>
 <table class="backlog">
 <thead>
 <tr><th scope="col">ID</th><th scope="col">História e critérios de aceite</th><th scope="col">MoSCoW</th><th scope="col">Pontos</th><th scope="col">MVP</th>
@@ -274,21 +275,21 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </tr>
 <tr><td>US02</td><td>Como Morador, quero consultar problemas em lista e mapa, para reconhecer o que já foi registrado na Liberdade.<p class="nota">UC02</p><strong>Aceite:</strong> Filtrar Pendentes, Resolvidos e Todos. Listar apenas a Liberdade. Usar os mesmos números na lista e no mapa.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
-<tr><td>US03</td><td>Como Morador, quero registrar um problema em três passos, para enviar categoria, local e detalhes sem preencher tudo de uma vez.<p class="nota">UC03,UC04,UC05</p><strong>Aceite:</strong> Exigir categoria, coordenadas, rua e bairro. Aceitar descrição opcional na tela e enviar nome da categoria se vazia. API criar ABERTA com data de hoje e prioridade calculada. Mostrar confirmação.</td><td><span class="prioridade">Must</span></td><td>8</td><td><span class="mvp">MVP</span></td>
+<tr><td>US03</td><td>Como Morador, quero registrar um problema em três passos, para enviar categoria, local e detalhes sem preencher tudo de uma vez.<p class="nota">UC03,UC04,UC05</p><strong>Aceite:</strong> Exigir categoria, coordenadas, rua e bairro. Aceitar descrição opcional na tela e enviar nome da categoria se vazia. API criar ABERTA com data de hoje e prioridade calculada. Mostrar confirmação.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
-<tr><td>US04</td><td>Como Morador, quero localizar o problema por endereço, GPS ou mapa, para indicar onde a equipe deve trabalhar.<p class="nota">UC04</p><strong>Aceite:</strong> Buscar endereço na região e oferecer resultados em texto. Permitir ajuste do ponto e marcação do centro com teclado. Confirmar local em texto e permitir informar rua se a busca falhar.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
+<tr><td>US04</td><td>Como Morador, quero localizar o problema por endereço, GPS ou mapa, para indicar onde a equipe deve trabalhar.<p class="nota">UC04</p><strong>Aceite:</strong> Buscar endereço na região e oferecer resultados em texto. Permitir ajuste do ponto e marcação do centro com teclado. Confirmar local em texto e permitir informar rua se a busca falhar.</td><td><span class="prioridade">Must</span></td><td>8</td><td><span class="mvp">MVP</span></td>
 </tr>
 <tr><td>US05</td><td>Como Morador, quero apoiar um registro parecido durante o cadastro, para evitar abrir outro pedido sobre o mesmo problema.<p class="nota">UC06,UC07</p><strong>Aceite:</strong> Sugerir pendentes da mesma categoria a até 60 m. Apoiar só após escolha do morador e sem criar nova ocorrência. Guardar rascunho na sessão. Não unir registros automaticamente.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
-<tr><td>US06</td><td>Como Morador, quero dar ou retirar meu apoio, para manter atualizada a indicação de que o problema também me afeta.<p class="nota">UC07,UC08,UC05</p><strong>Aceite:</strong> Impedir apoio próprio, repetido ou a ocorrência encerrada. Criar apoio por POST e retirar por DELETE. Recalcular prioridade após alteração.</td><td><span class="prioridade">Must</span></td><td>3</td><td><span class="mvp">MVP</span></td>
+<tr><td>US06</td><td>Como Morador, quero dar ou retirar meu apoio, para manter atualizada a indicação de que o problema também me afeta.<p class="nota">UC07,UC08,UC05</p><strong>Aceite:</strong> Impedir apoio próprio, repetido ou a ocorrência encerrada. Criar apoio por POST e retirar por DELETE. Recalcular prioridade após alteração.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
 <tr><td>US07</td><td>Como Morador, quero consultar situação, prazo de referência e histórico do problema, para saber o que já aconteceu e qual é a próxima etapa.<p class="nota">UC09</p><strong>Aceite:</strong> Exibir endereço, status, visitas e datas disponíveis. Distinguir agendamento de deslocamento em curso. Mostrar se o prazo da categoria já venceu.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
 <tr><td>US08</td><td>Como Morador, quero separar os problemas que registrei dos que apoiei, para reencontrar os pedidos que acompanho.<p class="nota">UC10</p><strong>Aceite:</strong> Filtrar autor e apoios pelo perfil selecionado. Exibir duas seções com acesso ao detalhe. Mostrar convite para agir nas listas vazias.</td><td><span class="prioridade">Must</span></td><td>3</td><td><span class="mvp">MVP</span></td>
 </tr>
-<tr><td>US09</td><td>Como Morador prioritário, quero que minha condição cadastrada participe da prioridade, para que o impacto sobre idosos e pessoas com deficiência seja considerado.<p class="nota">UC05,UC11</p><strong>Aceite:</strong> Somar peso × 10, 2 por apoio, 15 se houver ponto sensível a até 200 m e 10 pelo autor prioritário. Aplicar bônus de proximidade uma vez. Expor composição via API.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
+<tr><td>US09</td><td>Como Morador prioritário, quero que minha condição cadastrada participe da prioridade, para que o impacto sobre idosos e pessoas com deficiência seja considerado.<p class="nota">UC05,UC11</p><strong>Aceite:</strong> Somar peso × 10, 2 por apoio, 15 se houver ponto sensível a até 200 m e 10 pelo autor prioritário. Aplicar bônus de proximidade uma vez. Expor composição via API.</td><td><span class="prioridade">Must</span></td><td>8</td><td><span class="mvp">MVP</span></td>
 </tr>
-<tr><td>US10</td><td>Como Gestor da subprefeitura, quero consultar uma fila ordenada e entender a pontuação, para comparar os casos que ainda aguardam equipe.<p class="nota">UC12,UC11</p><strong>Aceite:</strong> Listar ABERTA sem atendimento válido em ordem decrescente de prioridade. Desconsiderar visitas canceladas. Consultar composição sem alterar dados.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
+<tr><td>US10</td><td>Como Gestor da subprefeitura, quero consultar uma fila ordenada e entender a pontuação, para comparar os casos que ainda aguardam equipe.<p class="nota">UC12,UC11</p><strong>Aceite:</strong> Listar ABERTA sem atendimento válido em ordem decrescente de prioridade. Desconsiderar visitas canceladas. Consultar composição sem alterar dados.</td><td><span class="prioridade">Must</span></td><td>3</td><td><span class="mvp">MVP</span></td>
 </tr>
 <tr><td>US11</td><td>Como Gestor da subprefeitura, quero agendar uma equipe para um problema, para organizar o atendimento.<p class="nota">UC13</p><strong>Aceite:</strong> API aceitar só ocorrência pendente, equipe ativa da mesma subprefeitura e data a partir da abertura. Mudar ABERTA para EM_ANDAMENTO. Na tela, oferecer equipes da mesma subprefeitura e data a partir de hoje.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
@@ -296,17 +297,17 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </tr>
 <tr><td>US13</td><td>Como Gestor da subprefeitura, quero cancelar ou reagendar uma visita, para ajustar o trabalho sem perder o histórico.<p class="nota">UC15,UC16</p><strong>Aceite:</strong> Cancelar visita pela tela ou API. Reagendar pela API apenas AGENDADO. Ao cancelar a última visita, devolver ocorrência EM_ANDAMENTO para ABERTA. Não editar visitas encerradas.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
-<tr><td>US14</td><td>Como Gestor da subprefeitura, quero manter categorias com peso, prazo e horas, para aplicar referências consistentes aos registros.<p class="nota">UC17</p><strong>Aceite:</strong> Cadastrar e listar na tela. Consultar régua opcional e validar peso de 1 a 5. Editar ou excluir pela API respeitando vínculos. Recalcular pendentes se o peso mudar.</td><td><span class="prioridade">Must</span></td><td>3</td><td><span class="mvp">MVP</span></td>
+<tr><td>US14</td><td>Como Gestor da subprefeitura, quero manter categorias com peso, prazo e horas, para aplicar referências consistentes aos registros.<p class="nota">UC17</p><strong>Aceite:</strong> Cadastrar e listar na tela. Consultar régua opcional e validar peso de 1 a 5. Editar ou excluir pela API respeitando vínculos. Recalcular pendentes se o peso mudar.</td><td><span class="prioridade">Must</span></td><td>5</td><td><span class="mvp">MVP</span></td>
 </tr>
-<tr><td>US15</td><td>Como Gestor da subprefeitura, quero manter cidadãos e sua condição prioritária pela API, para corrigir os dados usados nos registros.<p class="nota">UC18,UC05</p><strong>Aceite:</strong> Listar, consultar, cadastrar, atualizar e excluir respeitando vínculos. Exigir email único. Omitir prioritario no PUT preserva valor. Recalcular pendentes após alteração relevante.</td><td><span class="prioridade">Should</span></td><td>3</td><td>Fora</td>
+<tr><td>US15</td><td>Como Gestor da subprefeitura, quero manter cidadãos e sua condição prioritária pela API, para corrigir os dados usados nos registros.<p class="nota">UC18,UC05</p><strong>Aceite:</strong> Listar, consultar, cadastrar, atualizar e excluir respeitando vínculos. Exigir email único. Omitir prioritario no PUT preserva valor. Recalcular pendentes após alteração relevante.</td><td><span class="prioridade">Should</span></td><td>5</td><td>Fora</td>
 </tr>
-<tr><td>US16</td><td>Como Gestor da subprefeitura, quero manter equipes, pontos sensíveis e territórios pela API, para sustentar o atendimento e o cálculo de proximidade.<p class="nota">UC19,UC20,UC21,UC22,UC05</p><strong>Aceite:</strong> Oferecer consulta, cadastro, edição e exclusão dos quatro recursos com vínculos válidos. Manter equipe ativa, base e horas. Recalcular pendentes ao alterar pontos sensíveis.</td><td><span class="prioridade">Should</span></td><td>13</td><td>Fora</td>
+<tr><td>US16</td><td>Como Gestor da subprefeitura, quero manter equipes, pontos sensíveis e territórios pela API, para sustentar o atendimento e o cálculo de proximidade.<p class="nota">UC19,UC20,UC21,UC22,UC05</p><strong>Aceite:</strong> Oferecer consulta, cadastro, edição e exclusão dos quatro recursos com vínculos válidos. Manter equipe ativa, base e horas. Recalcular pendentes ao alterar pontos sensíveis.</td><td><span class="prioridade">Should</span></td><td>8</td><td>Fora</td>
 </tr>
-<tr><td>US17</td><td>Como Gestor da subprefeitura, quero corrigir registros e administrar exclusões pela API, para tratar erros de cadastro conforme as regras do histórico.<p class="nota">UC23,UC24</p><strong>Aceite:</strong> Corrigir ocorrência pendente sem trocar autor ou abertura. Cancelar também suas visitas agendadas. Recusar edição de ocorrência encerrada e exclusão de ocorrência resolvida ou atendimento concluído. Respeitar vínculos do banco.</td><td><span class="prioridade">Should</span></td><td>5</td><td>Fora</td>
+<tr><td>US17</td><td>Como Gestor da subprefeitura, quero corrigir registros e administrar exclusões pela API, para tratar erros de cadastro conforme as regras do histórico.<p class="nota">UC23,UC24</p><strong>Aceite:</strong> Corrigir ocorrência pendente sem trocar autor ou abertura. Cancelar também suas visitas agendadas. Recusar edição de ocorrência encerrada e exclusão de ocorrência resolvida ou atendimento concluído. Respeitar vínculos do banco.</td><td><span class="prioridade">Should</span></td><td>8</td><td>Fora</td>
 </tr>
 <tr><td>US18</td><td>Como Gestor da subprefeitura, quero consultar uma base histórica preparada do SP156, para fundamentar o planejamento em solicitações reais.<p class="nota">UC25</p><strong>Aceite:</strong> Preparar os quatro trimestres de 2025 com script local. Identificar fonte e período dos 507.859 pedidos. Não importar cidadãos nem transmitir protocolos ao SP156.</td><td><span class="prioridade">Should</span></td><td>5</td><td>Fora</td>
 </tr>
-<tr><td>US19</td><td>Como Gestor da subprefeitura, quero analisar demanda e risco no notebook, para identificar períodos e tipos de pedido que exigem atenção.<p class="nota">UC26,UC27</p><strong>Aceite:</strong> Treinar com dados de janeiro a setembro e avaliar no último trimestre de 2025. Medir o erro da demanda diária e a precisão e o recall do risco de atraso em sete dias.</td><td><span class="prioridade">Should</span></td><td>8</td><td>Fora</td>
+<tr><td>US19</td><td>Como Gestor da subprefeitura, quero analisar demanda e risco no notebook, para identificar períodos e tipos de pedido que exigem atenção.<p class="nota">UC26,UC27</p><strong>Aceite:</strong> Treinar com dados de janeiro a setembro e avaliar no último trimestre de 2025. Medir o erro da demanda diária e a precisão e o recall do risco de atraso em sete dias.</td><td><span class="prioridade">Should</span></td><td>13</td><td>Fora</td>
 </tr>
 <tr><td>US20</td><td>Como Gestor da subprefeitura, quero gerar um plano do dia no terminal, para selecionar serviços e ordenar visitas dentro da jornada simulada.<p class="nota">UC28,UC29,UC30</p><strong>Aceite:</strong> Ler retrato local ou fila da API. Gerar um plano dentro da jornada, incluindo serviço, deslocamento e volta à base. Mostrar os horários e os serviços adiados. A simulação não cria agendamentos.</td><td><span class="prioridade">Should</span></td><td>13</td><td>Fora</td>
 </tr>
@@ -323,7 +324,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </tbody>
 </table>
 <h3>Organização da Equipe RuaViva</h3>
-<p>Para o pitch, planejamos dividir as falas entre Anthony, que apresenta a jornada do morador, e Cesar, que explica os dados e as regras de atendimento.</p>
+<p>Para o pitch: As falas alternam entre os dois. Cesar apresenta o problema, as personas, o mapa, o detalhe e as ferramentas de análise; Anthony apresenta os dados, o registro, a fila do gestor e o fechamento.</p>
 <p>No quadro, cada história passa por A fazer, Em andamento, Em revisão e Concluído. A história fica pronta quando conseguimos demonstrar seus critérios de aceite.</p>
 </section>
 <section class="secao" id="ux">
@@ -376,28 +377,30 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <h2>6. Roteiro do pitch <span class="pontos">20 pontos</span>
 </h2>
 <p class="pendente">Link do vídeo: LINK_PITCH</p>
-<p>Planejamos até três minutos, com falas de Anthony e Cesar.</p>
+<p>O vídeo tem 2:55, com falas de Anthony e Cesar.</p>
 <table class="pitch">
 <thead>
 <tr><th scope="col">Tempo</th><th scope="col">Narração</th><th scope="col">O que aparece na tela</th>
 </tr>
 </thead>
 <tbody>
-<tr><td><strong>0:00–0:20</strong></td><td><strong>Anthony:</strong> “Na Rua Barão de Iguape, na Liberdade, um bueiro entupido ou uma calçada quebrada atrapalha quem caminha e quem trabalha. Depois de avisar, o morador ainda precisa descobrir se já existe outro registro e se alguém marcou uma visita. Esse é o problema do RuaViva.”</td><td>Entrada com os nomes da dupla e mapa da Liberdade.</td>
+<tr><td><strong>0:00–0:20</strong></td><td><strong>Cesar:</strong> “Na Rua Barão de Iguape, na Liberdade, tem buraco na rua, lixo na calçada e bueiro entupido. Quem avisa a prefeitura não sabe se alguém já avisou, nem quando vai ser resolvido. Esse é o problema do RuaViva. Somos Anthony Gonçalves Sforzin e Cesar Aaron Herrera.”</td><td>Placa RuaViva, equipe</td>
 </tr>
-<tr><td><strong>0:20–0:45</strong></td><td><strong>Cesar:</strong> “Analisamos 507.859 pedidos de zeladoria de 2025. Na Sé, 87% dos pedidos de calçadas, guias e postes do teste de outubro a dezembro não foram finalizados em até sete dias. Segunda-feira é o pico de demanda. Esses dados orientam nosso foco em acompanhamento e prioridade para quem enfrenta mais barreiras.”</td><td>Tabela do SP156 para a Sé e gráfico de demanda por dia da semana.</td>
+<tr><td><strong>0:20–0:45</strong></td><td><strong>Anthony:</strong> “Analisamos mais de quinhentos mil pedidos de zeladoria do SP156 em 2025. No último trimestre, na Sé, oitenta e sete por cento dos pedidos de calçadas, guias e postes não foram finalizados em até sete dias. E a segunda-feira é o dia de pico. Esses dados guiaram o nosso foco: acompanhar o pedido e priorizar o que afeta mais gente.”</td><td>Dados do SP156</td>
 </tr>
-<tr><td><strong>0:45–1:05</strong></td><td><strong>Anthony:</strong> “Pensamos em Helena, uma moradora idosa com baixa visão, e Rafael, que usa o celular entre os atendimentos da loja. A entrada separa morador e gestor. A lista aparece antes do mapa, com letras grandes, status escritos e endereços em placas azuis, como na rua.”</td><td>Helena e Rafael, personas fictícias. Entrada e lista do bairro no celular.</td>
+<tr><td><strong>0:45–0:51</strong></td><td><strong>Cesar:</strong> “Pensamos na Helena, com baixa visão, no Rafael, comerciante, e na Márcia, gestora da subprefeitura.”</td><td>Personas</td>
 </tr>
-<tr><td><strong>1:05–1:30</strong></td><td><strong>Cesar:</strong> “Registrar tem três passos: escolher o problema, confirmar o local e revisar os detalhes. Podemos buscar um endereço ou marcar o mapa. Se houver um registro pendente da mesma categoria a até sessenta metros, o morador pode apoiar em vez de repetir. A descrição é opcional, e a confirmação explica como acompanhar.”</td><td>Categoria, localização e detalhes. Aviso de registro parecido ao lado do endereço.</td>
+<tr><td><strong>0:51–1:05</strong></td><td><strong>Cesar:</strong> “O morador entra e vê os problemas do bairro em lista e no mapa. Cada número da lista é o mesmo do pino. Os endereços aparecem como placas de rua, com letra grande.”</td><td>Entrada e mapa</td>
 </tr>
-<tr><td><strong>1:30–1:50</strong></td><td><strong>Anthony:</strong> “No detalhe, o RuaViva informa o que existe no sistema: aguardando equipe, visita agendada ou resolução registrada. A linha do tempo mostra o atendimento. O apoio diz que o problema também afeta outras pessoas. Cada apoio soma dois pontos na fila.”</td><td>Detalhe do registro com histórico, prazo e botão de apoio.</td>
+<tr><td><strong>1:05–1:30</strong></td><td><strong>Anthony:</strong> “Registrar tem três passos: o que é, onde fica e os detalhes. Dá para buscar o endereço ou marcar no mapa. Se já existe um registro parecido a até sessenta metros, o morador pode apoiar o do vizinho em vez de repetir. Se abrir um novo, recebe um número para acompanhar.”</td><td>Registro em 3 passos</td>
 </tr>
-<tr><td><strong>1:50–2:15</strong></td><td><strong>Cesar:</strong> “O gestor compara os casos sem atendimento. Este bueiro tem 71 pontos: quarenta pela categoria, seis por três apoios, quinze pela proximidade de um ponto sensível e dez pelo autor prioritário. A composição explica a decisão. Na mesma tela, o gestor agenda uma equipe e registra a conclusão da visita.”</td><td>Fila do gestor e composição dos 71 pontos, com a escola fictícia a 40 m.</td>
+<tr><td><strong>1:30–1:50</strong></td><td><strong>Cesar:</strong> “No detalhe, a situação aparece como uma linha de metrô: registrado, na fila, visita agendada e resolvido, só com as datas que o sistema tem. O botão ’Isso também me afeta’ soma um apoio à prioridade.”</td><td>Detalhe e Linha do atendimento</td>
 </tr>
-<tr><td><strong>2:15–2:40</strong></td><td><strong>Anthony:</strong> “Também temos um notebook para estimar demanda e risco de atraso, e um programa de terminal que seleciona serviços e ordena visitas dentro da jornada, incluindo o retorno à base. São componentes separados do site. Deixamos no backlog a consulta de previsões no site e o acesso da equipe de campo pelo celular.”</td><td>Notebook e plano de visitas no terminal, com horários e volta à base.</td>
+<tr><td><strong>1:50–2:15</strong></td><td><strong>Anthony:</strong> “A gestora vê a fila por prioridade. Este bueiro tem setenta e um pontos: quarenta pela gravidade, seis por três apoios, quinze por estar perto de uma escola e dez porque quem registrou tem prioridade cadastrada. Ela entende o motivo, escolhe a equipe, a data e agenda a visita na mesma tela.”</td><td>Fila do gestor</td>
 </tr>
-<tr><td><strong>2:40–3:00</strong></td><td><strong>Cesar:</strong> “Quem registrou ou apoiou um problema pode voltar ao endereço e conferir a visita. Queremos acompanhar tempo de resolução e pedidos resolvidos em até sete dias e quantos apoios vêm do aviso de registro parecido. Somos Anthony Gonçalves Sforzin e Cesar Aaron Herrera, Equipe RuaViva, da FIAP.”</td><td>Nomes, RMs, território e endereço do repositório.</td>
+<tr><td><strong>2:15–2:40</strong></td><td><strong>Cesar:</strong> “Fora do site, temos um notebook que prevê a demanda e o risco de atraso, e um programa que escolhe os serviços que cabem no dia da equipe e monta a menor rota entre as visitas escolhidas. Integrar isso ao site é um próximo passo.”</td><td>Notebook e plano do dia</td>
+</tr>
+<tr><td><strong>2:40–2:55</strong></td><td><strong>Anthony:</strong> “O RuaViva liga o problema na rua à visita da equipe, com transparência para o morador. Equipe RuaViva, FIAP.”</td><td>Fluxo do registro à visita</td>
 </tr>
 </tbody>
 </table>
