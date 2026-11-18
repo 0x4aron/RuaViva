@@ -39,9 +39,11 @@ checa "POST atendimento em ocorrencia inexistente da 404" 404 "$(req POST /atend
 echo "== Ciclo de vida"
 OC=$(nova_oc 1)
 checa "agendar com equipe inativa (3) da 422" 422 "$(req POST /atendimentos "$(agendar_json "$OC" 3 "$HOJE")")"
+checa "agendar com equipe da Mooca em distrito da Sé dá 422" 422 "$(req POST /atendimentos "$(agendar_json "$OC" 4 "$HOJE")")"
 checa "agendar visita" 201 "$(req POST /atendimentos "$(agendar_json "$OC" 1 "$HOJE")")"
 AT=$(corpo | jq -r .idAtendimento)
 checa "ocorrencia vira EM_ANDAMENTO" EM_ANDAMENTO "$(status_oc "$OC")"
+checa "concluir com data de execução futura dá 422" 422 "$(req PUT "/atendimentos/$AT" "{\"idOcorrencia\":$OC,\"idEquipe\":1,\"dataAgendada\":\"$HOJE\",\"dataExecucao\":\"$AMANHA\",\"status\":\"CONCLUIDO\"}")"
 checa "concluir visita" 200 "$(req PUT "/atendimentos/$AT" "{\"idOcorrencia\":$OC,\"idEquipe\":1,\"dataAgendada\":\"$HOJE\",\"status\":\"CONCLUIDO\",\"observacao\":\"feito\"}")"
 checa "ocorrencia vira RESOLVIDA" RESOLVIDA "$(status_oc "$OC")"
 checa "atendimento concluido nao muda (422)" 422 "$(req PUT "/atendimentos/$AT" "{\"idOcorrencia\":$OC,\"idEquipe\":1,\"dataAgendada\":\"$HOJE\"}")"

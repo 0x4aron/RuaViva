@@ -5,14 +5,13 @@ import math
 import random
 from time import perf_counter
 
-from dados import carregar_dados
+from dados import carregar_dados, ocorrencias_da_equipe
 from grafo import gerar_matrizes, montar_grafo
 from mochila import mochila_forca_bruta, mochila_tabulada, preparar_itens
 from rota import held_karp, rota_forca_bruta, vizinho_mais_proximo
 
 
 def reduzir_matriz(matriz, nos):
-    """Mantém apenas a base e os nós escolhidos."""
     return [[matriz[a][b] for b in nos] for a in nos]
 
 
@@ -46,7 +45,6 @@ def horario(minutos):
 
 
 def mostrar_escolha(itens, plano):
-    """Explica a inclusão e o adiamento de cada ocorrência."""
     ids = {item["id"] for item in plano["escolhidos"]}
     usados = sum(item["custo"] for item in plano["escolhidos"])
     print(f'\nMOCHILA | {usados}/{plano["limite"]} blocos de 15 min usados')
@@ -67,7 +65,6 @@ def mostrar_escolha(itens, plano):
 
 
 def mostrar_rota(plano, distancias, velocidade):
-    """Exibe cada deslocamento e a janela de trabalho no destino."""
     print("\nROTA ÓTIMA PARA AS VISITAS ESCOLHIDAS | saída às 08:00")
     acumulado = 0
     for passo, (origem, destino) in enumerate(
@@ -90,7 +87,6 @@ def mostrar_rota(plano, distancias, velocidade):
 
 
 def mostrar_plano(dados, equipe, horas, velocidade, grafo, pontes, itens, plano, distancias):
-    """Apresenta o resultado sem depender de bibliotecas visuais."""
     print("=" * 72)
     print("RUAVIVA | PLANO DO DIA — LIBERDADE / SÃO PAULO")
     print("=" * 72)
@@ -102,6 +98,9 @@ def mostrar_plano(dados, equipe, horas, velocidade, grafo, pontes, itens, plano,
     arestas = sum(len(vizinhos) for vizinhos in grafo.values()) // 2
     print(f"Grafo: {len(grafo)} nós / {arestas} arestas / {len(pontes)} pontes extras")
     print(f"Velocidade média: {velocidade:g} km/h | Distância: Haversine × 1,3")
+    if not itens:
+        print("Nenhuma ocorrência pendente disponível para esta equipe na sua subprefeitura.")
+        return
     mostrar_escolha(itens, plano)
     mostrar_rota(plano, distancias, velocidade)
     total = plano["trabalho"] + plano["viagem"]
@@ -150,7 +149,6 @@ def comparar():
 
 
 def ler_argumentos():
-    """Define as opções da linha de comando."""
     analisador = argparse.ArgumentParser(description=__doc__)
     analisador.add_argument("--equipe", type=int, default=1, help="ID da equipe (padrão: 1)")
     analisador.add_argument("--horas", type=float, help="Jornada de 0 a 24 horas")
@@ -161,7 +159,6 @@ def ler_argumentos():
 
 
 def main():
-    """Executa o planejamento e, opcionalmente, a comparação."""
     analisador, argumentos = ler_argumentos()
     try:
         dados = carregar_dados(argumentos.api)
@@ -171,7 +168,7 @@ def main():
         horas = equipe["horas_dia"] if argumentos.horas is None else argumentos.horas
         if not math.isfinite(horas) or not 0 <= horas <= 24:
             raise ValueError("A jornada deve estar entre 0 e 24 horas.")
-        ocorrencias = sorted(dados["ocorrencias"], key=lambda o: o["id"])
+        ocorrencias = ocorrencias_da_equipe(dados["ocorrencias"], equipe)
         grafo, pontes = montar_grafo(equipe["base"], ocorrencias)
         distancias, tempos = gerar_matrizes(grafo, len(ocorrencias) + 1, argumentos.velocidade)
         itens = preparar_itens(ocorrencias, tempos)

@@ -14,7 +14,7 @@
 -- Regra de prioridade (a mesma que a API Java aplica):
 --   NR_PRIORIDADE = peso da categoria x 10
 --                 + 2 por apoio recebido
---                 + 15 se estiver a ate 200 m de um ponto sensivel
+--                 + 15 uma vez se houver ponto sensível a até 200 m
 --                 + 10 se quem registrou for prioritario (idoso/PcD)
 --
 -- Os IDs sao informados para deixar os relacionamentos legiveis.
@@ -64,7 +64,7 @@ VALUES (7, 'Lixeira pública', 'Lixeira quebrada, cheia ou inexistente', 15, 1, 
 
 
 -- -------------------------------------------------------------
--- GS_CIDADAO (simulados; emails no dominio reservado exemplo.com)
+-- GS_CIDADAO (cidadãos e e-mails fictícios)
 -- -------------------------------------------------------------
 INSERT INTO GS_CIDADAO (ID_CIDADAO, NM_CIDADAO, DS_EMAIL, NR_TELEFONE, FL_PRIORITARIO, DT_CADASTRO)
 VALUES (1, 'Maria Aparecida Souza', 'maria.souza@exemplo.com', '(11) 90000-0001', 'S', TO_DATE('2026-06-02', 'YYYY-MM-DD'));

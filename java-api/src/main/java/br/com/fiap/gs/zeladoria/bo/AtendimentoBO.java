@@ -12,6 +12,7 @@ import br.com.fiap.gs.zeladoria.model.StatusOcorrencia;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -28,12 +29,15 @@ public class AtendimentoBO {
     private final OcorrenciaDAO ocorrenciaDAO;
     private final OcorrenciaBO ocorrenciaBO;
     private final EquipeBO equipeBO;
+    private final DistritoBO distritoBO;
 
-    public AtendimentoBO(AtendimentoDAO dao, OcorrenciaDAO ocorrenciaDAO, OcorrenciaBO ocorrenciaBO, EquipeBO equipeBO) {
+    public AtendimentoBO(AtendimentoDAO dao, OcorrenciaDAO ocorrenciaDAO, OcorrenciaBO ocorrenciaBO,
+                         EquipeBO equipeBO, DistritoBO distritoBO) {
         this.dao = dao;
         this.ocorrenciaDAO = ocorrenciaDAO;
         this.ocorrenciaBO = ocorrenciaBO;
         this.equipeBO = equipeBO;
+        this.distritoBO = distritoBO;
     }
 
     public List<Atendimento> listar(Long idOcorrencia) {
@@ -50,7 +54,7 @@ public class AtendimentoBO {
         ocorrenciaDAO.travar(a.getIdOcorrencia());
         Ocorrencia ocorrencia = ocorrenciaBO.buscar(a.getIdOcorrencia());
         validarOcorrenciaPendente(ocorrencia);
-        validarEquipeAtiva(a.getIdEquipe());
+        validarEquipe(a.getIdEquipe(), ocorrencia);
         validarDataAgendada(a, ocorrencia);
 
         a.setStatus(StatusAtendimento.AGENDADO);
@@ -90,7 +94,7 @@ public class AtendimentoBO {
         if (dados.getStatus() == StatusAtendimento.AGENDADO
                 || (dados.getStatus() == StatusAtendimento.CONCLUIDO
                 && dados.getIdEquipe() != null && !dados.getIdEquipe().equals(atual.getIdEquipe()))) {
-            validarEquipeAtiva(dados.getIdEquipe());
+            validarEquipe(dados.getIdEquipe(), ocorrencia);
         }
 
         switch (dados.getStatus()) {
@@ -100,8 +104,11 @@ public class AtendimentoBO {
                 dao.atualizar(dados);
             }
             case CONCLUIDO -> {
+                LocalDate hoje = Datas.hoje();
                 if (dados.getDataExecucao() == null) {
-                    dados.setDataExecucao(Datas.hoje());
+                    dados.setDataExecucao(hoje);
+                } else if (dados.getDataExecucao().isAfter(hoje)) {
+                    throw new RegraNegocioException("A data de execução não pode ser posterior a hoje");
                 }
                 // Se a equipe resolveu antes do dia marcado, a data agendada passa a ser o dia da execucao
                 if (dados.getDataExecucao().isBefore(dados.getDataAgendada())) {
@@ -155,10 +162,14 @@ public class AtendimentoBO {
         }
     }
 
-    private void validarEquipeAtiva(Long idEquipe) {
+    private void validarEquipe(Long idEquipe, Ocorrencia ocorrencia) {
         Equipe equipe = equipeBO.buscar(idEquipe);
         if (!equipe.getAtiva()) {
             throw new RegraNegocioException("A equipe " + equipe.getNome() + " está inativa");
+        }
+        Long subprefeitura = distritoBO.buscar(ocorrencia.getIdDistrito()).getIdSubprefeitura();
+        if (!subprefeitura.equals(equipe.getIdSubprefeitura())) {
+            throw new RegraNegocioException("A equipe deve pertencer à mesma subprefeitura do distrito da ocorrência");
         }
     }
 

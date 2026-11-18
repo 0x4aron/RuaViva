@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/** Acesso a tabela GS_EQUIPE. */
 @Repository
 public class EquipeDAO {
 

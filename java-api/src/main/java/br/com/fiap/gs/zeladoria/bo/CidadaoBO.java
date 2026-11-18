@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/** Regras de negocio de Cidadao. */
 @Service
 public class CidadaoBO {
 

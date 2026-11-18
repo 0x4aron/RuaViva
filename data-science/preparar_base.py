@@ -5,13 +5,9 @@ Fonte: Portal de Dados Abertos da Prefeitura de Sao Paulo, conjunto "Dados do SP
 (licenca CC0): https://dados.prefeitura.sp.gov.br/dataset/dados-do-sp156
 Arquivos usados: "Dados do SP156 - 1o, 2o, 3o e 4o TRI 2025" (CSV), salvos em dados/raw/.
 
-O que este script faz:
-  1. junta os 4 trimestres de 2025;
-  2. mantem so os temas de zeladoria ("Rua e bairro" e "Lixo e limpeza");
-  3. mantem so os assuntos de manutencao fisica da rua (tira PSIU, fiscalizacao etc.);
-  4. padroniza os nomes e mantem so as 32 subprefeituras;
-  5. guarda so as colunas usadas, sem endereco (nao ha dado pessoal na base original);
-  6. salva em dados/sp156_zeladoria_2025.csv.gz (CSV compactado).
+Seleciona os assuntos de manutenção da rua nos dois temas de zeladoria. Depois de
+padronizar os nomes, mantém os órgãos com pelo menos 3.000 pedidos no recorte.
+Em 2025, ficaram as 32 subprefeituras. O CSV compactado não inclui endereços.
 
 Uso: python preparar_base.py
 """
@@ -72,8 +68,6 @@ def main():
 
     # Nomes antigos da mesma subprefeitura -> nome atual
     base["subprefeitura"] = base["subprefeitura"].replace(NOMES_ANTIGOS)
-    # Mantem so as 32 subprefeituras (tira orgaos como "Superintendencia das Usinas de Asfalto"
-    # e "Prefeitura Regional nao encontrada", que somam menos de 0,5% dos pedidos)
     contagem = base["subprefeitura"].value_counts()
     base = base[base["subprefeitura"].isin(contagem[contagem >= 3000].index)]
     print(f"Subprefeituras: {base['subprefeitura'].nunique()}")

@@ -1,4 +1,4 @@
-! Cisco 2960-24TT novo no Packet Tracer 8.2.
+! Switch da base de zeladoria (Cisco 2960-24TT) · Packet Tracer 9.0.1.
 ! Todas as senhas abaixo sao exemplos: troque antes da entrega.
 enable
 configure terminal

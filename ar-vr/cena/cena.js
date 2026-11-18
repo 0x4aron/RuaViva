@@ -100,13 +100,13 @@ await Promise.all([
 ]);
 await document.fonts.ready;
 
-// Maquete longitudinal; a rua corre no eixo Z. A cavidade é um recorte real.
+// A rua acompanha o eixo Z da maquete.
 box(60, 1.2, 86, 0, -.8, 0, mat('#a79688'));
 const road = new THREE.Shape();
 road.moveTo(-5, -37); road.lineTo(5, -37); road.lineTo(5, 37); road.lineTo(-5, 37); road.closePath();
 const holePath = new THREE.Path();
 holePath.absellipse(-1.4, 12, 1.25, .92, 0, Math.PI * 2, true); road.holes.push(holePath);
-// Recorte na borda: as placas afundam de fato, sem serem cobertas pelo asfalto.
+// O recorte no asfalto deixa espaço para o movimento das placas da sarjeta.
 const gutterPath = new THREE.Path();
 gutterPath.moveTo(4.22, -1.95); gutterPath.lineTo(4.22, 1.95);
 gutterPath.lineTo(4.99, 1.95); gutterPath.lineTo(4.99, -1.95); gutterPath.closePath();
@@ -391,11 +391,11 @@ function cameraValue(t, key) {
   });
 }
 const captions = [
-  [5, 13, 'Bueiro entupido, sarjeta afundada, buraco: o morador vê todo dia.'],
-  [13, 21, 'Cada vizinho afetado apoia o registro.'],
-  [21, 29, 'A fila prioriza gravidade, apoios e quem está perto de escola, UBS ou creche.'],
-  [29, 38, 'A equipe recebe a rota do dia calculada para atender mais em menos tempo.'],
-  [38, 44, 'Resolvido. E todo mundo acompanha.']
+  [5, 13, 'Bueiro entupido, sarjeta afundada e buraco perto da creche.'],
+  [13, 21, 'Os vizinhos apoiam os registros que também os afetam.'],
+  [21, 29, 'O bueiro soma 71 pontos. A escola a 40 m conta 15.'],
+  [29, 38, 'A van segue a rota entre os três reparos.'],
+  [38, 44, 'O marcador fica verde quando a equipe termina o reparo.']
 ];
 const $ = id => document.getElementById(id);
 const ui = { opening: $('abertura'), ending: $('fecho'), caption: $('legenda'), identity: $('identidade'), note: $('nota') };
@@ -447,7 +447,7 @@ window.renderizar = function renderizar(segundos) {
       item.group.position.lerp(queued, queueBlend);
     }
     item.group.quaternion.copy(camera.quaternion);
-    // Um único marco troca cor, símbolo e etiqueta, sem estados intermediários ambíguos.
+    // A cor, o símbolo e a etiqueta mudam ao fim do reparo.
     const resolved = t >= item.repairAt[1];
     item.material.color.copy(resolved ? greenColor : redColor);
     item.faceMaterial.map = resolved ? checkMap : item.numberMap;

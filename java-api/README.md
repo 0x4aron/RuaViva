@@ -19,7 +19,7 @@ Fluxo de uma requisição: **Controller → BO → DAO → Oracle**.
 
 ## Regras de negócio (camada BO)
 
-- **Prioridade da ocorrência:** peso da categoria × 10, + 2 por apoio, + 15 se estiver a até 200 m de um ponto sensível (distância pela fórmula de Haversine), + 10 se quem registrou é idoso ou PcD. É recalculada sempre que algo de que ela depende muda: um apoio é dado ou retirado, um ponto sensível muda, o peso de uma categoria muda ou um cidadão passa a ser (ou deixa de ser) prioritário.
+- **Prioridade da ocorrência:** peso da categoria × 10, + 2 por apoio, + 15 uma vez se houver ponto sensível a até 200 m (distância pela fórmula de Haversine), + 10 se quem registrou é idoso ou PcD. É recalculada sempre que algo de que ela depende muda: um apoio é dado ou retirado, um ponto sensível muda, o peso de uma categoria muda ou um cidadão passa a ser (ou deixa de ser) prioritário.
 - **Ciclo de vida da ocorrência:**
 
   ```
@@ -29,17 +29,17 @@ Fluxo de uma requisição: **Controller → BO → DAO → Oracle**.
   ABERTA / EM_ANDAMENTO ──PUT com status CANCELADA──▶ CANCELADA
   ```
 
-  O status muda pelos atendimentos. Pelo `PUT /ocorrencias/{id}`, a única mudança de status aceita é cancelar, o que também cancela as visitas agendadas. Ocorrências `RESOLVIDA` ou `CANCELADA` são histórico e não podem mais ser alteradas. Quem registrou e a data de abertura nunca mudam.
+  O status muda pelos atendimentos. Pelo `PUT /ocorrencias/{id}`, a única mudança de status aceita é cancelar, o que também cancela as visitas agendadas. O PUT bloqueia a edição de ocorrências resolvidas ou canceladas. O DELETE também bloqueia a exclusão de ocorrências resolvidas. Quem registrou e a data de abertura nunca mudam.
 - **Apoio ("também me afeta"):** o cidadão não pode apoiar a própria ocorrência nem apoiar a mesma ocorrência duas vezes. Ocorrências resolvidas ou canceladas não recebem apoio.
 - **Atendimento:**
-  - Só equipes ativas podem ser agendadas, e a data agendada não pode ser anterior à abertura da ocorrência.
+  - A equipe precisa estar ativa e pertencer à subprefeitura do distrito da ocorrência. A API aceita agendamentos a partir da data de abertura.
   - Só atendimentos `AGENDADO` podem ser alterados. `CONCLUIDO` e `CANCELADO` são histórico, e um atendimento concluído não pode ser excluído.
-  - Ao concluir, as outras visitas agendadas para a mesma ocorrência são canceladas. Se a equipe concluir antes do dia marcado, a data agendada passa a ser o dia da execução.
+  - A data de execução pode ser, no máximo, hoje. Ao concluir, as outras visitas agendadas para a mesma ocorrência são canceladas. Se a equipe concluir antes do dia marcado, a data agendada passa a ser o dia da execução.
 - **Cidadão:** o email é único. Se `prioritario` não for enviado no cadastro, vale `false`; se não for enviado no PUT, o valor atual é mantido.
 - **Equipe:** se `ativa` não for enviada no cadastro, vale `true`; se não for enviada no PUT, o valor atual é mantido.
 - **Categoria:** o peso vai de 1 a 5. A API oferece uma **régua sugerida** (`GET /categorias/regua-peso`) para o gestor consultar ao cadastrar uma categoria; ela não é obrigatória.
 - **Datas:** "hoje" é sempre calculado no horário de São Paulo, mesmo com o servidor do Render em UTC.
-- **CORS liberado:** uma página web em outro endereço (o futuro front-end) pode chamar a API.
+- **CORS liberado:** o site em `web/` chama a API de outro endereço.
 
 ## Tratamento de exceções
 

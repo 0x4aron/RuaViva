@@ -3,7 +3,6 @@ package br.com.fiap.gs.zeladoria.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-/** Tabela GS_SUBPREFEITURA. */
 public class Subprefeitura {
 
     private Long idSubprefeitura;

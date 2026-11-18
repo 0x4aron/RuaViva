@@ -9,12 +9,12 @@
 | **Nome da CitizenTech** | RuaViva (Equipe RuaViva) |
 | **Cidade e bairro** | São Paulo (SP), Liberdade, Rua Barão de Iguape (Subprefeitura Sé) |
 | **Cidadão beneficiado** | Moradores do bairro, em especial idosos, pessoas com deficiência e quem anda com carrinho de bebê, que dependem de ruas e calçadas em bom estado |
-| **Problema, em uma frase** | O morador registra buracos, lixo acumulado e calçadas quebradas na prefeitura, mas não sabe quando o problema vai ser resolvido, nem se outras pessoas já reclamaram do mesmo problema, e os casos que afetam mais gente não recebem prioridade |
-| **Como funciona** | O cidadão registra a ocorrência e apoia registros de vizinhos ("também me afeta"). A plataforma prioriza a fila pelo impacto: gravidade do problema, quantas pessoas apoiaram, proximidade de escola, UBS ou casa de repouso, e se quem registrou é idoso ou pessoa com deficiência. Com os dados do SP156, prevê a demanda de cada região e a chance de um pedido ser resolvido em até 7 dias. Também monta a rota diária da equipe de campo |
+| **Problema, em uma frase** | Quem encontra um problema na rua precisa saber se um vizinho já avisou e se a prefeitura marcou uma visita. |
+| **Como funciona** | No site, o morador registra problemas e apoia os dos vizinhos. O gestor agenda visitas pela fila. A prioridade considera a gravidade, os apoios, a distância a pontos sensíveis e a condição prioritária do autor. No notebook, estimamos a demanda diária e o risco de atraso. No terminal, planejamos as visitas de uma equipe dentro da jornada. |
 | **O que cada parte faz** | Ver tabela abaixo |
 | **Link do repositório** | <https://github.com/0x4aron/RuaViva> |
-| **Indicador de impacto** | Tempo médio até a resolução · % de ocorrências resolvidas em até 7 dias · nº de registros duplicados unificados |
-| **ODS conectados** | ODS 11 (Cidades e comunidades sustentáveis) · ODS 10 (Redução das desigualdades) · ODS 9 (Indústria, inovação e infraestrutura) |
+| **Indicadores propostos** | Tempo médio até a resolução, percentual resolvido em até sete dias e apoios dados a partir do aviso de registro parecido. |
+| **ODS conectados** | ODS 11 pela conservação de ruas e calçadas. ODS 10 pela prioridade a idosos e pessoas com deficiência. Para o ODS 9, usamos os registros por endereço para planejar a manutenção da infraestrutura do bairro, como bueiros e sarjetas. |
 
 ### O que cada parte faz
 
@@ -22,13 +22,13 @@
 |---|---|---|
 | [`agile/`](agile/) | Agile Methodology | Personas, casos de uso, backlog (MoSCoW + story points), protótipo de telas, pitch |
 | [`ar-vr/`](ar-vr/) | AR-VR Modelling | Vídeo 3D: uma rua do bairro com as ocorrências e a solução em ação |
-| [`data-science/`](data-science/) | Data Science | Dados reais do SP156: regressão linear para a demanda diária por subprefeitura e regressão logística para estimar se a solicitação é atendida em até 7 dias |
+| [`data-science/`](data-science/) | Data Science | Dados reais do SP156: regressão linear para a demanda diária por subprefeitura e regressão logística para estimar o risco de o pedido passar de sete dias |
 | [`database/`](database/) | Database Design | Modelo relacional Oracle e scripts DDL, DML e DQL |
 | [`java-api/`](java-api/) | DDD - Java | API REST em Spring Boot + Oracle, publicada em [ruaviva-api.onrender.com](https://ruaviva-api.onrender.com/swagger-ui.html) |
-| [`web/`](web/) | (todas) | Site do MVP, publicado em [ruaviva.onrender.com](https://ruaviva.onrender.com): morador registra e apoia problemas; gestor vê a fila e agenda equipes. Sistema de design em [`web/DESIGN.md`](web/DESIGN.md), espelhado no Figma |
+| [`web/`](web/) | (todas) | Site do MVP, publicado em [ruaviva.onrender.com](https://ruaviva.onrender.com): morador registra e apoia problemas; gestor vê a fila e agenda equipes. Sistema de design em [`web/DESIGN.md`](web/DESIGN.md) |
 | [`docs/`](docs/) | (todas) | Documentos das entregas em HTML, que viram PDF com `./docs/gerar_pdfs.sh` |
 | [`dynamic-programming/`](dynamic-programming/) | Dynamic Programming | Rota da equipe de campo (grafos) e escolha das ocorrências dentro do orçamento (tabulação/memoização) |
-| [`network/`](network/) | Network Architect | Rede da base de zeladoria da subprefeitura no Packet Tracer |
+| [`network/`](network/) | Network Architect | Rede da base de zeladoria da subprefeitura no Packet Tracer 9.0.1 |
 
 ## Como rodar o MVP
 
@@ -38,7 +38,7 @@
 
 ## Design
 
-O visual segue a sinalização de rua de São Paulo: a placa azul é o endereço, o amarelo da faixa de pedestre é a ação principal e o vermelho é só para urgência. Os tokens (cores, espaços, raios, tipografia) têm o mesmo nome no CSS e no Figma, onde estão os componentes e as telas da versão atual.
+Usamos placas azuis para identificar endereços, amarelo para a ação principal e verde para serviços resolvidos. As cores e os componentes estão em [web/DESIGN.md](web/DESIGN.md).
 
 ## Equipe
 

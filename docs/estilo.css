@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap');
 
-:root { --placa:#1A4D8F; --faixa:#F2C200; --urgente:#C8102E; --resolvido:#1E7D4F; --texto:#1F2A30; --suave:#4A5961; --linha:#D3DAD7; }
+:root { --placa:#1A4D8F; --faixa:#F2C200; --urgente:#C8102E; --resolvido:#176B43; --texto:#1F2A30; --suave:#4A5961; --linha:#D3DAD7; }
 @page { size:A4; margin:18mm;
   @bottom-left { content:'RuaViva · FIAP · GS 2026.2'; font:8pt 'Atkinson Hyperlegible',sans-serif; color:#4A5961; }
   @bottom-right { content:counter(page); font:9pt 'Barlow Semi Condensed',sans-serif; color:#1A4D8F; }
@@ -70,7 +70,7 @@ code { font-family:'DejaVu Sans Mono',monospace; font-size:.87em; overflow-wrap:
 .pagina-paisagem .mermaid { margin:0; line-height:1; }
 .diagrama-casos { margin:0; }
 .diagrama-casos img { width:100%; height:auto; max-height:175mm; object-fit:contain; }
-/* Compact section furniture leaves room for the landscape DER. */
+/* O cabeçalho compacto deixa espaço para o DER na página horizontal. */
 .diagrama-der h2 { margin:4mm 0 3mm; }
 .diagrama-der > p { font-size:10pt; margin-bottom:3mm; }
 @media screen and (min-width: 1150px) {
@@ -116,3 +116,5 @@ code { font-family:'DejaVu Sans Mono',monospace; font-size:.87em; overflow-wrap:
 
 .diagrama-dm figure img { max-height: 128mm; width: auto; max-width: 100%; display: block; margin: 0 auto; }
 .diagrama-dm h2 { margin-top: 0; }
+
+pre.running { font-size:7pt; line-height:1.25; column-count:2; column-gap:6mm; }

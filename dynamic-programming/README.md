@@ -11,7 +11,8 @@ com foco na Rua Barão de Iguape. Moradores registram problemas, o sistema
 atribui prioridades e o gestor da subprefeitura organiza os atendimentos.
 
 Este programa escolhe ocorrências pendentes (`ABERTA` e `EM_ANDAMENTO`) para
-uma equipe e ordena suas visitas. O objetivo é atender a maior soma de
+uma equipe e ordena suas visitas. Só entram ocorrências da subprefeitura da equipe,
+sem visita agendada para outra equipe. O objetivo é atender a maior soma de
 prioridades possível no modelo da mochila e respeitar a jornada considerando
 serviço, deslocamento e retorno à base. A equipe padrão é a Equipe A, ID 1,
 com 8 horas disponíveis, saída às 08:00 e velocidade média de 12 km/h.
@@ -26,7 +27,8 @@ e rota**. A duração final sempre é conferida antes de exibir o plano.
 `dados/liberdade.json` foi extraído de `../database/02_dml.sql`, preservando os
 valores das sete categorias, cinco equipes e respectivas bases, cinco pontos
 sensíveis e cinco ocorrências pendentes. Cada ocorrência contém ID, categoria,
-descrição, endereço, coordenadas, status, prioridade e horas da categoria.
+descrição, endereço, coordenadas, status, prioridade, horas da categoria,
+subprefeitura e equipes com atendimento agendado.
 
 | ID | Categoria | Status | Prioridade | Serviço |
 |---|---|---|---:|---:|
@@ -49,19 +51,16 @@ preservados como contexto; o programa não recalcula nem duplica esses bônus.
 
 ### Integração opcional com Java
 
-Com `--api`, `urllib.request` consulta `GET /ocorrencias/fila`, `/categorias`
-e `/equipes`, com timeout de 5 segundos por requisição. Os campos camelCase
-dos modelos Java são convertidos para o mesmo formato interno do JSON.
-Só entram registros recebidos com status `ABERTA` ou `EM_ANDAMENTO`.
+Com `--api`, o programa consulta `/ocorrencias`, `/categorias`, `/equipes`,
+`/distritos` e `/atendimentos`, com timeout de 5 segundos por requisição.
+O distrito informa a subprefeitura da ocorrência. Entre os atendimentos,
+somente os de status `AGENDADO` reservam a visita. Assim, tanto na API
+quanto no JSON local, a equipe pode planejar suas próprias visitas agendadas.
+Se houver também um agendamento de outra equipe, a ocorrência fica fora do plano.
+
 Se ocorrer falha de rede, JSON inválido ou inconsistência nos campos utilizados,
 o programa avisa no terminal e usa integralmente o retrato local.
-
-**Diferença da fila:** na implementação Java deste repositório, `/ocorrencias/fila`
-retorna ocorrências abertas sem atendimento. Portanto, a ocorrência 5, que já
-está agendada, não é retornada por esse endpoint. O modo API respeita a fila
-recebida e pode gerar outro plano; não mistura ocorrências locais com dados
-atuais. Os três endpoints não fornecem pontos sensíveis, então essa lista fica
-vazia no modo API, sem afetar o cálculo que usa a prioridade já recebida.
+Uma consulta válida sem ocorrências elegíveis produz um aviso de fila vazia.
 
 ## Como as técnicas foram usadas
 
@@ -201,9 +200,10 @@ também funciona executar `python dynamic-programming/main.py` a partir da raiz.
 
 `--horas` aceita de 0 a 24; valores fracionários usam ponto decimal.
 `--velocidade` aceita qualquer número positivo finito em km/h. IDs inexistentes
-e equipes inativas geram erro claro. A opção `--equipe` muda a base e a jornada,
-mas mantém a fila da Liberdade: equipes de outras subprefeituras representam
-uma simulação de apoio, sem verificar competência territorial ou especialidade.
+e equipes inativas geram erro claro. A opção `--equipe` muda a base, a jornada e as ocorrências
+elegíveis. No retrato local, a ocorrência 5 está agendada para a equipe 1
+da Sé. A equipe 2 também é da Sé, mas não pode incluí-la. A equipe 4 é
+da Mooca e não encontra ocorrências no seu território nesse retrato.
 
 ### Comparação e testes
 
@@ -220,11 +220,11 @@ pretensão de benchmark rigoroso. Os tempos variam entre execuções. Por exempl
 com 8 visitas foram 1.025 estados memoizados contra 40.320 permutações. No caso
 de 4 visitas, a gulosa percorreu 4.722,6 m, contra 3.955,2 m da solução ótima.
 
-A validação executou o programa normal, `--comparar` e **17 testes, todos
+A validação executou o programa normal, `--comparar` e **19 testes, todos
 aprovados**. Os testes incluem caminhos conhecidos de Dijkstra, componentes
 desconectados, 150 casos aleatórios de mochila com semente fixa, rotas de zero
 a sete visitas contra permutações, começo/fim na base, dados do SQL, API
-simulada, fallback, fila vazia e correção do limite ao incluir a volta.
+simulada, filtro territorial, reserva de visita por equipe, fallback, fila vazia e correção do limite ao incluir a volta.
 A integração HTTP foi testada com mocks da biblioteca padrão, sem depender
 de uma instância Java e Oracle em execução.
 
@@ -237,7 +237,7 @@ Saída capturada de `python3 main.py`, com os dados locais e opções padrão:
 RUAVIVA | PLANO DO DIA — LIBERDADE / SÃO PAULO
 ========================================================================
 Fonte: database/02_dml.sql
-Equipe: Zeladoria Se - Equipe A (ID 1) | Jornada: 8 h
+Equipe: Zeladoria Sé - Equipe A (ID 1) | Jornada: 8 h
 Base: -23.5503000, -46.6339000
 Dados: 5 pendentes | 7 categorias | 5 equipes
 Grafo: 12 nós / 27 arestas / 1 pontes extras
@@ -245,13 +245,13 @@ Velocidade média: 12 km/h | Distância: Haversine × 1,3
 
 MOCHILA | 31/32 blocos de 15 min usados
   #03 Limpeza de bueiro | prioridade 71 | 9 blocos
-      Rua Barao de Iguape, 288 — HOJE: integra a melhor soma de prioridades da mochila
+      Rua Barão de Iguape, 288 — HOJE: integra a melhor soma de prioridades da mochila
   #05 Limpeza de bueiro | prioridade 59 | 9 blocos
-      Rua Barao de Iguape, 277 — HOJE: integra a melhor soma de prioridades da mochila
+      Rua Barão de Iguape, 277 — HOJE: integra a melhor soma de prioridades da mochila
   #07 Guias e sarjetas | prioridade 45 | 17 blocos
-      Rua Barao de Iguape, 664 — AMANHÃ: não cabe junto à combinação escolhida
+      Rua Barão de Iguape, 664 — AMANHÃ: não cabe junto à combinação escolhida
   #08 Guias e sarjetas | prioridade 59 | 17 blocos
-      Rua Barao de Iguape, 319 — AMANHÃ: não cabe junto à combinação escolhida
+      Rua Barão de Iguape, 319 — AMANHÃ: não cabe junto à combinação escolhida
   #10 Tapa-buraco | prioridade 57 | 13 blocos
       Rua Doutor Siqueira Campos, 23 — HOJE: integra a melhor soma de prioridades da mochila
 
@@ -289,8 +289,7 @@ Horários estimados; a soma considera os tempos antes do arredondamento.
   trecho curto pode mostrar partida e chegada no mesmo minuto. A conferência
   da jornada usa tempos completos, incluindo a volta à base.
 - O retrato local não se atualiza sozinho. O modo API pode receber uma fila
-  diferente porque exclui atendimentos já agendados; uma fila vazia válida
-  permanece vazia e não aciona fallback.
+  diferente conforme as ocorrências e os agendamentos registrados no servidor.
 - A ferramenta simula um plano para uma equipe por vez; não distribui tarefas
   entre várias equipes, não grava atendimentos nem altera a API ou o banco.
   “Amanhã” significa adiado, sem reserva automática para uma data futura.

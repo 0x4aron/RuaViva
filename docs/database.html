@@ -37,13 +37,12 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </li>
 <li><a href="#tabelas">3. Tabelas e integridade</a>
 </li>
-<li><a href="#modelo">4. Diagrama do modelo lógico</a>
+<li><a href="#modelo">4. Diagrama do modelo relacional</a>
 </li>
 <li><a href="#scripts">5. Scripts e consultas</a>
 </li>
 </ol>
 </nav>
-<p class="nota">Os títulos são links para as seções. A paginação final acompanha o conteúdo e as imagens inseridas.</p>
 </section>
 <section class="secao" id="objetivo">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <h2>1. Objetivo e escopo</h2>
 <p>Estruturar os dados do RuaViva para registrar problemas de zeladoria, indicar impacto coletivo e organizar atendimentos na Liberdade, com foco na Rua Barão de Iguape, Subprefeitura Sé.</p>
 <p>O modelo Oracle tem nove tabelas, chaves geradas por IDENTITY e integridade declarada por PK, FK, UNIQUE e CHECK. É a base da API Java e fornece coordenadas e tempos para o planejamento de campo.</p>
-<p>Os scripts usam sintaxe Oracle 19c ou superior; o README registra testes em Oracle XE 21. A implantação acadêmica usa Oracle FIAP.</p>
+<p>Os scripts usam sintaxe Oracle 19c ou superior; testamos a carga no Oracle XE 21. A implantação acadêmica usa Oracle FIAP.</p>
 </section>
 <section class="secao" id="funcionalidades">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
@@ -65,8 +64,8 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <li>Consultar problemas da rua, indicadores por categoria e fila sem atendimento válido.</li>
 </ol>
 <div class="destaque">
-<p class="formula">Peso × 10 + 2 por apoio + 15 por ponto sensível a até 200 m + 10 por autor prioritário.</p>
-<p>A API calcula e atualiza a prioridade; o DML já contém valores calculados com essa regra.</p>
+<p class="formula">Peso × 10 + 2 por apoio + 15 uma única vez se houver ponto sensível a até 200 m + 10 por autor prioritário.</p>
+<p>A API e o DML usam a mesma regra. No bueiro da Barão de Iguape, 288, o peso 4 vale 40 pontos. Três apoios somam 6, a escola fictícia a 40 m soma 15 e o autor prioritário soma 10. Total de 71 pontos.</p>
 </div>
 <h3>Origem dos dados</h3>
 <p>São 69 linhas demonstrativas: 15 ocorrências, das quais nove na Barão de Iguape. Endereços, coordenadas, tipos e datas vêm de solicitações SP156 do 3º trimestre de 2026. Cidadãos, apoios, equipes, descrições e atendimentos são simulados; quatro pontos sensíveis são fictícios. Prazos e pesos são referências da equipe.</p>
@@ -104,15 +103,15 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </table>
 <h3>Integridade referencial</h3>
 <p>As dez FKs ligam cada registro filho a um pai obrigatório. A exclusão de ocorrência propaga-se a apoios e atendimentos por ON DELETE CASCADE. Outras exclusões dependem da ausência de filhos. A API acrescenta proteção ao histórico: ocorrência resolvida e atendimento concluído não podem ser excluídos.</p>
-<p>Coordenadas têm limites de latitude/longitude. Datas de resolução não antecedem abertura; execução não antecede agendamento. VARCHAR2 usa tamanho em caracteres (CHAR), preservando textos com acentos. A combinação (ID_OCORRENCIA, ID_CIDADAO) é única em GS_APOIO.</p>
+<p>O banco valida latitude e longitude. A resolução deve ocorrer a partir da abertura, e a execução, a partir do agendamento. Usamos VARCHAR2 com tamanho em caracteres nos campos de texto.</p>
 </section>
 <section class="secao pagina-paisagem diagrama-dm" id="modelo">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
 </div>
-<h2>4. Diagrama do modelo lógico (Oracle Data Modeler)</h2>
-<figure><img src="img/modelo-logico-data-modeler.png" alt="Modelo lógico oficial do RuaViva, exportado do Oracle Data Modeler."><figcaption>Modelo lógico oficial do RuaViva, exportado do Oracle Data Modeler.</figcaption>
+<h2>4. Diagrama do modelo relacional (Oracle Data Modeler)</h2>
+<figure><img src="img/modelo-logico-data-modeler.png" alt="Modelo relacional importado do DDL. As nove tabelas se ligam por dez chaves estrangeiras."><figcaption>Modelo relacional importado do DDL. As nove tabelas se ligam por dez chaves estrangeiras.</figcaption>
 </figure>
-<p>Gerado no Oracle SQL Developer Data Modeler 24.3 a partir de database/01_ddl.sql (Arquivo → Importar → Arquivo DDL, Oracle Database 21c): 19 instruções importadas, nenhuma com falha, resultando nas 9 tabelas e 10 chaves estrangeiras do script. O projeto do Data Modeler está em database/modelo/RuaViva.dmd.</p>
+<p>No Oracle SQL Developer Data Modeler 24.3, importamos <code>database/01_ddl.sql</code> para Oracle Database 21c. A figura mostra a vista relacional de <code>database/modelo/RuaViva.dmd</code>.</p>
 </section>
 <section class="secao" id="scripts">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
@@ -136,7 +135,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </tr>
 </tbody>
 </table>
-<p>Execução: 01_ddl.sql → 02_dml.sql → 03_dql.sql. Usar 00_drop.sql apenas para recriação consciente. Abrir arquivos em UTF-8 no SQL Developer.</p>
+<p>Execução: 01_ddl.sql → 02_dml.sql → 03_dql.sql. O script opcional 00_drop.sql apaga os dados das nove tabelas. Abrir arquivos em UTF-8 no SQL Developer.</p>
 <table class="">
 <thead>
 <tr><th scope="col">Consulta</th><th scope="col">Recursos SQL</th><th scope="col">Finalidade</th>

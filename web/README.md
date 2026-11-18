@@ -6,7 +6,7 @@ Site responsivo em **HTML, CSS e JavaScript puro** que usa a API Java (`java-api
 
 | Página | Quem usa | O que faz |
 |---|---|---|
-| `index.html` | Todos | Entrada: escolher "Sou morador" (um dos moradores fictícios) ou "Trabalho na subprefeitura" |
+| `index.html` | Todos | Entrada: escolher um morador fictício e clicar em "Entrar como morador", ou usar "Entrar como gestor" |
 | `mapa.html` | Morador | Mapa e lista dos problemas do bairro, com cor por status |
 | `registrar.html` | Morador | Registrar problema: categoria, ponto no mapa (ou GPS), endereço e descrição. **Avisa quando já existe um problema parecido a até 60 m**, para o morador apoiar em vez de repetir |
 | `ocorrencia.html` | Morador e gestor | Detalhe: número local, botão **"Isso também me afeta"**, linha do tempo, prazo e opções para copiar, compartilhar ou imprimir. Links abrem em modo de leitura sem perfil. |
@@ -14,13 +14,13 @@ Site responsivo em **HTML, CSS e JavaScript puro** que usa a API Java (`java-api
 | `gestor.html` | Gestor | **Fila por prioridade**: agendar equipe, concluir ou cancelar visita |
 | `categorias.html` | Gestor | Cadastrar categoria com a **régua de peso sugerida** (vinda de `GET /categorias/regua-peso`) |
 
-Nesta versão não há login: o perfil escolhido na entrada fica guardado no navegador (`localStorage`).
+A escolha de perfil é local e fica guardada no navegador (`localStorage`).
 
 ## Identidade visual
 
 - **Cores da rua:** azul das placas de rua de SP, asfalto, amarelo da faixa de pedestre e vermelho das lanternas da Liberdade (`css/estilo.css`).
 - **Letras:** Atkinson Hyperlegible (feita para pessoas com baixa visão) e Barlow Semi Condensed (títulos, lembra sinalização viária).
-- **Acessibilidade:** texto a partir de 18px, alto contraste e foco visível no teclado.
+- **Acessibilidade:** corpo de 18 px e textos auxiliares menores. Os controles do morador têm pelo menos 48 px de altura. No gestor, a referência de toque é 44 px. Os marcadores do mapa têm área de 44 × 44 px e cada registro também abre pela lista.
 - **Elemento marcante:** o endereço de cada problema aparece como uma placa de rua.
 
 ## Como rodar
@@ -35,7 +35,7 @@ python3 -m http.server 5500 --directory web
 
 4. Abra <http://localhost:5500>.
 
-Para publicar, a pasta `web/` pode ir para qualquer hospedagem de site estático (Render Static Site, GitHub Pages...). Antes, troque `API_URL` pelo endereço da API no Render.
+Publicamos a pasta `web/` como site estático. O endereço da API no Render já está em `js/config.js`. Para usar uma API local, ajuste `API_URL`.
 
 ## Arquivos
 
@@ -49,7 +49,7 @@ web/
 └── *.html            uma página por tela
 ```
 
-## Redesenho v2
+## Organização do site
 
 A especificação visual está em `DESIGN.md`. Os componentes compartilhados ficam em
 `js/ui.js`, o mapa e a geocodificação em `js/mapa.js`, e cada tela tem um

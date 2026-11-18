@@ -8,13 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/** Acesso a tabela GS_SUBPREFEITURA. */
 @Repository
 public class SubprefeituraDAO {
 
     private final JdbcTemplate jdbc;
 
-    // Converte uma linha do banco em objeto Java
     private final RowMapper<Subprefeitura> mapper = (rs, i) -> {
         Subprefeitura s = new Subprefeitura();
         s.setIdSubprefeitura(rs.getLong("ID_SUBPREFEITURA"));

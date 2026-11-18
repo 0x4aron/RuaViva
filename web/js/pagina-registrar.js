@@ -83,6 +83,7 @@ function marcar(lat, lng, buscar = true, versao = novaEscolha(buscar)) {
   if (buscar) {
     $("logradouro").value = "";
     $("numero").value = "";
+    $("distrito").value = "";
   }
   $("local-escolhido").textContent = textoCoordenadas();
   verificarParecidas();
@@ -95,8 +96,11 @@ function preencherEndereco(resultado) {
   const endereco = enderecoGeografico(resultado);
   $("logradouro").value = nomeProprio(endereco.logradouro).slice(0, 120);
   $("numero").value = endereco.numero.slice(0, 10);
+  const bairro = chave(endereco.bairro.trim());
+  const distrito = apoio?.distritos.find((d) => chave(d.nome.trim()) === bairro);
+  $("distrito").value = distrito?.idDistrito ?? "";
   $("local-escolhido").textContent = endereco.logradouro
-    ? `Local escolhido: ${nomeProprio(endereco.logradouro)}${endereco.numero ? ", " + endereco.numero : ""} — ${nomeProprio(endereco.bairro)}`
+    ? `Local escolhido: ${nomeProprio(endereco.logradouro)}${endereco.numero ? ", " + endereco.numero : ""}${endereco.bairro ? " — " + endereco.bairro : ""}`
     : textoCoordenadas();
   salvarRascunho();
   if (passo === 3) atualizarResumo();
@@ -226,7 +230,7 @@ async function carregar() {
       const visual = categoriaVisual(c);
       return `<label class="opcao opcao-categoria"><input id="categoria-${c.idCategoria}" type="radio" name="categoria" value="${c.idCategoria}" aria-describedby="exemplo-${c.idCategoria}">${iconeCategoria(visual.icone, "grande")}<span class="opcao-texto"><span class="opcao-nome">${esc(nomeExibido(c.nome))}</span><small id="exemplo-${c.idCategoria}">${esc(visual.exemplo)}</small></span><span class="opcao-marca" aria-hidden="true"></span></label>`;
     }).join("") || `<p class="vazio">${icone("info")} Nenhuma categoria disponível para registro.</p>`;
-    $("distrito").innerHTML = '<option value="">Escolha o bairro</option>' + apoio.distritos.map((d) => `<option value="${d.idDistrito}" ${chave(d.nome) === "liberdade" ? "selected" : ""}>${esc(nomeProprio(d.nome))}</option>`).join("");
+    $("distrito").innerHTML = '<option value="">Escolha o bairro</option>' + apoio.distritos.map((d) => `<option value="${d.idDistrito}">${esc(nomeProprio(d.nome))}</option>`).join("");
     dadosProntos = Boolean(apoio.categorias.length && apoio.distritos.length);
     atualizarContinuar();
     restaurarRascunho();

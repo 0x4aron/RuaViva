@@ -93,5 +93,5 @@ async function geocodificar(rota, parametros) {
 }
 function enderecoGeografico(resultado) {
   const a = resultado.address || {};
-  return { logradouro: nomeProprio(a.road || a.pedestrian || a.footway || ""), numero: a.house_number || "", bairro: nomeProprio(a.suburb || a.city_district || "Liberdade") };
+  return { logradouro: nomeProprio(a.road || a.pedestrian || a.footway || ""), numero: a.house_number || "", bairro: nomeProprio(a.suburb || a.neighbourhood || a.city_district || "") };
 }

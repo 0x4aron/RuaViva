@@ -1,4 +1,4 @@
-! Cisco 2911 novo no Packet Tracer 8.2. Responda no ao assistente inicial.
+! Roteador da base de zeladoria (Cisco 2911) · Packet Tracer 9.0.1.
 ! Todas as senhas abaixo sao exemplos: troque antes da entrega.
 enable
 configure terminal

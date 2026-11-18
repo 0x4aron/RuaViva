@@ -12,7 +12,6 @@ PENDENTES = {"ABERTA", "EM_ANDAMENTO"}
 
 
 def buscar_json(url):
-    """Busca uma lista JSON com limite de espera."""
     with urlopen(url, timeout=5) as resposta:
         registros = json.load(resposta)
     if not isinstance(registros, list):
@@ -20,14 +19,15 @@ def buscar_json(url):
     return registros
 
 
-def converter_ocorrencia(registro, categorias):
-    """Relaciona a ocorrência com as horas da categoria."""
+def converter_ocorrencia(registro, categorias, distritos, equipes_agendadas):
     categoria = categorias[registro["idCategoria"]]
     numero = registro.get("numero") or "s/n"
     return {
         "id": registro["idOcorrencia"],
         "categoria_id": categoria["id"], "categoria": categoria["nome"],
         "distrito_id": registro["idDistrito"],
+        "subprefeitura_id": distritos[registro["idDistrito"]],
+        "equipes_agendadas": equipes_agendadas.get(registro["idOcorrencia"], []),
         "descricao": registro["descricao"],
         "endereco": f'{registro["logradouro"]}, {numero}',
         "latitude": registro["latitude"], "longitude": registro["longitude"],
@@ -37,9 +37,8 @@ def converter_ocorrencia(registro, categorias):
 
 
 def carregar_api(url):
-    """Converte os campos camelCase usados pelo Java."""
     url = url.rstrip("/")
-    fila = buscar_json(url + "/ocorrencias/fila")
+    registros = buscar_json(url + "/ocorrencias")
     categorias = [{
         "id": c["idCategoria"], "nome": c["nome"],
         "horas_estimadas": c["horasEstimadas"],
@@ -51,16 +50,34 @@ def carregar_api(url):
         "horas_dia": e["horasDia"], "ativa": e["ativa"],
         "base": {"latitude": e["latitude"], "longitude": e["longitude"]},
     } for e in buscar_json(url + "/equipes")]
+    distritos = {d["idDistrito"]: d["idSubprefeitura"] for d in buscar_json(url + "/distritos")}
+    equipes_agendadas = {}
+    for atendimento in buscar_json(url + "/atendimentos"):
+        if atendimento["status"] == "AGENDADO":
+            equipes_agendadas.setdefault(atendimento["idOcorrencia"], []).append(atendimento["idEquipe"])
+
     por_id = {c["id"]: c for c in categorias}
-    ocorrencias = [converter_ocorrencia(o, por_id) for o in fila
+    ocorrencias = [converter_ocorrencia(o, por_id, distritos, equipes_agendadas) for o in registros
                    if o["status"] in PENDENTES]
     return {"origem": f"API {url}", "categorias": categorias,
             "equipes": equipes, "ocorrencias": ocorrencias,
             "pontos_sensiveis": []}
 
 
+def ocorrencias_da_equipe(ocorrencias, equipe):
+    elegiveis = []
+    for ocorrencia in ocorrencias:
+        if ocorrencia["status"] not in PENDENTES:
+            continue
+        if ocorrencia["subprefeitura_id"] != equipe["subprefeitura_id"]:
+            continue
+        if any(id_equipe != equipe["id"] for id_equipe in ocorrencia["equipes_agendadas"]):
+            continue
+        elegiveis.append(ocorrencia)
+    return sorted(elegiveis, key=lambda o: o["id"])
+
+
 def validar(dados):
-    """Rejeita valores que impedem calcular o plano."""
     for grupo in (dados["equipes"], dados["ocorrencias"]):
         ids = [registro["id"] for registro in grupo]
         if len(ids) != len(set(ids)):
@@ -84,8 +101,6 @@ def carregar_dados(api=None):
         try:
             dados = carregar_api(api)
             validar(dados)
-            print("Aviso: a fila da API exclui ocorrências já agendadas.",
-                  file=sys.stderr)
             return dados
         except (OSError, ValueError, KeyError, TypeError) as erro:
             print(f"Aviso: falha na API ({erro}). Usando o JSON local.",

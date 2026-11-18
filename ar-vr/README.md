@@ -1,8 +1,8 @@
 # RuaViva — cena 3D de zeladoria urbana
 
-Filme de **48 segundos**, em **1920 × 1080**, sobre a CitizenTech RuaViva na Rua Barão de Iguape, Liberdade, São Paulo. A maquete low-poly mostra prédios baixos, lanternas suzuranto, faixa de pedestre amarela, escola, creche e a base da equipe. É uma representação ilustrativa do bairro, não um levantamento arquitetônico. Os três registros, suas pontuações e seus apoios vêm de `database/02_dml.sql`; a localização na maquete, a rota e os reparos são ilustrativos. O terceiro registro pertence à Rua Doutor Siqueira Campos, 23, representada nesta maquete junto à creche, sem pretensão geográfica.
+Na maquete de 48 segundos (1920 × 1080), acompanhamos três reparos na Liberdade. Usamos os endereços, as pontuações e os apoios de `database/02_dml.sql`. Reunimos na mesma maquete a Rua Barão de Iguape e o trecho da Rua Doutor Siqueira Campos onde fica o buraco perto da creche. A posição dos prédios e o trajeto da van são ilustrativos.
 
-A identidade segue o README da raiz e `web/DESIGN.md`: azul placa `#1A4D8F`, amarelo faixa `#F2C200`, vermelho `#C8102E`, verde resolvido `#1E7D4F`, fundo `#F4F6F5`, Barlow Semi Condensed e Atkinson Hyperlegible. Fim de tarde com céu em degradê, névoa rosada, luz lateral quente, sombras PCFSoft de 2048 px, ACES/sRGB e exposição 0,94. Lanternas emissivas com halos e somente seis PointLights sem sombras. Geometrias estáticas são agrupadas por material para reduzir draw calls. Placas têm frente e verso independentes; etiquetas HTML projetadas usam fontes de 28–36 px em Full HD.
+No site, o status resolvido usa `#176B43`. Na maquete, as placas azuis identificam os endereços. A rota aparece em amarelo e os marcadores ficam verdes ao fim de cada reparo. Usamos Barlow Semi Condensed nos títulos e Atkinson Hyperlegible nas legendas. Agrupamos as geometrias estáticas por material para reduzir as chamadas de desenho.
 
 | Tempo | Cena |
 | --- | --- |
@@ -11,14 +11,14 @@ A identidade segue o README da raiz e `web/DESIGN.md`: azul placa `#1A4D8F`, ama
 | 13–21 s | Luzes de moradores convergem para os registros; contadores de apoio sobem. |
 | 21–29 s | Fila flutuante com 71, 59 e 57 pontos, barras proporcionais e contornos na escola e creche. |
 | 29–38 s | Van inicia a rota amarela e chega ao bueiro; as próximas paradas acompanham os reparos. |
-| 38–44 s | Bueiro limpo (38–39,25 s), sarjeta nivelada (40–41 s), asfalto novo (42–43,2 s); van parada, câmera próxima e checks verdes. |
+| 38–44 s | A equipe termina de limpar o bueiro aos 38,5 s, nivela a sarjeta aos 40 s e termina de tapar o buraco aos 41,5 s. |
 | 44–48 s | Vista alta, mensagem final e créditos da equipe. |
 
 ## Registros representados
 
 | Alfinete | ID no DML | Ocorrência | Endereço real | Prioridade | Apoios |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 3 | Bueiro entupido | Rua Barão de Iguape, 288 | 71 | 3 |
+| 1 | 3 | Bueiro entupido (escola fictícia a 40 m no cadastro) | Rua Barão de Iguape, 288 | 71 | 3 |
 | 2 | 8 | Sarjeta afundada (guias e sarjetas) | Rua Barão de Iguape, 319 | 59 | 2 |
 | 3 | 10 | Buraco perto da creche (tapa-buraco) | Rua Doutor Siqueira Campos, 23 | 57 | 1 |
 
@@ -46,7 +46,7 @@ window.renderizar(24); // posiciona e desenha exatamente o instante de 24 segund
 
 Capture a região **`#filme`**, que inclui canvas e overlays HTML. Capturar apenas `canvas.toDataURL()` omite as legendas e os créditos. O renderer usa `preserveDrawingBuffer: true`, antialias e pixel ratio 1. A reprodutibilidade é esperada no mesmo navegador/GPU/fontes; rasterização pode variar entre plataformas.
 
-A rota demonstrativa compara as seis permutações possíveis entre três paradas, minimizando a distância desde a base, sem retorno obrigatório. É ótima nesse modelo simples de uma rua; não representa um cálculo sobre a malha viária real. A van desacelera, para e muda de direção antes de cada novo trecho.
+A cena compara seis ordens possíveis para os três reparos. A van sai da base e segue a sequência de menor distância na maquete. A distância termina na terceira parada.
 
 ## Gerar os quadros e o vídeo
 
@@ -89,10 +89,6 @@ ar-vr/.venv/bin/python ar-vr/validar.py
 ```
 
 O teste grava quadros em `ar-vr/quadros/validacao/`, compara pixels após saltos no tempo, confere dados/etiquetas/legendas e mede os 1.441 instantes de 0 a 48 s a 30 fps em 1920 × 1080. O JSON registra tempos de CPU e de GPU sincronizada (incluindo `gl.finish`), navegador e renderizador. O limite padrão de 120 ms aplica-se a cada chamada medida de `renderizar`; a sincronização da GPU é reportada separadamente. O aquecimento de shaders é separado da medição. A meta depende da GPU e precisa ser confirmada no ambiente de captura.
-
-## Publicação
-
-**YouTube:** [inserir link do vídeo publicado]
 
 Equipe RuaViva — Anthony Gonçalves Sforzin · Cesar Aaron Herrera  
 FIAP · Global Solution 2026

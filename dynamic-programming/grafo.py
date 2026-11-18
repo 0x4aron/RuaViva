@@ -76,7 +76,6 @@ def montar_grafo(base, ocorrencias, raio=400, cruzamentos=CRUZAMENTOS):
 
 
 def dijkstra(grafo, origem):
-    """Obtém as menores distâncias a partir da origem."""
     distancias = {no: math.inf for no in grafo}
     distancias[origem] = 0
     fila = [(0, origem)]

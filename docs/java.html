@@ -23,7 +23,7 @@ if(window.mermaid){
     er:{useMaxWidth:true,layoutDirection:'LR',entityPadding:12,nodeSpacing:24,rankSpacing:36,fontSize:18}
   });
 }
-// Observe the automatic render instead of running Mermaid twice on window.load.
+// Aguarda a renderização dos diagramas antes da impressão.
 function falhaDiagramas(erro){
   document.documentElement.dataset.diagramas='erro';
   const p=document.createElement('p');
@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 </li>
 </ol>
 </nav>
-<p class="nota">Os títulos são links para as seções. A paginação final acompanha o conteúdo e as imagens inseridas.</p>
 </section>
 <section class="secao" id="solucao">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
@@ -110,14 +109,14 @@ document.addEventListener('DOMContentLoaded',()=>{
 <h3>Arquitetura e regras</h3>
 <p>Controller → BO → DAO → Oracle. Controllers expõem HTTP; BOs validam negócio e transações; DAOs usam SQL via JdbcTemplate; models representam as nove tabelas e enums; DTOs expõem composição e régua. GlobalExceptionHandler padroniza falhas.</p>
 <p>Prioridade: peso × 10 + 2 por apoio + 15 se houver ponto sensível a até 200 m + 10 por autor prioritário. A distância usa Haversine; o ponto mais próximo gera um único bônus. Cadastros relevantes e apoios recalculam a pontuação.</p>
-<p>Agendar coloca a ocorrência EM_ANDAMENTO; concluir coloca RESOLVIDA e cancela outras visitas agendadas. Cancelar a última visita reabre a pendência. A API recusa apoio próprio/duplicado, edição de histórico, exclusão de ocorrência resolvida e exclusão de atendimento concluído. Datas usam America/Sao_Paulo.</p>
+<p>O agendamento exige equipe ativa da mesma subprefeitura e muda a ocorrência para EM_ANDAMENTO. A conclusão aceita data de execução até hoje, muda a ocorrência para RESOLVIDA e cancela outras visitas agendadas. Cancelar a última visita reabre a pendência. A API recusa apoio próprio/duplicado, edição de ocorrências encerradas por PUT, exclusão de ocorrência resolvida e exclusão de atendimento concluído. Datas usam America/Sao_Paulo.</p>
 <p>Os perfis do site são demonstrativos: não há autenticação/autorização no servidor. O notebook e o planejador são componentes separados. O prazo por categoria não equivale ao corte estatístico de sete dias.</p>
 </section>
 <section class="secao" id="classes">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
 </div>
 <h2>2. Diagrama de classes</h2>
-<p>Vistas do mesmo modelo de classes, divididas para leitura em A4 paisagem. Setas contínuas representam referências mantidas em campos; setas tracejadas, dependências de uso. Models guardam IDs estrangeiros como Long; relações por ID são indicadas como tal, sem inventar objetos JPA.</p>
+<p>Vistas do mesmo modelo de classes, divididas para leitura em A4 paisagem. Setas contínuas representam referências mantidas em campos; setas tracejadas, dependências de uso. As classes de domínio guardam os IDs das tabelas relacionadas em campos do tipo Long.</p>
 <article class="diagrama pagina-paisagem">
 <h3>2.1 Model · entidades e enums</h3>
 <figure><pre class="mermaid">classDiagram
@@ -237,7 +236,7 @@ Ocorrencia ..&gt; Distrito : idDistrito
 Apoio ..&gt; Ocorrencia : idOcorrencia
 Apoio ..&gt; Cidadao : idCidadao
 Atendimento ..&gt; Ocorrencia : idOcorrencia
-Atendimento ..&gt; Equipe : idEquipe</pre><figcaption>2.1 Model · nove entidades e três enums, com atributos. Setas tracejadas representam IDs estrangeiros, sem associações JPA.</figcaption>
+Atendimento ..&gt; Equipe : idEquipe</pre><figcaption>2.1 Model · nove entidades e três enums, com atributos. Setas tracejadas representam IDs estrangeiros.</figcaption>
 </figure>
 </article>
 <article class="diagrama pagina-paisagem">
@@ -368,7 +367,7 @@ AtendimentoBO --&gt; AtendimentoDAO
 AtendimentoBO --&gt; OcorrenciaDAO
 AtendimentoBO --&gt; OcorrenciaBO
 AtendimentoBO --&gt; EquipeBO
-</pre><figcaption>2.3 BO · dependências de negócio e persistência. As três classes usam Datas; contratos e exceções: vista 2.6.</figcaption>
+</pre><figcaption>2.3 BO · dependências de negócio e persistência. As três classes usam Datas. AtendimentoBO consulta DistritoBO ao conferir a subprefeitura da equipe.</figcaption>
 </figure>
 </article>
 <article class="diagrama pagina-paisagem">
@@ -549,7 +548,7 @@ CategoriaBO ..&gt; ReguaPesoDTO : retorna</pre><figcaption>2.6 Exception + DTO �
 <div class="cabecalho"><span class="placa">RuaViva</span><span>DDD · Java · 19/11/2026</span>
 </div>
 <h2>3. Protótipos de tela</h2>
-<p>As telas conectam o fluxo de morador às operações da API. A identidade segue web/DESIGN.md. As capturas abaixo devem mostrar o protótipo real e preservar a indicação de demonstração.</p>
+<p>As sete telas mostram como o morador registra e acompanha um problema e como o gestor organiza o atendimento.</p>
 <article class="tela">
 <h3>Entrada</h3>
 <p class="nota">UC01 · US01</p>
@@ -562,7 +561,7 @@ CategoriaBO ..&gt; ReguaPesoDTO : retorna</pre><figcaption>2.6 Exception + DTO �
 <p class="nota">UC02 · US02</p>
 <figure><img src="img/tela-mapa.png" alt="O mapa localiza; a lista permite ler e agir sem depender de precisão no toque."><figcaption>O mapa localiza; a lista permite ler e agir sem depender de precisão no toque.</figcaption>
 </figure>
-<p>A lista aparece primeiro no celular. Números ligam registros e marcadores; os filtros Não resolvidos, Resolvidos e Todos apoiam a busca. Endereço e status escritos atendem quem usa zoom ou tem baixa visão.</p>
+<p>A lista aparece primeiro no celular. Números ligam registros e marcadores; os filtros Pendentes, Resolvidos e Todos apoiam a busca. Endereço e status escritos atendem quem usa zoom ou tem baixa visão.</p>
 </article>
 <article class="tela">
 <h3>Registrar problema</h3>
@@ -584,6 +583,16 @@ CategoriaBO ..&gt; ReguaPesoDTO : retorna</pre><figcaption>2.6 Exception + DTO �
 <figure><img src="img/tela-fila.png" alt="O gestor entende a pontuação e agenda no contexto do caso. Reagendamento permanece na API."><figcaption>O gestor entende a pontuação e agenda no contexto do caso. Reagendamento permanece na API.</figcaption>
 </figure>
 <p>A fila compara prioridade, endereço, apoios e prazo. O formulário abre na própria linha; oferece equipes ativas da mesma subprefeitura e datas a partir de hoje. Visitas ficam separadas e permitem concluir ou cancelar. Alta ≥ 60; média ≥ 40; baixa abaixo de 40.</p>
+</article>
+<article class="tela">
+<h3>Meus registros</h3>
+<p class="nota">UC10 · US08</p>
+<figure><img src="img/tela-minhas.png" alt="Tela de Meus registros"><figcaption>O morador busca pelo número e vê os problemas que registrou ou apoiou.</figcaption></figure>
+</article>
+<article class="tela">
+<h3>Categorias</h3>
+<p class="nota">UC17 · US14</p>
+<figure><img src="img/tela-categorias.png" alt="Tela de Categorias"><figcaption>O gestor consulta a régua de gravidade ao cadastrar peso, prazo e horas de serviço.</figcaption></figure>
 </article>
 </section>
 <section class="secao" id="endpoints">
@@ -866,6 +875,6 @@ docker run --rm -p 8080:8080   -e DB_URL -e DB_USER -e DB_PASSWORD ruaviva-api</
 <p>GitHub: <a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a>
 </p>
 <h3>Teste de regressão</h3>
-<p>Com a API ativa e uma base de teste recém-criada pelo DDL/DML, executar a partir da raiz do repositório:</p><pre>bash java-api/testes/regressao.sh http://localhost:8080</pre><p>O roteiro verifica ciclo de vida, equipe inativa, apoio, exclusões, integridade e concorrência. Ele cria e modifica dados; usar uma base destinada aos testes. Critério: todas as verificações aprovadas, sem linhas FALHA. Esta documentação não registra uma nova execução da regressão da API.</p>
+<p>Com a API ativa e uma base de teste recém-criada pelo DDL/DML, executar a partir da raiz do repositório:</p><pre>bash java-api/testes/regressao.sh http://localhost:8080</pre><p>O script cria dados de teste e verifica o ciclo das visitas, as equipes, os apoios, as exclusões e a concorrência. Ao final, lista as verificações que falharam.</p>
 </section>
 </main></body></html>

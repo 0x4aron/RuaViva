@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-/** Metodos auxiliares usados por todas as classes DAO. */
 final class DaoUtil {
 
     private DaoUtil() {

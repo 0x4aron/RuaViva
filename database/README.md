@@ -2,9 +2,7 @@
 
 Banco: **Oracle** (servidor da FIAP). Os scripts usam sintaxe compatível com Oracle 19c ou superior e foram testados localmente no Oracle XE 21. Este modelo também é a base da API Java (`java-api/`).
 
-> **Atenção antes de rodar no Oracle da FIAP:** o usuário de vocês pode ter tabelas de GS anteriores com prefixo `GS_`. Antes de rodar o `00_drop.sql`, confiram:
-> `SELECT table_name FROM user_tables WHERE table_name LIKE 'GS%';`
-> O drop só apaga as 9 tabelas listadas abaixo. Mesmo assim, se alguma delas tiver o mesmo nome de uma tabela antiga de vocês, a antiga será apagada.
+> Antes de executar `00_drop.sql` no Oracle da FIAP, confira se alguma das nove tabelas pertence a outro trabalho. O script apaga essas tabelas e seus dados. Para listar os nomes, use `SELECT table_name FROM user_tables WHERE table_name LIKE 'GS%';`.
 
 ## Scripts
 
@@ -35,7 +33,7 @@ Os scripts de dados e consultas estão em **UTF-8**. No SQL Developer, abra com 
 
 ## Diagrama
 
-O diagrama oficial foi gerado no **Oracle SQL Developer Data Modeler** (`Arquivo → Importar → Arquivo DDL → 01_ddl.sql`, Oracle Database 21c) e está em [`../docs/img/modelo-logico-data-modeler.png`](../docs/img/modelo-logico-data-modeler.png). O projeto do Data Modeler fica em [`modelo/RuaViva.dmd`](modelo/RuaViva.dmd), que abre direto na ferramenta.
+Importamos o DDL e exportamos o diagrama do modelo relacional no **Oracle SQL Developer Data Modeler** (`Arquivo → Importar → Arquivo DDL → 01_ddl.sql`, Oracle Database 21c) e salvamos a imagem em [`../docs/img/modelo-logico-data-modeler.png`](../docs/img/modelo-logico-data-modeler.png). O projeto do Data Modeler fica em [`modelo/RuaViva.dmd`](modelo/RuaViva.dmd), que abre direto na ferramenta.
 
 Rascunho rápido do mesmo modelo, para leitura no GitHub:
 
@@ -132,7 +130,7 @@ erDiagram
 |---|---|---|
 | `GS_SUBPREFEITURA`, `GS_DISTRITO` | 5 cada | Nomes oficiais de São Paulo |
 | `GS_CATEGORIA` | 7 | Tipos de serviço do SP156. Prazo, peso e horas são valores de referência definidos pela equipe |
-| `GS_CIDADAO` | 8 | Simulados, com email no domínio reservado `exemplo.com` |
+| `GS_CIDADAO` | 8 | Cidadãos e e-mails fictícios |
 | `GS_PONTO_SENSIVEL` | 5 | 4 fictícios em localização aproximada + Estação Japão-Liberdade |
 | `GS_EQUIPE` | 5 | Simuladas |
 | `GS_OCORRENCIA` | 15 | **Endereço, coordenadas, tipo e datas reais do SP156** (Liberdade, 3º tri/2026). 9 delas são na Rua Barão de Iguape |
@@ -146,11 +144,11 @@ No final do script, as colunas IDENTITY são ajustadas (`START WITH LIMIT VALUE`
 ```
 NR_PRIORIDADE = peso da categoria × 10
               + 2 por apoio recebido
-              + 15 se estiver a até 200 m de um ponto sensível
+              + 15 uma única vez se houver ponto sensível a até 200 m
               + 10 se quem registrou for prioritário (idoso/PcD)
 ```
 
-Os valores do DML já foram calculados com essa regra, que a API Java também vai aplicar.
+A API Java usa a mesma regra de prioridade do DML.
 
 ### Quem define o peso de uma categoria
 
@@ -174,7 +172,7 @@ O peso (1 a 5) é informado pelo **gestor da subprefeitura** quando ele cadastra
 | 2 | INNER JOIN + funções de grupo + GROUP BY | Por categoria: total, resolvidas, média de dias até a resolução e prioridade média |
 | 3 | LEFT OUTER JOIN + WHERE + ORDER BY | Fila do gestor: ocorrências **abertas e sem atendimento** (atendimentos cancelados não contam), da maior para a menor prioridade (`GS_OCORRENCIA` + `GS_ATENDIMENTO`) |
 
-Resultado da consulta 3 com os dados de exemplo: o bueiro da Barão de Iguape, 288 (prioridade 71, com 3 apoios e perto da escola) aparece em primeiro.
+Resultado da consulta 3 com os dados de exemplo: o bueiro da Barão de Iguape, 288 (prioridade 71, com 3 apoios e a escola fictícia a 40 m) aparece em primeiro.
 
 ## Como os dados se ligam ao resto do projeto
 

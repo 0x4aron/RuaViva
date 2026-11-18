@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/** Regras de negocio de Distrito. */
 @Service
 public class DistritoBO {
 

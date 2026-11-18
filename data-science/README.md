@@ -6,19 +6,18 @@ Notebook: [`zeladoria_sp156.ipynb`](zeladoria_sp156.ipynb), entregue já executa
 
 | Modelo | Pergunta | Resultado no teste (out-dez/2025) |
 |---|---|---|
-| **Regressão linear** | Quantos pedidos de zeladoria cada subprefeitura vai receber amanhã? | MAE 11,6 · RMSE 16,5 · R² 0,56 (contra R² 0,34 de repetir a média da semana) |
-| **Regressão logística** | Este pedido corre risco de **não** ser resolvido em até 7 dias? | Recall 0,85 · Precisão 0,52 · F1 0,64 · AUC 0,82 |
+| **Regressão linear** | Quantos pedidos de zeladoria cada subprefeitura vai receber amanhã? | MAE 11,598 · RMSE 16,532 · R² 0,558 (contra R² 0,336 de repetir a média da semana) |
+| **Regressão logística** | Este pedido corre risco de **não** ser resolvido em até 7 dias? | Precisão 0,516 · Recall 0,852 · F1 0,643 · AUC 0,819 |
 
-Hipótese testada e confirmada: quanto mais pedidos do mesmo tipo chegaram à mesma região na semana anterior (fila cheia), maior o risco de atraso.
+No modelo logístico, cada desvio-padrão a mais nas aberturas do mesmo assunto na mesma subprefeitura na semana anterior esteve associado a uma razão de chances de atraso de 1,11, mantidas as demais variáveis.
 
 ## Dados
 
 - **Fonte:** Portal de Dados Abertos da Prefeitura de São Paulo, conjunto [Dados do SP156](https://dados.prefeitura.sp.gov.br/dataset/dados-do-sp156) (licença CC0), os 4 trimestres de 2025. A base não tem dados pessoais.
-- **Base usada:** [`dados/sp156_zeladoria_2025.csv.gz`](dados/), com 507.859 pedidos de zeladoria das 32 subprefeituras. Ela é gerada pelo [`preparar_base.py`](preparar_base.py) a partir dos arquivos originais.
-- **Sem vazamento de dados:**
-  - treino com jan-set e teste com out-dez (divisão por data);
-  - variáveis calculadas só com dias anteriores;
-  - codificação e padronização ajustadas só no treino, dentro de um `Pipeline`.
+- **Base usada:** [`dados/sp156_zeladoria_2025.csv.gz`](dados/sp156_zeladoria_2025.csv.gz), com 507.859 pedidos de zeladoria das 32 subprefeituras. Ela é gerada pelo [`preparar_base.py`](preparar_base.py) a partir dos arquivos originais.
+- **Recorte**. Selecionamos assuntos de manutenção da rua e mantivemos os órgãos com pelo menos 3.000 registros. As aberturas de pedidos cancelados e dos 85 finalizados sem data válida contam para a demanda e para o volume dos sete dias anteriores. Esses pedidos ficam fora da análise de prazo.
+- **Treino e teste**. O teste vai de 01/10 a 31/12/2025. O treino linear usa a demanda até 30/09. Na logística, a última abertura de treino é 24/09, sete dias antes do corte. Foram 385.593 pedidos no treino e 112.910 no teste. A codificação e a padronização são ajustadas no treino.
+- **Previsão demonstrativa**. O histórico termina em 31/12/2025. O modelo prevê 01/01/2026 usando o dia da semana e as contagens anteriores. Ele não tem uma variável específica para feriados.
 
 ## Como executar
 

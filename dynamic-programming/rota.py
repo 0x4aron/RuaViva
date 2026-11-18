@@ -5,7 +5,6 @@ from itertools import permutations
 
 
 def distancia_rota(matriz, caminho):
-    """Soma os trechos de um caminho."""
     return sum(matriz[a][b] for a, b in zip(caminho, caminho[1:]))
 
 
@@ -43,7 +42,6 @@ def held_karp(matriz):
 
 
 def vizinho_mais_proximo(matriz):
-    """Escolhe a visita mais próxima a cada passo."""
     restantes = set(range(1, len(matriz)))
     caminho = [0]
     avaliacoes = 0

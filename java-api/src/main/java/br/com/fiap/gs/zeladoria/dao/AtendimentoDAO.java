@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/** Acesso a tabela GS_ATENDIMENTO. */
 @Repository
 public class AtendimentoDAO {
 
@@ -45,14 +44,12 @@ public class AtendimentoDAO {
                 .stream().findFirst();
     }
 
-    /** Conta os atendimentos ainda AGENDADOS de uma ocorrencia. */
     public int contarAgendados(Long idOcorrencia) {
         Integer total = jdbc.queryForObject("SELECT COUNT(*) FROM GS_ATENDIMENTO WHERE ID_OCORRENCIA = ? "
                 + "AND ST_ATENDIMENTO = 'AGENDADO'", Integer.class, idOcorrencia);
         return total == null ? 0 : total;
     }
 
-    /** Cancela todas as visitas ainda AGENDADAS de uma ocorrencia. */
     public void cancelarAgendados(Long idOcorrencia) {
         jdbc.update("UPDATE GS_ATENDIMENTO SET ST_ATENDIMENTO = 'CANCELADO' "
                 + "WHERE ID_OCORRENCIA = ? AND ST_ATENDIMENTO = 'AGENDADO'", idOcorrencia);

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-/** Tabela GS_ATENDIMENTO: visita de uma equipe para resolver uma ocorrencia. */
 public class Atendimento {
 
     private Long idAtendimento;

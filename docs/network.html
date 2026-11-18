@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </li>
 </ol>
 </nav>
-<p class="nota">Os títulos são links para as seções. A paginação final acompanha o conteúdo e as imagens inseridas.</p>
 </section>
 <section class="secao" id="ficha">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Network Architect Solutions · 19/11/2026</span>
@@ -61,13 +60,13 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </tr>
 <tr><td>Problema</td><td>O morador registra buracos, lixo e calçadas quebradas, mas não acompanha claramente a resolução; registros se repetem e o impacto coletivo precisa orientar a fila.</td>
 </tr>
-<tr><td>Funcionamento</td><td>Registro e apoio de vizinhos; prioridade por gravidade, apoios, proximidade sensível e autor prioritário. Notebook prevê demanda/risco; planejador de terminal organiza visitas.</td>
+<tr><td>Funcionamento</td><td>No site, o morador registra e apoia problemas. O gestor consulta a prioridade e agenda visitas. O notebook estima demanda e risco de atraso. O programa de terminal planeja as visitas do dia.</td>
 </tr>
 <tr><td>Papel das disciplinas</td><td>Agile: personas, casos, backlog, UX e pitch. AR-VR: representação 3D. Data Science: modelos com SP156. Database: modelo Oracle. Java: API. Web: experiência do MVP. Dynamic Programming: seleção/rota. Network: infraestrutura da base.</td>
 </tr>
-<tr><td>Indicadores propostos</td><td>Tempo médio até resolução; percentual resolvido em sete dias; duplicatas unificadas (depende de evolução futura).</td>
+<tr><td>Indicadores propostos</td><td>Tempo médio até a resolução, percentual resolvido em até sete dias e apoios dados a partir do aviso de registro parecido.</td>
 </tr>
-<tr><td>ODS</td><td>11: cidades sustentáveis; 10: redução das desigualdades; 9: indústria, inovação e infraestrutura.</td>
+<tr><td>ODS</td><td>ODS 11 pela conservação das ruas, ODS 10 pela prioridade a idosos e pessoas com deficiência e ODS 9 pelo uso de registros por endereço para planejar a manutenção urbana.</td>
 </tr>
 <tr><td>Repositório</td><td><a href="https://github.com/0x4aron/RuaViva">https://github.com/0x4aron/RuaViva</a></td>
 </tr>
@@ -107,7 +106,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </tbody>
 </table>
 <h3>Plano de endereçamento</h3>
-<p>O plano aprovado usa uma rede /24 por setor. O “X” de 192.168.X.0/24 varia entre 10, 20 e 30.</p>
+<p>Usamos uma rede /24 por setor. O terceiro octeto identifica a VLAN da equipe (10), dos cidadãos (20) ou dos servidores e sensores (30).</p>
 <table class="">
 <thead>
 <tr><th scope="col">Setor</th><th scope="col">Rede / máscara</th><th scope="col">Gateway</th><th scope="col">DHCP / hosts</th><th scope="col">Broadcast</th>
@@ -153,7 +152,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Network Architect Solutions · 19/11/2026</span>
 </div>
 <h2>3. Configurações de referência</h2>
-<p>Trechos dos arquivos de network/configs para conferência com <code>show running-config</code>. São a configuração prevista, copiada das fontes, e não uma saída coletada de um .pkt executado. Após aplicar os comandos, conferir no modo privilegiado e salvar com write memory.</p>
+<p>Os comandos abaixo vêm dos arquivos de configuração de R1-BASE, SW1 e ISP em <code>network/configs/</code>.</p>
 <article class="bloco-config">
 <h3>3.1 SW1 · VLANs e trunk</h3>
 <p>Uma VLAN por setor; Gi0/1 transporta as três até o R1. O 2960 já usa 802.1Q.</p><pre>vlan 10
@@ -316,7 +315,7 @@ exit</pre><p class="nota">Fonte: network/configs/ISP.txt.</p>
 </article>
 <article class="bloco-config">
 <h3>3.8 R1 · restrição do SSH</h3>
-<p>Acesso remoto somente SSH e apenas da VLAN Equipe. As fontes também configuram usuário local, SSH v2 e credenciais de exemplo; substituir as senhas antes da entrega e não expô-las nas capturas.</p><pre>ip access-list standard VTY_EQUIPE
+<p>No R1 e no SW1, as linhas VTY aceitam SSH apenas da rede da equipe. A ACL de entrada da VLAN 20 bloqueia o SSH do Wi-Fi. O ISP também usa SSH, com autenticação local.</p><pre>ip access-list standard VTY_EQUIPE
  permit 192.168.10.0 0.0.0.255
  deny any
 exit
@@ -328,6 +327,274 @@ line vty 0 4
 exit
 !</pre><p class="nota">Fonte: network/configs/R1-BASE.txt.</p>
 </article>
+<h3>Trechos de show running-config</h3>
+<p>Saída real de <code>show running-config</code>, exportada do projeto network/RuaViva.pkt no Packet Tracer 9.0.1 (Config → Running Config → Export). As senhas aparecem como &lt;oculta&gt;.</p>
+<article class="bloco-config"><h4>R1-BASE</h4><pre class="running">!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname R1-BASE
+!
+enable secret 5 &lt;oculta&gt;
+!
+ip dhcp excluded-address 192.168.10.1 192.168.10.9
+ip dhcp excluded-address 192.168.20.1 192.168.20.9
+ip dhcp excluded-address 192.168.30.1 192.168.30.9
+ip dhcp excluded-address 192.168.30.10
+!
+ip dhcp pool EQUIPE
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+ip dhcp pool CIDADAO
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+ip dhcp pool SERVIDORES_SENSORES
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+ dns-server 192.168.30.10
+ domain-name ruaviva.gs
+!
+ip cef
+no ipv6 cef
+!
+username admin privilege 15 secret 5 &lt;oculta&gt;
+!
+license udi pid CISCO2911/K9 sn FTX15246YCN-
+!
+ip ssh version 2
+no ip domain-lookup
+ip domain-name ruaviva.gs
+!
+spanning-tree mode pvst
+!
+interface GigabitEthernet0/0
+ description TRUNK_8021Q_PARA_SW1_G0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.10
+ description VLAN10_EQUIPE
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/0.20
+ description VLAN20_CIDADAO_WIFI
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip nat inside
+ ip access-group WIFI_CIDADAO_IN in
+!
+interface GigabitEthernet0/0.30
+ description VLAN30_SERVIDORES_SENSORES
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/1
+ description WAN_PARA_ISP_G0/0
+ ip address 200.10.0.2 255.255.255.252
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2
+ description NAO_UTILIZADA
+ no ip address
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+!
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+ip classless
+ip route 0.0.0.0 0.0.0.0 200.10.0.1 
+!
+ip flow-export version 9
+!
+ip access-list standard VTY_EQUIPE
+ permit 192.168.10.0 0.0.0.255
+ deny any
+ip access-list extended WIFI_CIDADAO_IN
+ permit udp any eq bootpc host 255.255.255.255 eq bootps
+ permit udp 192.168.20.0 0.0.0.255 eq bootpc host 192.168.20.1 eq bootps
+ permit udp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq domain
+ permit tcp 192.168.20.0 0.0.0.255 host 192.168.30.10 eq www
+ deny ip any 192.168.10.0 0.0.0.255
+ deny ip any 192.168.30.0 0.0.0.255
+ deny tcp 192.168.20.0 0.0.0.255 any eq 22
+ permit ip 192.168.20.0 0.0.0.255 any
+access-list 1 permit 192.168.10.0 0.0.0.255
+access-list 1 permit 192.168.20.0 0.0.0.255
+access-list 1 permit 192.168.30.0 0.0.0.255
+!
+banner motd #ACESSO RESTRITO - RuaViva - Somente pessoal autorizado.#
+!
+line con 0
+ exec-timeout 5 0
+ password 7 &lt;oculta&gt;
+ logging synchronous
+ login
+!
+line aux 0
+!
+line vty 0 4
+ access-class VTY_EQUIPE in
+ exec-timeout 5 0
+ login local
+ transport input ssh
+!
+end</pre></article>
+<article class="bloco-config"><h4>SW1</h4><pre class="running">!
+version 15.0
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname SW1
+!
+enable secret 5 &lt;oculta&gt;
+!
+ip ssh version 2
+no ip domain-lookup
+ip domain-name ruaviva.gs
+!
+username admin secret 5 &lt;oculta&gt;
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+ description PC_EQUIPE
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ description AP_WIFI_PORT0
+ switchport access vlan 20
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ description SRV_RUAVIVA
+ switchport access vlan 30
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/4
+ description PC_SENSOR_SIMULADO
+ switchport access vlan 30
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/5
+ shutdown
+!
+interface FastEthernet0/6
+ shutdown
+!
+interface FastEthernet0/7
+ shutdown
+!
+interface FastEthernet0/8
+ shutdown
+!
+interface FastEthernet0/9
+ shutdown
+!
+interface FastEthernet0/10
+ shutdown
+!
+interface FastEthernet0/11
+ shutdown
+!
+interface FastEthernet0/12
+ shutdown
+!
+interface FastEthernet0/13
+ shutdown
+!
+interface FastEthernet0/14
+ shutdown
+!
+interface FastEthernet0/15
+ shutdown
+!
+interface FastEthernet0/16
+ shutdown
+!
+interface FastEthernet0/17
+ shutdown
+!
+interface FastEthernet0/18
+ shutdown
+!
+interface FastEthernet0/19
+ shutdown
+!
+interface FastEthernet0/20
+ shutdown
+!
+interface FastEthernet0/21
+ shutdown
+!
+interface FastEthernet0/22
+ shutdown
+!
+interface FastEthernet0/23
+ shutdown
+!
+interface FastEthernet0/24
+ shutdown
+!
+interface GigabitEthernet0/1
+ description TRUNK_PARA_R1_G0/0
+ switchport trunk allowed vlan 10,20,30
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 192.168.10.2 255.255.255.0
+!
+ip default-gateway 192.168.10.1
+!
+banner motd #ACESSO RESTRITO - Switch da base RuaViva.#
+!
+access-list 10 permit 192.168.10.0 0.0.0.255
+access-list 10 deny any
+line con 0
+ password 7 &lt;oculta&gt;
+ logging synchronous
+ login
+ exec-timeout 5 0
+!
+line vty 0 4
+ access-class 10 in
+ exec-timeout 5 0
+ login local
+ transport input ssh
+line vty 5 15
+ access-class 10 in
+ exec-timeout 5 0
+ login local
+ transport input ssh
+!
+end</pre></article>
 <h3>Serviços e Wi-Fi</h3>
 <p>No SRV-RUAVIVA, ligar DNS e HTTP; DHCP permanece desligado. Registros A: ruaviva.gs → 192.168.30.10 e internet.gs → 8.8.8.8. Publicar network/servidor/index.html como index.html. No servidor externo, publicar network/servidor/internet.html como index.html, com HTTP ligado.</p>
 <p>No AP: SSID RuaViva-Cidadao, canal 6, WPA2-PSK e AES. Associar o laptop com WPC300N e solicitar DHCP. Portas não utilizadas ficam desligadas. Conferir também SSH da Equipe e recusa de Telnet.</p>
@@ -337,62 +604,46 @@ exit
 </div>
 <h2>4. Testes e evidências</h2>
 <p>Pré-condições: interfaces up/up, VLANs/portas corretas, trunk encaminhando 10,20,30, DNS/HTTP ligados e rotas conectadas no ISP. Conferir show vlan brief, show interfaces trunk, show ip interface brief e show ip route.</p>
-<p class="destaque">Os cinco testes abaixo foram executados no Cisco Packet Tracer 9.0.1 em 15/11/2026, no projeto network/RuaViva.pkt. Cada imagem é a captura real da execução.</p>
+<p class="destaque">Executamos os cinco testes em 15/11/2026 no Cisco Packet Tracer 9.0.1, com o projeto <code>network/RuaViva.pkt</code>.</p>
 <article class="teste">
 <h3>1. Ping entre VLANs</h3>
-<p><strong>Origem e destino:</strong> PC-EQUIPE → gateway local e SRV-RUAVIVA; PC-SENSOR → gateway da VLAN 10.</p><pre>PC-EQUIPE:
-ping 192.168.10.1
-ping 192.168.30.10
-PC-SENSOR:
-ping 192.168.10.1</pre><p><strong>Resultado esperado:</strong> Respostas estáveis entre VLANs 10 e 30. Repetir após resolução ARP inicial. Não usar laptop como destino da Equipe: a ACL bloqueia o retorno ICMP.</p>
-<figure><img src="img/teste-ping-vlans.png" alt="1. Ping entre VLANs · evidência real com origem, destino e resultado observado."><figcaption>1. Ping entre VLANs · evidência real com origem, destino e resultado observado.</figcaption>
-</figure>
-<p class="nota">Resultado observado: o PC-EQUIPE (192.168.10.10, via DHCP) respondeu 4/4 ao gateway 192.168.10.1 e 4/4 ao SRV-RUAVIVA 192.168.30.10, atravessando da VLAN 10 para a VLAN 30 pelo R1 (TTL 127). Na primeira execução, um pacote se perdeu pela resolução ARP; a captura mostra a repetição estável.</p>
+<p>PC-EQUIPE</p>
+<pre>ping 192.168.10.1
+ping 192.168.30.10</pre>
+<p>Esperávamos alcançar o gateway local e o servidor na outra VLAN.</p>
+<figure><img src="img/teste-ping-vlans.png" alt="O PC-EQUIPE recebeu quatro respostas de 192.168.10.1 e quatro de 192.168.30.10, na VLAN 30."><figcaption>O PC-EQUIPE recebeu quatro respostas de 192.168.10.1 e quatro de 192.168.30.10, na VLAN 30.</figcaption></figure>
 </article>
 <article class="teste">
 <h3>2. DHCP nos três setores</h3>
-<p><strong>Origem e destino:</strong> PC-EQUIPE, LAPTOP-CIDADAO associado e PC-SENSOR, com ACL já aplicada.</p><pre>Em cada cliente:
-ipconfig /release
-ipconfig /renew
-ipconfig /all
-No R1:
-show ip dhcp binding
-show ip dhcp pool</pre><p><strong>Resultado esperado:</strong> Equipe .10.10–254; cidadão .20.10–254; sensor .30.11–254. Máscara /24, gateway .1 da própria VLAN e DNS 192.168.30.10. Capturar concessões e renovação com a ACL ativa.</p>
-<figure><img src="img/teste-dhcp.png" alt="2. DHCP nos três setores · evidência real com origem, destino e resultado observado."><figcaption>2. DHCP nos três setores · evidência real com origem, destino e resultado observado.</figcaption>
-</figure>
-<p class="nota">Resultado observado: show ip dhcp binding no R1 lista 192.168.10.10 (PC-EQUIPE), 192.168.20.10 (LAPTOP-CIDADAO, pelo Wi-Fi WPA2) e 192.168.30.11 (PC-SENSOR), um endereço por pool, todos automáticos.</p>
+<p>R1</p>
+<pre>show ip dhcp binding</pre>
+<p>Esperávamos uma concessão em cada uma das três redes.</p>
+<figure><img src="img/teste-dhcp.png" alt="O R1 concedeu 192.168.10.10 ao PC-EQUIPE, 192.168.20.10 ao laptop e 192.168.30.11 ao sensor."><figcaption>O R1 concedeu 192.168.10.10 ao PC-EQUIPE, 192.168.20.10 ao laptop e 192.168.30.11 ao sensor.</figcaption></figure>
 </article>
 <article class="teste">
 <h3>3. Página acessada pelo nome</h3>
-<p><strong>Origem e destino:</strong> Navegador do PC-EQUIPE e do LAPTOP-CIDADAO.</p><pre>http://ruaviva.gs</pre><p><strong>Resultado esperado:</strong> Ficha da CitizenTech com localização, nomes e RMs; URL visível. Demonstra resolução DNS e HTTP. No cidadão, confirma as permissões UDP 53/TCP 80 anteriores ao bloqueio da VLAN 30.</p>
-<figure><img src="img/teste-pagina-nome.png" alt="3. Página acessada pelo nome · evidência real com origem, destino e resultado observado."><figcaption>3. Página acessada pelo nome · evidência real com origem, destino e resultado observado.</figcaption>
-</figure>
-<p class="nota">Resultado observado: o LAPTOP-CIDADAO, conectado ao SSID RuaViva-Cidadao com WPA2-PSK, abriu http://ruaviva.gs e recebeu a Ficha da CitizenTech servida pelo SRV-RUAVIVA (DNS UDP 53 e HTTP TCP 80 liberados pela ACL).</p>
+<p>Navegador do LAPTOP-CIDADAO</p>
+<pre>http://ruaviva.gs</pre>
+<p>A ACL permite a consulta DNS e o acesso HTTP ao servidor 192.168.30.10.</p>
+<figure><img src="img/teste-pagina-nome.png" alt="No Wi-Fi, o LAPTOP-CIDADAO abriu a ficha do RuaViva em http://ruaviva.gs."><figcaption>No Wi-Fi, o LAPTOP-CIDADAO abriu a ficha do RuaViva em http://ruaviva.gs.</figcaption></figure>
 </article>
 <article class="teste">
 <h3>4. NAT/PAT e internet simulada</h3>
-<p><strong>Origem e destino:</strong> PC-EQUIPE e LAPTOP-CIDADAO → servidor externo 8.8.8.8.</p><pre>Navegadores:
-http://internet.gs
-No R1, imediatamente após o acesso:
-show ip nat translations
-show ip nat statistics</pre><p><strong>Resultado esperado:</strong> Página “Internet simulada”. Tradução TCP: Inside local = IP/porta reais do cliente; Inside global = 200.10.0.2:porta; destino = 8.8.8.8:80. Registrar a tabela antes de expirar; DNS interno não precisa gerar NAT.</p>
-<figure><img src="img/teste-nat.png" alt="4. NAT/PAT e internet simulada · evidência real com origem, destino e resultado observado."><figcaption>4. NAT/PAT e internet simulada · evidência real com origem, destino e resultado observado.</figcaption>
-</figure>
-<p class="nota">Resultado observado: o PC-EQUIPE abriu http://internet.gs (8.8.8.8). Em seguida, show ip nat translations no R1 mostrou 192.168.10.10:1025 e 192.168.20.10:1026 traduzidos para o mesmo IP público 200.10.0.2, com destino 8.8.8.8:80, comprovando o PAT.</p>
+<p>R1, após acesso a http://internet.gs</p>
+<pre>show ip nat translations</pre>
+<p>O PAT deve distinguir pelo número de porta as conexões dos dois clientes.</p>
+<figure><img src="img/teste-nat.png" alt="Na tabela do R1, 192.168.10.10:1025 e 192.168.20.10:1026 usaram o mesmo IP público, 200.10.0.2, para acessar 8.8.8.8:80."><figcaption>Na tabela do R1, 192.168.10.10:1025 e 192.168.20.10:1026 usaram o mesmo IP público, 200.10.0.2, para acessar 8.8.8.8:80.</figcaption></figure>
 </article>
 <article class="teste">
 <h3>5. Bloqueio por ACL</h3>
-<p><strong>Origem e destino:</strong> LAPTOP-CIDADAO → IP concedido ao PC-EQUIPE e SRV-RUAVIVA.</p><pre>No PC-EQUIPE: ipconfig
-No laptop (substituir pelo IP observado):
-ping 192.168.10.10
+<p>LAPTOP-CIDADAO e R1</p>
+<pre>ping 192.168.10.10
 ping 192.168.30.10
-No R1, antes e depois:
-show access-lists
-show access-lists WIFI_CIDADAO_IN</pre><p><strong>Resultado esperado:</strong> Sem respostas de eco aos dois destinos; os contadores deny das redes 10 e 30 aumentam. HTTP da solução continua funcionando. Se o PT não exibir contadores, capturar também a PDU ICMP descartada em Simulation.</p>
-<figure><img src="img/teste-acl.png" alt="5. Bloqueio por ACL · evidência real com origem, destino e resultado observado."><figcaption>5. Bloqueio por ACL · evidência real com origem, destino e resultado observado.</figcaption>
-</figure>
-<p class="nota">Resultado observado: no LAPTOP-CIDADAO, ping 192.168.10.10 e ping 192.168.30.10 tiveram 0/4 respostas (Destination host unreachable, enviado por 192.168.20.1). No R1, show access-lists WIFI_CIDADAO_IN mostrou 4 correspondências em deny ip any 192.168.10.0 e 4 em deny ip any 192.168.30.0, enquanto DNS e HTTP para 192.168.30.10 continuaram permitidos.</p>
+
+R1: show access-lists WIFI_CIDADAO_IN</pre>
+<p>Esperávamos bloquear o ping para a equipe e para o servidor, mantendo o acesso à página por HTTP.</p>
+<figure><img src="img/teste-acl.png" alt="O laptop recebeu zero respostas em quatro tentativas para cada destino. No R1, cada regra de bloqueio registrou quatro pacotes."><figcaption>O laptop recebeu zero respostas em quatro tentativas para cada destino. No R1, cada regra de bloqueio registrou quatro pacotes.</figcaption></figure>
 </article>
-<p>Salvar como network/RuaViva.pkt, reabrir e repetir os testes para verificar persistência. A ACL não isola cidadãos dentro do mesmo segmento Wi-Fi. A página HTTP do laboratório apresenta a ficha; não executa a API.</p>
+<p>A ACL do R1 filtra o tráfego entre redes. A comunicação entre clientes na mesma VLAN Wi-Fi fica no segmento local.</p>
 </section>
 </main></body></html>
