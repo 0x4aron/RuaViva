@@ -50,6 +50,23 @@ public class AtendimentoDAO {
         return total == null ? 0 : total;
     }
 
+    public boolean temEquipeDeOutraSubprefeitura(Long idOcorrencia, Long idSubprefeitura) {
+        Integer total = jdbc.queryForObject("SELECT COUNT(*) FROM GS_ATENDIMENTO a "
+                + "JOIN GS_EQUIPE e ON e.ID_EQUIPE = a.ID_EQUIPE "
+                + "WHERE a.ID_OCORRENCIA = ? AND a.ST_ATENDIMENTO = 'AGENDADO' "
+                + "AND e.ID_SUBPREFEITURA <> ?", Integer.class, idOcorrencia, idSubprefeitura);
+        return total != null && total > 0;
+    }
+
+    public boolean temOcorrenciaDeOutraSubprefeitura(Long idEquipe, Long idSubprefeitura) {
+        Integer total = jdbc.queryForObject("SELECT COUNT(*) FROM GS_ATENDIMENTO a "
+                + "JOIN GS_OCORRENCIA o ON o.ID_OCORRENCIA = a.ID_OCORRENCIA "
+                + "JOIN GS_DISTRITO d ON d.ID_DISTRITO = o.ID_DISTRITO "
+                + "WHERE a.ID_EQUIPE = ? AND a.ST_ATENDIMENTO = 'AGENDADO' "
+                + "AND d.ID_SUBPREFEITURA <> ?", Integer.class, idEquipe, idSubprefeitura);
+        return total != null && total > 0;
+    }
+
     public void cancelarAgendados(Long idOcorrencia) {
         jdbc.update("UPDATE GS_ATENDIMENTO SET ST_ATENDIMENTO = 'CANCELADO' "
                 + "WHERE ID_OCORRENCIA = ? AND ST_ATENDIMENTO = 'AGENDADO'", idOcorrencia);

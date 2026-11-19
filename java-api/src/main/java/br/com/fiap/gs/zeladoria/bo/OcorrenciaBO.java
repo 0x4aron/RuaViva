@@ -12,6 +12,7 @@ import br.com.fiap.gs.zeladoria.exception.RecursoNaoEncontradoException;
 import br.com.fiap.gs.zeladoria.exception.RegraNegocioException;
 import br.com.fiap.gs.zeladoria.model.Categoria;
 import br.com.fiap.gs.zeladoria.model.Cidadao;
+import br.com.fiap.gs.zeladoria.model.Distrito;
 import br.com.fiap.gs.zeladoria.model.Ocorrencia;
 import br.com.fiap.gs.zeladoria.model.PontoSensivel;
 import br.com.fiap.gs.zeladoria.model.StatusOcorrencia;
@@ -108,7 +109,12 @@ public class OcorrenciaBO {
             throw new RegraNegocioException("Ocorrência " + atual.getStatus() + " faz parte do histórico e não pode ser alterada");
         }
         buscarCategoria(dados.getIdCategoria());
-        distritoBO.buscar(dados.getIdDistrito());
+        Distrito distrito = distritoBO.buscar(dados.getIdDistrito());
+        if (!atual.getIdDistrito().equals(distrito.getIdDistrito())
+                && atendimentoDAO.temEquipeDeOutraSubprefeitura(id, distrito.getIdSubprefeitura())) {
+            throw new RegraNegocioException("A ocorrência tem visita agendada com equipe de outra subprefeitura. "
+                    + "Cancele a visita antes de mudar o distrito.");
+        }
 
         StatusOcorrencia novoStatus = dados.getStatus() == null ? atual.getStatus() : dados.getStatus();
         if (novoStatus != atual.getStatus() && novoStatus != StatusOcorrencia.CANCELADA) {

@@ -41,7 +41,7 @@ Iluminação pública apagada não está entre as categorias do MVP e fica regis
 | Evidência do projeto | Consequência para o RuaViva |
 |---|---|
 | Em 2025, selecionamos **507.859 pedidos de zeladoria nas 32 subprefeituras**. | Usamos o SP156 para conhecer os serviços mais pedidos em São Paulo. |
-| No teste de **outubro a dezembro de 2025**, **87% dos 526 pedidos de “Calçadas, guias e postes” da Sé** passaram de sete dias. | Destacamos o prazo e a situação no detalhe do registro. A taxa abrange toda a Subprefeitura Sé. |
+| No teste de **outubro a dezembro de 2025**, **87% dos 529 pedidos de “Calçadas, guias e postes” da Sé** passaram de sete dias. | Destacamos o prazo e a situação no detalhe do registro. A taxa abrange toda a Subprefeitura Sé. |
 | Segunda-feira concentra mais pedidos na análise de demanda. | No notebook, levamos o dia da semana em conta ao estimar a demanda. |
 | A base demonstrativa do banco tem **15 ocorrências**, das quais **9 na Barão de Iguape**, com endereço, coordenadas, tipo e datas provenientes do SP156 do terceiro trimestre de 2026. | Há exemplos territoriais para demonstrar o fluxo. Esse retrato de 2026 é diferente da base estatística de 2025. Cidadãos, apoios, equipes, descrições e atendimentos são simulados. |
 

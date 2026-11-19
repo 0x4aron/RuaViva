@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </li>
 <li><a href="#tabelas">3. Tabelas e integridade</a>
 </li>
-<li><a href="#modelo">4. Diagrama do modelo relacional</a>
+<li><a href="#modelo">4. Diagrama do modelo lógico</a>
 </li>
 <li><a href="#scripts">5. Scripts e consultas</a>
 </li>
@@ -108,8 +108,8 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 <section class="secao pagina-paisagem diagrama-dm" id="modelo">
 <div class="cabecalho"><span class="placa">RuaViva</span><span>Database Design · 19/11/2026</span>
 </div>
-<h2>4. Diagrama do modelo relacional (Oracle Data Modeler)</h2>
-<figure><img src="img/modelo-logico-data-modeler.png" alt="Modelo relacional importado do DDL. As nove tabelas se ligam por dez chaves estrangeiras."><figcaption>Modelo relacional importado do DDL. As nove tabelas se ligam por dez chaves estrangeiras.</figcaption>
+<h2>4. Diagrama do modelo lógico (Oracle Data Modeler)</h2>
+<figure><img src="img/modelo-logico-data-modeler.png" alt="Modelo lógico-relacional no Oracle Data Modeler: nove tabelas, dez chaves estrangeiras e cardinalidades 1:N."><figcaption>Modelo lógico-relacional no Oracle Data Modeler: nove tabelas com atributos, chaves primárias (P), estrangeiras (F) e únicas (U), e dez relacionamentos 1:N. O pé de galinha marca o lado N.</figcaption>
 </figure>
 <p>No Oracle SQL Developer Data Modeler 24.3, importamos <code>database/01_ddl.sql</code> para Oracle Database 21c. A figura mostra a vista relacional de <code>database/modelo/RuaViva.dmd</code>.</p>
 </section>
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded',prepararImagens);
 </tr>
 </thead>
 <tbody>
-<tr><td>database/00_drop.sql</td><td>Recriação opcional: remove as nove tabelas. Conferir nomes existentes antes de executar; apaga os dados.</td>
+<tr><td>database/00_drop.sql</td><td>Recriação opcional, só no GitHub (não vai no envio): remove as nove tabelas. Conferir nomes existentes antes de executar; apaga os dados.</td>
 </tr>
 <tr><td>database/01_ddl.sql</td><td>Nove CREATE TABLE com PK, UNIQUE e CHECK; dez FKs via ALTER TABLE.</td>
 </tr>

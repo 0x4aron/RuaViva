@@ -6,8 +6,8 @@ Fonte: Portal de Dados Abertos da Prefeitura de Sao Paulo, conjunto "Dados do SP
 Arquivos usados: "Dados do SP156 - 1o, 2o, 3o e 4o TRI 2025" (CSV), salvos em dados/raw/.
 
 Seleciona os assuntos de manutenção da rua nos dois temas de zeladoria. Depois de
-padronizar os nomes, mantém os órgãos com pelo menos 3.000 pedidos no recorte.
-Em 2025, ficaram as 32 subprefeituras. O CSV compactado não inclui endereços.
+padronizar os nomes, mantém as 32 subprefeituras da cidade.
+O CSV compactado não inclui endereços.
 
 Uso: python preparar_base.py
 """
@@ -43,6 +43,19 @@ NOMES_ANTIGOS = {
     "PERUS-ANHANGUERA": "PERUS",
 }
 
+# Lista da Prefeitura com a grafia usada no SP156.
+# https://prefeitura.sp.gov.br/web/subprefeituras/subprefeituras/mapa
+SUBPREFEITURAS = [
+    "ARICANDUVA-FORMOSA-CARRAO", "BUTANTA", "CAMPO LIMPO", "CAPELA DO SOCORRO",
+    "CASA VERDE-CACHOEIRINHA", "CIDADE ADEMAR", "CIDADE TIRADENTES",
+    "ERMELINO MATARAZZO", "FREGUESIA-BRASILANDIA", "GUAIANASES", "IPIRANGA",
+    "ITAIM PAULISTA", "ITAQUERA", "JABAQUARA", "JACANA-TREMEMBE", "LAPA",
+    "M BOI MIRIM", "MOOCA", "PARELHEIROS", "PENHA", "PERUS", "PINHEIROS",
+    "PIRITUBA-JARAGUA", "SANTANA-TUCURUVI", "SANTO AMARO", "SAO MATEUS",
+    "SAO MIGUEL", "SAPOPEMBA", "SE", "VILA MARIA-VILA GUILHERME",
+    "VILA MARIANA", "VILA PRUDENTE",
+]
+
 COLUNAS = {
     "Data de Abertura": "data_abertura",
     "Data de Finalização": "data_finalizacao",
@@ -68,8 +81,7 @@ def main():
 
     # Nomes antigos da mesma subprefeitura -> nome atual
     base["subprefeitura"] = base["subprefeitura"].replace(NOMES_ANTIGOS)
-    contagem = base["subprefeitura"].value_counts()
-    base = base[base["subprefeitura"].isin(contagem[contagem >= 3000].index)]
+    base = base[base["subprefeitura"].isin(SUBPREFEITURAS)]
     print(f"Subprefeituras: {base['subprefeitura'].nunique()}")
 
     # Datas no formato ISO (AAAA-MM-DD)

@@ -63,6 +63,26 @@ checa "apoiar ocorrencia cancelada da 422" 422 "$(req POST /apoios "{\"idOcorren
 checa "PUT de status para RESOLVIDA direto da 422" 422 "$(req PUT "/ocorrencias/$(nova_oc 3)" "$(echo "$OCJ" | jq -c '.status="RESOLVIDA"')")"
 checa "excluir ocorrencia ABERTA da 204" 204 "$(req DELETE "/ocorrencias/$(nova_oc 8)")"
 
+echo "== Troca de distrito com visita agendada"
+OC=$(nova_oc 7)
+checa "criar distrito de teste na Mooca" 201 "$(req POST /distritos "{\"idSubprefeitura\":2,\"nome\":\"Distrito de regressao $OC\"}")"
+DIST=$(corpo | jq -r .idDistrito)
+checa "agendar visita da equipe da Sé" 201 "$(req POST /atendimentos "$(agendar_json "$OC" 1 "$HOJE")")"
+OCJ=$(curl -s "$API/ocorrencias/$OC" | jq -c --argjson distrito "$DIST" '.idDistrito=$distrito')
+checa "mudar ocorrência da Sé para distrito da Mooca com visita agendada dá 422" 422 "$(req PUT "/ocorrencias/$OC" "$OCJ")"
+checa "excluir ocorrência de teste com sua visita" 204 "$(req DELETE "/ocorrencias/$OC")"
+checa "excluir distrito de teste" 204 "$(req DELETE "/distritos/$DIST")"
+
+echo "== Troca de subprefeitura da equipe com visita agendada"
+OC=$(nova_oc 10)
+checa "criar equipe de teste na Sé" 201 "$(req POST /equipes "{\"idSubprefeitura\":1,\"nome\":\"Equipe de regressao $OC\",\"horasDia\":8,\"latitude\":-23.55,\"longitude\":-46.63}")"
+EQ=$(corpo | jq -r .idEquipe)
+EQJ=$(corpo | jq -c '.idSubprefeitura=2')
+checa "agendar visita da equipe de teste na Sé" 201 "$(req POST /atendimentos "$(agendar_json "$OC" "$EQ" "$HOJE")")"
+checa "mudar equipe para a Mooca com visita agendada na Sé dá 422" 422 "$(req PUT "/equipes/$EQ" "$EQJ")"
+checa "excluir ocorrência de teste com sua visita" 204 "$(req DELETE "/ocorrencias/$OC")"
+checa "excluir equipe de teste" 204 "$(req DELETE "/equipes/$EQ")"
+
 echo "== Cancelar visita preserva data e equipe"
 OC=$(nova_oc 9)
 req POST /atendimentos "$(agendar_json "$OC" 1 "$HOJE")" >/dev/null; AT=$(corpo | jq -r .idAtendimento)

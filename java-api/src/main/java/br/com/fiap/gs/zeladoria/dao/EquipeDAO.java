@@ -38,6 +38,10 @@ public class EquipeDAO {
                 .stream().findFirst();
     }
 
+    public void travar(Long id) {
+        jdbc.queryForList("SELECT ID_EQUIPE FROM GS_EQUIPE WHERE ID_EQUIPE = ? FOR UPDATE", id);
+    }
+
     public Long inserir(Equipe e) {
         return DaoUtil.inserir(jdbc,
                 "INSERT INTO GS_EQUIPE (ID_SUBPREFEITURA, NM_EQUIPE, NR_HORAS_DIA, NR_LATITUDE, NR_LONGITUDE, FL_ATIVA) "

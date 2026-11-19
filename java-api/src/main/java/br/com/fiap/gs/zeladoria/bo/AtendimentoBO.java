@@ -163,7 +163,7 @@ public class AtendimentoBO {
     }
 
     private void validarEquipe(Long idEquipe, Ocorrencia ocorrencia) {
-        Equipe equipe = equipeBO.buscar(idEquipe);
+        Equipe equipe = equipeBO.buscarComTrava(idEquipe);
         if (!equipe.getAtiva()) {
             throw new RegraNegocioException("A equipe " + equipe.getNome() + " está inativa");
         }

@@ -33,6 +33,7 @@ Fluxo de uma requisição: **Controller → BO → DAO → Oracle**.
 - **Apoio ("também me afeta"):** o cidadão não pode apoiar a própria ocorrência nem apoiar a mesma ocorrência duas vezes. Ocorrências resolvidas ou canceladas não recebem apoio.
 - **Atendimento:**
   - A equipe precisa estar ativa e pertencer à subprefeitura do distrito da ocorrência. A API aceita agendamentos a partir da data de abertura.
+  - Essa regra vale também depois do agendamento: com visita `AGENDADO`, a API recusa (422) mudar o distrito da ocorrência ou a subprefeitura da equipe para um território diferente. É preciso cancelar a visita antes.
   - Só atendimentos `AGENDADO` podem ser alterados. `CONCLUIDO` e `CANCELADO` são histórico, e um atendimento concluído não pode ser excluído.
   - A data de execução pode ser, no máximo, hoje. Ao concluir, as outras visitas agendadas para a mesma ocorrência são canceladas. Se a equipe concluir antes do dia marcado, a data agendada passa a ser o dia da execução.
 - **Cidadão:** o email é único. Se `prioritario` não for enviado no cadastro, vale `false`; se não for enviado no PUT, o valor atual é mantido.

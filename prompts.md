@@ -14,7 +14,7 @@ O enunciado permite IA "para aprender e revisar" e pede que os prompts fiquem re
 | Codex CLI (OpenAI) | Segunda opinião e trabalho delegado. Eu dizia o que revisar ou corrigir. O Claude transformava isso em pedido para o Codex e conferia a resposta comigo antes de aplicar. Modelos: `gpt-6-luna`, `gpt-6-astra`, `gpt-6.1-sol`, `gpt-6.2-astra` e `gpt-6.2-sol`. |
 | Playwright | Usuários simulados clicando no site, para achar erro antes do professor. |
 | Figma (conector) | Telas e diagrama de casos de uso num arquivo que eu também posso editar. |
-| edge-tts (Microsoft) | Voz gerada para a narração do pitch geral da GS. O pitch de Agile é narrado por nós, como o enunciado pede. |
+| edge-tts (Microsoft) | Voz gerada para a narração do pitch geral da GS. O pitch de Agile eu narrei com a minha voz, como o enunciado pede. |
 
 **Regras que eu defini e mantive**
 
@@ -76,7 +76,7 @@ O enunciado permite IA "para aprender e revisar" e pede que os prompts fiquem re
 >
 > e pode dar commit, mas antes revise pra que nao possa haver algum erro ou contradição que nos atrapalhe futuramente
 
-**Decisão:** usamos 10, 20 e 30, como o professor aceitou. Antes do commit, pedi revisão para não ter contradição entre o README, as configurações e o plano de endereços.
+**Decisão:** usamos 10, 20 e 30, como o professor orientou: uma rede /24 para cada setor, em vez de dividir um único /24 em três. Antes do commit, pedi revisão para não ter contradição entre o README, as configurações e o plano de endereços.
 
 ## 4. Banco de dados: entender antes de aceitar (10/11)
 
@@ -104,7 +104,7 @@ O enunciado permite IA "para aprender e revisar" e pede que os prompts fiquem re
 
 > pode ser, web então, vamos fazer tudo, e se vermos que é possivel ja implementamos, login real, fotos e todas essas ideias, além disso quero que integre junto ao figma, para que eu possa alterar também, e pode fazer o commit, mas espero que terminemos tudo logo, para começarmos a melhorar ainda mais o projeto
 
-**Decisão:** o MVP é web (HTML, CSS e JavaScript), consumindo a API Spring Boot publicada no Render. Login real e fotos ficaram fora da entrega. Comecei uma versão com login à parte, fora da entrega (seção 9).
+**Decisão:** o MVP é web (HTML, CSS e JavaScript), consumindo a API Spring Boot. A API foi publicada no Render depois, em 16/11. Login real e fotos ficaram fora da entrega. Comecei uma versão com login à parte, fora da entrega (seção 9).
 
 ## 6. Data Science e Figma (10/11 e 11/11)
 
@@ -114,11 +114,11 @@ O enunciado permite IA "para aprender e revisar" e pede que os prompts fiquem re
 
 > tem figma instalado nessa maquina? se for possivel instale
 
-**Por quê:** pedi resumo curto depois de cada bloco, para conseguir explicar o que foi feito.
+**Por quê:** o resumo curto era o jeito de eu conseguir explicar cada parte. Exemplo: na tela de categorias, a régua só sugere um peso; o que entra na prioridade é o peso que o gestor salva (`web/js/pagina-categorias.js`).
 
 ## 7. Orquestrar duas IAs (11/11)
 
-Aqui passei a usar o Claude como coordenador e o Codex como executor e revisor.
+A partir daqui, parte das revisões e correções foi delegada ao Codex. O Claude conferia o resultado no código e nos testes, e eu decidia o que entrava.
 
 > quero começar a fazer uma orquestração, entre LLMs, tem alguma skill sobre isso, para fazer essa conexão entre LLMs, e delegação entre agentes?
 
@@ -142,7 +142,7 @@ Aqui passei a usar o Claude como coordenador e o Codex como executor e revisor.
 
 > antes faça a revisao, e melhora dessa UI, nao precisa mais usar o Astra, pode usar o Luna no max, e faça comparação com o 156 e veja se há possiveis melhorias, em paralelo revise rigorozamente o projeto em si na visao de um professor e veja se não há nada que eles possam criticar ou descontar notas, como comentario de IA no projeto e etc, quero realmente fazer um site funcionando, com login e etc, mas isso pode deixar que nao vou entregar, é só por que quero realmente fazer algo funcional.
 
-**Por quê:** a comparação com o SP156 guiou três funções do RuaViva: ver o que o vizinho já registrou, apoiar em vez de repetir e acompanhar a etapa do pedido. A revisão "como professor" leu o enunciado item por item contra o repositório.
+**Resultado:** a comparação com o SP156 trouxe duas mudanças no site: o número do registro para o morador acompanhar e o caminho para a Ouvidoria do SP156 quando o prazo vence. A revisão "como professor" leu o enunciado item por item contra o repositório.
 
 ## 9. Visual, usuários simulados e versão com login (12/11)
 
@@ -150,7 +150,7 @@ Aqui passei a usar o Claude como coordenador e o Codex como executor e revisor.
 
 > voce sabe que voce pode fazer esse do packet tracer sim, alem disso sobre o visual, eu acho ainda que está muito generico, quero algo realmente lindo de se usar, mas que também nao saia do escopo visual e fique algo um pouco, desconectado, pode tomar exemplos *QUE DERAM CERTO* e ver de se basear neles, e realmente caprichar no detalhamento, além de simular users ou QAs para que nao haja possiveis erros, e veja o que mais é possivel você fazer
 
-**Resultado:** a identidade veio da própria rua: endereço como placa azul de São Paulo e a etapa do pedido desenhada como linha de metrô ("Linha do atendimento"). Três personas simuladas (Helena, numa tela de 640 px, que equivale a zoom de 200%, registrando só com o teclado; Rafael, num celular de 360 px; e Márcia, na fila do gestor) e uma checagem automática de acessibilidade (axe) fazem 38 verificações no site. Os testes e as revisões de código acharam defeitos reais, todos corrigidos:
+**Resultado:** a identidade veio da própria rua: endereço como placa azul de São Paulo e a etapa do pedido desenhada como linha de metrô ("Linha do atendimento"). Três personas simuladas (Helena, numa janela estreita de 640 px, que simula zoom de 200%, registrando com o teclado; Rafael, num celular de 360 px; e Márcia, na fila do gestor) e uma checagem automática de acessibilidade (axe) fazem 38 verificações no site. Os testes e as revisões de código acharam defeitos reais, todos corrigidos:
 
 - o Enter não buscava o endereço;
 - a marca de seleção aparecia em todas as categorias;
@@ -199,17 +199,17 @@ O que levamos para o projeto: o lixo bloqueia a calçada e quem empurra carrinho
 
 **Resultado:**
 
-- Os vídeos do pitch foram gravados do site real, sem áudio, e o roteiro ficou com falas cronometradas.
-- O pitch geral da GS ganhou narração com voz gerada por IA. O do Agile eu gravo com a minha voz, porque o enunciado pede narração de integrante do grupo.
+- Os vídeos do pitch juntam capturas do site real e slides (o geral também mostra a cena 3D). O roteiro tem as falas cronometradas e a narração entrou depois.
+- O pitch geral da GS ganhou narração com voz gerada por IA. O do Agile eu narrei com a minha voz, porque o enunciado pede narração de integrante do grupo.
 - O site estático foi publicado no Render.
-- A revisão final procurou comentários óbvios, texto com tom de propaganda e inconsistências entre disciplinas.
+- A revisão final procurou números que não batiam com o código e inconsistências entre disciplinas.
 - O Packet Tracer passou a rodar numa tela virtual, sem ocupar a minha.
 - O vídeo 3D foi publicado no YouTube.
 - No Planning Poker, a IA não vota no meu lugar. Ela entra como estimador independente, e quem decide as divergências sou eu (seção 13).
 
-## 12. O que o Codex fez em cada rodada
+## 12. Rodadas do Codex
 
-Estes pedidos foram escritos pelo Claude, a partir do que eu pedi, e enviados ao Codex. As revisões rodaram só com permissão de leitura. As correções podiam escrever apenas dentro da pasta do projeto. Os commits vieram depois da revisão e saíram no meu nome.
+Estas são as rodadas principais. Os pedidos foram escritos pelo Claude, a partir do que eu pedi, e enviados ao Codex. As revisões rodaram só com permissão de leitura. As correções podiam escrever apenas dentro da pasta do projeto. Os commits vieram depois da revisão e saíram no meu nome.
 
 | Data | Modelo | Pedido | O que foi feito com a resposta |
 |---|---|---|---|
@@ -222,8 +222,13 @@ Estes pedidos foram escritos pelo Claude, a partir do que eu pedi, e enviados ao
 | 16/11 | `gpt-6-luna` | Acabamento v4: mapa calmo, lista ligada aos pinos, barra de ação no celular | Depois, o Claude rodou as personas simuladas no site |
 | 17/11 | `gpt-6.2-astra` (rápido) | Revisão como professor, disciplina por disciplina | Lista de pontos que podiam tirar nota |
 | 17/11 | `gpt-6.2-astra` (rápido) | Procurar comentários e textos com cara de gerados | Achados aplicados na rodada seguinte |
-| 17/11 | `gpt-6.2-astra` (rápido) | Duas frentes em paralelo, uma para código e análise, outra para textos, com pastas separadas | Notebook reexecutado sem vazamento de dados e regras novas na API; depois, a regressão completa (42/42) rodou com a API local e o Oracle de teste |
+| 17/11 | `gpt-6.2-astra` (rápido) | Duas frentes em paralelo, uma para código e análise, outra para textos, com pastas separadas | Notebook reexecutado sem vazamento de dados e regras novas na API; depois, a regressão completa rodou com a API local e o Oracle de teste |
 | 18/11 | `gpt-6.2-astra` e `gpt-6.2-sol` | Estimar as 25 histórias no Planning Poker | Ver seção 13 |
+| 18/11 | `gpt-6.2-astra` (rápido) | Conferir o prompts.md e o roteiro do pitch contra o repositório | Corrigidos números (dez estimativas, 38 verificações), falas do roteiro e o texto da etapa Escutar |
+| 19/11 | `gpt-6.2-sol` | Revisão final como professor, item por item da rubrica de cada disciplina | Legenda do diagrama de casos de uso, nome do modelo lógico, orientação de rede no PDF e as duas correções abaixo |
+| 19/11 | `gpt-6.2-astra` (rápido) | Conferir de novo o prompts.md contra o repositório e o histórico do git | Datas, autoria das rodadas e a descrição dos vídeos e dos testes |
+| 19/11 | `gpt-6.2-astra` (rápido) | Java: manter a regra de território quando a ocorrência ou a equipe é editada com visita agendada | Regressão completa com o Oracle de teste: 52 ok, 0 falhas |
+| 19/11 | `gpt-6.2-astra` (rápido) | Data Science: tirar da amostra de treino o que só se sabia depois do corte | Notebook reexecutado do zero; números novos conferidos e atualizados nos documentos |
 
 Exemplo de pedido ao Codex, o do Planning Poker, completo:
 
@@ -252,7 +257,7 @@ A sessão mudou dez estimativas anteriores (US03, US04, US06, US09, US10, US14, 
 
 ## 14. Testes e conferências
 
-- Regressão da API: 42 casos com `curl` contra a API local (`java-api/testes/regressao.sh`).
+- Regressão da API: 52 verificações com `curl` contra a API local e o Oracle de teste (`java-api/testes/regressao.sh`). Última rodada completa em 19/11: 52 ok, 0 falhas.
 - Site: 38 verificações com três personas simuladas e o axe, apontando para a API local para não sujar o banco da FIAP.
 - Programação dinâmica: 19 testes automatizados.
 - Notebook: reexecutado do zero, com corte temporal antes do treino.
