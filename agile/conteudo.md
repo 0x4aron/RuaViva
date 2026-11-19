@@ -370,7 +370,7 @@ As linhas em **negrito** compõem o MVP. A coluna UCs liga cada história aos ca
 
 ### Organização da Equipe RuaViva
 
-Para o pitch: As falas alternam entre os dois. Cesar apresenta o problema, as personas, o mapa, o detalhe e as ferramentas de análise; Anthony apresenta os dados, o registro, a fila do gestor e o fechamento.
+Para o pitch: O roteiro divide as falas entre os dois: Cesar fica com o problema, as personas, o mapa, o detalhe e as ferramentas de análise; Anthony, com os dados, o registro, a fila do gestor e o fechamento. Na gravação, Cesar narrou o roteiro inteiro.
 
 No quadro, uma história passa por A fazer, Em andamento, Em revisão e Concluído. Consideramos a história pronta quando conseguimos demonstrar os critérios de aceite na tela, na API, no notebook ou no terminal, conforme o backlog.
 
@@ -412,7 +412,9 @@ Na [fila](../web/gestor.html), Márcia compara prazo, endereço e prioridade. Ao
 
 ### Roteiro de até três minutos
 
-O vídeo tem 2:55, com falas de Anthony e Cesar.
+Vídeo no YouTube (não listado): https://youtu.be/b_BnqCT8mUg
+
+O vídeo tem 2:36. A narração é de Cesar, lendo o roteiro abaixo, que divide as falas entre os dois integrantes.
 
 | Tempo | Narração | O que aparece na tela |
 |---|---|---|
@@ -420,8 +422,8 @@ O vídeo tem 2:55, com falas de Anthony e Cesar.
 | **0:20–0:45** | **Anthony:** “Analisamos mais de quinhentos mil pedidos de zeladoria do SP156 em 2025. No último trimestre, na Sé, oitenta e sete por cento dos pedidos de calçadas, guias e postes não foram finalizados em até sete dias. E a segunda-feira é o dia de pico. Esses dados guiaram o nosso foco: acompanhar o pedido e priorizar o que afeta mais gente.” | Dados do SP156 |
 | **0:45–0:51** | **Cesar:** “Pensamos na Helena, com baixa visão, no Rafael, comerciante, e na Márcia, gestora da subprefeitura.” | Personas |
 | **0:51–1:05** | **Cesar:** “O morador entra e vê os problemas do bairro em lista e no mapa. Cada número da lista é o mesmo do pino. Os endereços aparecem como placas de rua, com letra grande.” | Entrada e mapa |
-| **1:05–1:30** | **Anthony:** “Registrar tem três passos: o que é, onde fica e os detalhes. Dá para buscar o endereço ou marcar no mapa. Se já existe um registro parecido a até sessenta metros, o morador pode apoiar o do vizinho em vez de repetir. Se abrir um novo, recebe um número para acompanhar.” | Registro em 3 passos |
-| **1:30–1:50** | **Cesar:** “No detalhe, a situação aparece como uma linha de metrô: registrado, na fila, visita agendada e resolvido, só com as datas que o sistema tem. O botão ’Isso também me afeta’ soma um apoio à prioridade.” | Detalhe e Linha do atendimento |
-| **1:50–2:15** | **Anthony:** “A gestora vê a fila por prioridade. Este bueiro tem setenta e um pontos: quarenta pela gravidade, seis por três apoios, quinze por estar perto de uma escola e dez porque quem registrou tem prioridade cadastrada. Ela entende o motivo, escolhe a equipe, a data e agenda a visita na mesma tela.” | Fila do gestor |
-| **2:15–2:40** | **Cesar:** “Fora do site, temos um notebook que prevê a demanda e o risco de atraso, e um programa que escolhe os serviços que cabem no dia da equipe e monta a menor rota entre as visitas escolhidas. Integrar isso ao site é um próximo passo.” | Notebook e plano do dia |
-| **2:40–2:55** | **Anthony:** “O RuaViva liga o problema na rua à visita da equipe, com transparência para o morador. Equipe RuaViva, FIAP.” | Fluxo do registro à visita |
+| **1:05–1:24** | **Anthony:** “Registrar tem três passos: o que é, onde fica e os detalhes. Dá para buscar o endereço ou marcar no mapa. Se já existe um registro parecido a até sessenta metros, o morador pode apoiar o do vizinho em vez de repetir. Se abrir um novo, recebe um número para acompanhar.” | Registro em 3 passos |
+| **1:24–1:39** | **Cesar:** “No detalhe, a situação aparece como uma linha de metrô: registrado, na fila, visita agendada e resolvido, só com as datas que o sistema tem. O botão ’Isso também me afeta’ soma um apoio à prioridade.” | Detalhe e Linha do atendimento |
+| **1:39–2:04** | **Anthony:** “A gestora vê a fila por prioridade. Este bueiro tem setenta e um pontos: quarenta pela gravidade, seis por três apoios, quinze por estar perto de uma escola e dez porque quem registrou tem prioridade cadastrada. Ela entende o motivo, escolhe a equipe, a data e agenda a visita na mesma tela.” | Fila do gestor |
+| **2:04–2:21** | **Cesar:** “Fora do site, temos um notebook que prevê a demanda e o risco de atraso, e um programa que escolhe os serviços que cabem no dia da equipe e monta a menor rota entre as visitas escolhidas. Integrar isso ao site é um próximo passo.” | Notebook e plano do dia |
+| **2:21–2:36** | **Anthony:** “O RuaViva liga o problema na rua à visita da equipe, com transparência para o morador. Equipe RuaViva, FIAP.” | Fluxo do registro à visita |

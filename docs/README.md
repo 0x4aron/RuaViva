@@ -20,5 +20,4 @@ PDFs dentro de `docs/`:
 Saídas previstas: `Agile-RuaViva.pdf`, `Database-RuaViva.pdf`,
 `Java-RuaViva.pdf`, `Network-RuaViva.pdf` e `ARVR-RuaViva.pdf`.
 O script lista as imagens ausentes e usa áreas identificadas no lugar delas.
-Acrescente as capturas reais e substitua `LINK_PITCH`, `LINK_DEPLOY` e
-`LINK_VIDEO_3D` antes da entrega.
+Os links do pitch, do deploy e do vídeo 3D já estão nos documentos.
