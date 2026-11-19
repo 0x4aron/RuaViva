@@ -205,7 +205,7 @@ O que levamos para o projeto: o lixo bloqueia a calçada e quem empurra carrinho
 - A revisão final procurou números que não batiam com o código e inconsistências entre disciplinas.
 - O Packet Tracer passou a rodar numa tela virtual, sem ocupar a minha.
 - O vídeo 3D foi publicado no YouTube.
-- No Planning Poker, a IA não vota no meu lugar. Ela entra como estimador independente, e quem decide as divergências sou eu (seção 13).
+- No Planning Poker, dois modelos votaram como estimadores independentes. Eu aceitei os votos iguais e decidi as cinco divergências (seção 13). É uma adaptação da técnica: não houve rodada de cartas entre os dois integrantes.
 
 ## 12. Rodadas do Codex
 
